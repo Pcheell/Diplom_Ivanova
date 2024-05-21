@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Ivanova_UchitDn.Core
 {
     public class CoreApp
@@ -28,12 +23,7 @@ namespace Ivanova_UchitDn.Core
             public string FIOStud { get; set; }
         }
 
-        public class ListItemSelectP
-        {
-            public int IDPred { get; set; }
-            public string NamePred { get; set; }
-        }
-
+     
         
 
     }

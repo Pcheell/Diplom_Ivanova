@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static Ivanova_UchitDn.Core.CoreApp;
 
 namespace Ivanova_UchitDn.Model

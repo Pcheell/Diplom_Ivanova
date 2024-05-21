@@ -70,6 +70,8 @@
                                 <StackPanel Orientation="Vertical">
                                     <Button Style="{DynamicResource BtnStyle}" Content="Обновить" Padding="10" MinWidth="150" Margin="5 5 5 0" Command="{Binding Update}"/>
                                     <Button Style="{DynamicResource BtnStyle}" Content="Удалить" Padding="10" Margin="5" Command="{Binding DeleteMe}"/>
+                                    <Button Style="{DynamicResource BtnStyle}" Content="Перевести классы" Padding="10" Margin="5" Command="{Binding PromoteClassesCommand}"/>
+
                                 </StackPanel>
                             </StackPanel>
 

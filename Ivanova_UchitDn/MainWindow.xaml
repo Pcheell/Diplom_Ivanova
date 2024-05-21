@@ -18,12 +18,10 @@
             <Label Content="Меню" Foreground="White" FontSize="22" HorizontalAlignment="Center" FontWeight="Bold" Padding="10" Margin="0 20"/>
             <Button Click="Kur_btn" Margin="50 3" Style="{DynamicResource BtnStyle}" FontSize="15" Padding="10">Куратор</Button>
             <Button Click="Grup_btn" Margin="50 3" Style="{DynamicResource BtnStyle}" FontSize="15" Padding="10">Группа</Button>
-            <Button Click="Pred_btn" Margin="50 3" Style="{DynamicResource BtnStyle}" FontSize="15" Padding="10">Предмет</Button>
             <Button Click="Stud_btn" Margin="50 3" Style="{DynamicResource BtnStyle}" FontSize="15" Padding="10">Карта студента</Button>
             <Button Click="Rod_btn" Margin="50 3" Style="{DynamicResource BtnStyle}" FontSize="15" Padding="10">Родители</Button>
-            <Button Click="Usrev_btn" Margin="50 3" Style="{DynamicResource BtnStyle}" FontSize="15" Padding="10">Успеваемость</Button>
 
-            
+
         </StackPanel>
 
         <Button Content="Выход" Click="LoginPageOpen" Margin="50 40" Style="{DynamicResource BtnStyle}" FontSize="15" Padding="10" VerticalAlignment="Bottom"/>

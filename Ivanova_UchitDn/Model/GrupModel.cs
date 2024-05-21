@@ -1,17 +1,17 @@
-﻿using System;
+﻿using Ivanova_UchitDn.Core;
+using Ivanova_UchitDn.ViewModel;
+using MySqlConnector;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 using static Ivanova_UchitDn.Core.CoreApp;
-using static Ivanova_UchitDn.ViewModel.GrupData;
 
 namespace Ivanova_UchitDn.Model
 {
     public class GrupModel : INotifyPropertyChanged
     {
-
+        private GrupData grupData;
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
@@ -86,6 +86,7 @@ namespace Ivanova_UchitDn.Model
                 ListItemSelectKurSelf = value;
                 OnPropertyChanged("ListItemSelectKur");
             }
-        }
+        } 
+
     }
 }

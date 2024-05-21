@@ -1,17 +1,13 @@
 ﻿using Ivanova_UchitDn.Core;
 using Ivanova_UchitDn.Model;
 using MySqlConnector;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using static Ivanova_UchitDn.Core.CoreApp;
 
 namespace Ivanova_UchitDn.ViewModel
@@ -204,8 +200,8 @@ namespace Ivanova_UchitDn.ViewModel
             sql += string.IsNullOrEmpty(sql) ? value : " and " + value;
         }
 
-        private DeleteCommandR DeleteSelf;
-        public DeleteCommandR DeleteMe
+        private DeleteCommand<RodModel> DeleteSelf;
+        public DeleteCommand<RodModel> DeleteMe
         {
             get => DeleteSelf;
             set
@@ -252,7 +248,7 @@ namespace Ivanova_UchitDn.ViewModel
                     Rabota = value.Rabota
                 };
 
-                DeleteMe = new DeleteCommandR(DeleteData, EditDataSelf);
+                DeleteMe = new DeleteCommand<RodModel>(DeleteData, EditDataSelf);
                 OnPropertyChanged("EditRod");
             }
         }

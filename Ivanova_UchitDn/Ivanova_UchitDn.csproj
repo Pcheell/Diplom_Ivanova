@@ -103,40 +103,31 @@
     <Compile Include="Core\EditCommand.cs" />
     <Compile Include="Core\IBaseCommands.cs" />
     <Compile Include="Core\InsertCommand.cs" />
+    <Compile Include="Core\RelayCommand.cs" />
     <Compile Include="Core\ReloadCommand.cs" />
     <Compile Include="Core\SearchCommand.cs" />
     <Compile Include="Model\GrupModel.cs" />
-    <Compile Include="Model\PredmetModel.cs" />
     <Compile Include="Model\RodModel.cs" />
     <Compile Include="Model\StudModel.cs" />
-    <Compile Include="Model\UspModel.cs" />
     <Compile Include="VhodPage.xaml.cs">
       <DependentUpon>VhodPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\GrupData.cs" />
-    <Compile Include="ViewModel\PredmetData.cs" />
     <Compile Include="ViewModel\RodData.cs" />
     <Compile Include="ViewModel\StudData.cs" />
     <Compile Include="ViewModel\UpdateData.cs" />
     <Compile Include="ViewModel\UserData.cs" />
-    <Compile Include="ViewModel\UspData.cs" />
     <Compile Include="View_Page\GrupPage.xaml.cs">
       <DependentUpon>GrupPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="View_Page\Kurator.xaml.cs">
       <DependentUpon>Kurator.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View_Page\PredmetPage.xaml.cs">
-      <DependentUpon>PredmetPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View_Page\RoditeliPage.xaml.cs">
       <DependentUpon>RoditeliPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="View_Page\StudPage.xaml.cs">
       <DependentUpon>StudPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View_Page\UspPage.xaml.cs">
-      <DependentUpon>UspPage.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -163,19 +154,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View_Page\PredmetPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="View_Page\RoditeliPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View_Page\StudPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View_Page\UspPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

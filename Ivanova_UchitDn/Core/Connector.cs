@@ -1,14 +1,12 @@
 ﻿using MySqlConnector;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Ivanova_UchitDn.Core
 {
     class Connector
     {
+        // изменить подключение
         private static string
            Link = "Server=195.93.252.96;" +
            "Port=3306;" +
@@ -27,13 +25,37 @@ namespace Ivanova_UchitDn.Core
         //подключение к БД
         public async Task GetOpen()
         {
-            await connection.OpenAsync();
+            try
+            {
+                if (connection.State != System.Data.ConnectionState.Open)
+                {
+                    await connection.OpenAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Логирование ошибки или другое действие
+                Console.WriteLine($"Error opening connection: {ex.Message}");
+                throw;
+            }
         }
 
         //отключение от БД
         public async Task GetClose()
         {
-            await connection.CloseAsync();
+            try
+            {
+                if (connection.State != System.Data.ConnectionState.Closed)
+                {
+                    await connection.CloseAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Логирование ошибки или другое действие
+                Console.WriteLine($"Error closing connection: {ex.Message}");
+                throw;
+            }
         }
 
         //возвращение подключения

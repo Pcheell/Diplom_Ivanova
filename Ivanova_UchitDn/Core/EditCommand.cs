@@ -1,31 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+﻿using System.Windows.Input;
+using System;
 
-namespace Ivanova_UchitDn.Core
+public class EditCommand : ICommand
 {
-    public class EditCommand : ICommand
+    private Action<object> editData;
+    public event EventHandler CanExecuteChanged;
+
+    public EditCommand(Action<object> editData)
     {
-        private Action<object> editData;
+        this.editData = editData;
+    }
 
-        public EditCommand(Action<object> editData)
-        {
-            this.editData = editData;
-        }
+    public bool CanExecute(object parameter)
+    {
+        // Логика определения возможности выполнения команды
+        return true;
+    }
 
-        public event EventHandler CanExecuteChanged;
+    public void Execute(object parameter)
+    {
+        editData(parameter);
+    }
 
-        public bool CanExecute(object parameter)
-        {
-            return true;
-        }
-
-        public void Execute(object parameter)
-        {
-            editData(parameter);
-        }
+    public void RaiseCanExecuteChanged()
+    {
+        CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
 }

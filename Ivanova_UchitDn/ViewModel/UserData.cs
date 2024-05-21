@@ -1,18 +1,14 @@
 ﻿using Ivanova_UchitDn.Core;
 using Ivanova_UchitDn.Model;
 using MySqlConnector;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
-using System.Xml.Linq;
+
 
 namespace Ivanova_UchitDn.ViewModel
 {
@@ -134,8 +130,8 @@ namespace Ivanova_UchitDn.ViewModel
         }
 
 
-        private DeleteCommand DeleteSelf;
-        public DeleteCommand DeleteMe
+        private DeleteCommand<User> DeleteSelf;
+        public DeleteCommand<User> DeleteMe
         {
             get => DeleteSelf;
             set
@@ -180,7 +176,7 @@ namespace Ivanova_UchitDn.ViewModel
                 };
 
 
-                DeleteMe = new DeleteCommand(DeleteData, EditUserSelf);
+                DeleteMe = new DeleteCommand<User>(DeleteData, EditUserSelf);
                 OnPropertyChanged("EditUser");
             }
         }

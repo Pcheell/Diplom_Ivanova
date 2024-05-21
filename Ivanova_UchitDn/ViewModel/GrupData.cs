@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -63,15 +61,20 @@ namespace Ivanova_UchitDn.ViewModel
             }
         }
 
+        public ICommand PromoteClassesCommand { get; }
 
+      
 
         public GrupData()
         {
             ListItemSelectKur = new ObservableCollection<ListItemSelect>();
             LoadData();
+
+            PromoteClassesCommand = new RelayCommand(PromoteClasses);
+
         }
 
-        private async void LoadData()
+        public async void LoadData()
         {
             NewGroup = new GrupModel();
             EditGroup = new GrupModel();
@@ -190,8 +193,8 @@ namespace Ivanova_UchitDn.ViewModel
         }
 
 
-        private DeleteCommandG DeleteSelf;
-        public DeleteCommandG DeleteMe
+        private DeleteCommand<GrupModel> DeleteSelf;
+        public DeleteCommand<GrupModel> DeleteMe
         {
             get => DeleteSelf;
             set
@@ -235,7 +238,7 @@ namespace Ivanova_UchitDn.ViewModel
                 };
 
 
-                DeleteMe = new DeleteCommandG(DeleteData, EditDataSelf);
+                DeleteMe = new DeleteCommand<GrupModel> (DeleteData, EditDataSelf);
                 OnPropertyChanged("EditGroup");
             }
         }
@@ -448,5 +451,53 @@ namespace Ivanova_UchitDn.ViewModel
             get => SearchSelectKurSelf;
             set { SearchSelectKurSelf = value; LoadData(); OnPropertyChanged("SearchSelectKur"); }
         }
+
+
+
+
+        private async void PromoteClasses()
+        {
+            Connector con = new Connector();
+            MySqlCommand command;
+            await con.GetOpen();
+
+            try
+            {
+                // Удаляем последний класс для всех буквенных суффиксов
+                string deleteSql = "DELETE FROM `grup` WHERE `name_grup` LIKE '11%'";
+                command = new MySqlCommand(deleteSql, con.GetCon());
+                await command.ExecuteNonQueryAsync();
+
+                // Переименовываем остальные классы
+                for (int i = 10; i >= 1; i--)
+                {
+                    string oldNamePattern = $"{i}%";
+                    string newNumber = $"{i + 1}";
+                    string updateSql = "UPDATE `grup` SET `name_grup` = CONCAT(@newNumber, SUBSTRING(`name_grup`, 2)) WHERE `name_grup` LIKE @oldNamePattern";
+                    command = new MySqlCommand(updateSql, con.GetCon());
+                    command.Parameters.AddWithValue("@newNumber", newNumber);
+                    command.Parameters.AddWithValue("@oldNamePattern", oldNamePattern);
+                    await command.ExecuteNonQueryAsync();
+                }
+
+                MessageBox.Show("Классы успешно переведены", "Успех");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при переводе классов: {ex.Message}", "Ошибка");
+            }
+            finally
+            {
+                await con.GetClose();
+                LoadData(); // Обновить данные после перевода
+            }
+        }
+
+
+
+
+
+
+
     }
 }
