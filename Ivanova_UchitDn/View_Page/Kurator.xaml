@@ -13,7 +13,7 @@
 
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="220"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
@@ -93,6 +93,8 @@
                 </DataGrid>
             </Grid>
         </Grid>
+
+
 
 
         <Grid x:Name="ShowInsertData" Background="Gray"  Grid.Column="1" Grid.RowSpan="2" Visibility="Collapsed" >

@@ -3,29 +3,62 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Ivanova_UchitDn"
+        xmlns:local="clr-namespace:Ivanova_UchitDn" xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
         mc:Ignorable="d"
         Title="Журнал классного руководителя" MinHeight="600" MinWidth="1200" Height="600" Width="1000">
+   
+    
     <Grid x:Name="GridData">
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="220"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        
-        <StackPanel Grid.Column="0" Background="#AFAFFF">
-            <Label Content="Меню" Foreground="White" FontSize="22" HorizontalAlignment="Center" FontWeight="Bold" Padding="10" Margin="0 20"/>
-            <Button Click="Kur_btn" Margin="50 3" Style="{DynamicResource BtnStyle}" FontSize="15" Padding="10">Куратор</Button>
-            <Button Click="Grup_btn" Margin="50 3" Style="{DynamicResource BtnStyle}" FontSize="15" Padding="10">Группа</Button>
-            <Button Click="Stud_btn" Margin="50 3" Style="{DynamicResource BtnStyle}" FontSize="15" Padding="10">Карта студента</Button>
-            <Button Click="Rod_btn" Margin="50 3" Style="{DynamicResource BtnStyle}" FontSize="15" Padding="10">Родители</Button>
 
+        <StackPanel Grid.Column="0" Background="#623ED0">
 
+            <Label Content="Меню" Foreground="White" FontSize="22" HorizontalAlignment="Center" FontWeight="Medium"  Margin="0 50 0 0"/>
+            <Separator Margin="20" Background="#7E5FDC" Height="0.6" Width="150"/>
+
+            <Button Style="{StaticResource menuButton}" Click="Kur_btn" >
+                <StackPanel Orientation="Horizontal">
+                    <Icon:PackIconMaterial Kind="CashMultiple" Style="{StaticResource menuButtonIcon}"/>
+                    <TextBlock Text="Руководители"/>
+                </StackPanel>
+            </Button>
+
+            <Button Style="{StaticResource menuButton}" Click="Grup_btn">
+                <StackPanel Orientation="Horizontal">
+                    <Icon:PackIconMaterial Kind="CashMultiple" Style="{StaticResource menuButtonIcon}"/>
+                    <TextBlock Text="Классы"/>
+                </StackPanel>
+            </Button>
+
+            <Button Style="{StaticResource menuButton}" Click="Stud_btn">
+                <StackPanel Orientation="Horizontal">
+                    <Icon:PackIconMaterial Kind="CashMultiple" Style="{StaticResource menuButtonIcon}"/>
+                    <TextBlock Text="Ученики"/>
+                </StackPanel>
+            </Button>
+
+            <Button Style="{StaticResource menuButton}" Click="Rod_btn">
+                <StackPanel Orientation="Horizontal">
+                    <Icon:PackIconMaterial Kind="CashMultiple" Style="{StaticResource menuButtonIcon}"/>
+                    <TextBlock Text="Родители"/>
+                </StackPanel>
+            </Button>
+            
         </StackPanel>
 
-        <Button Content="Выход" Click="LoginPageOpen" Margin="50 40" Style="{DynamicResource BtnStyle}" FontSize="15" Padding="10" VerticalAlignment="Bottom"/>
+        <Button Style="{StaticResource menuButton}" VerticalAlignment="Bottom" Click="LoginPageOpen" Margin="15 0 15 50">
+            <StackPanel Orientation="Horizontal">
+                <Icon:PackIconMaterial Kind="Logout" Style="{StaticResource menuButtonIcon}"/>
+                <TextBlock Text="Выйти"/>
+            </StackPanel>
+        </Button>
         
+       
         <Frame NavigationUIVisibility="Hidden" Name="MyFrame" Grid.Row="0" Grid.ColumnSpan="3"></Frame>
     </Grid>
 </Window>
