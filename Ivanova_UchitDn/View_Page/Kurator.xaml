@@ -123,25 +123,24 @@
 
         
         
-        <Grid Grid.Column="1" Grid.Row="1"  Background="White">
-            <Grid Margin="15 5" >
+        <Grid Grid.Column="1" Grid.Row="1" >
+            <Grid Margin="15 5"  >
                 <ListView ItemsSource="{Binding Users}" SelectedItem="{Binding EditUser}" 
                           Margin="15" BorderThickness="0" 
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <WrapPanel ItemWidth="200" Height="auto"/>
+                            <WrapPanel ItemWidth="200" />
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Margin="0 0 0 30" >
+                            <StackPanel Margin="0 0 0 30"  >
 
-                                    <StackPanel Margin="0 0 0 10" >
-                                        <TextBlock Text="ФИО" Style="{StaticResource text}"/>
-                                        <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="100">
-                                            <TextBox Text="{Binding Name}" IsReadOnly="True" Height="60"/>
-                                        </ScrollViewer>
+                                <StackPanel Margin="0 0 0 10" >
+                                    <TextBlock Text="ФИО" Style="{StaticResource text}"/>
+                                    <TextBox Text="{Binding Name}" IsReadOnly="True" Height="60" Width="165"/>
+     
                                 </StackPanel>
 
                                     <StackPanel Margin="0 0 0 10" >
