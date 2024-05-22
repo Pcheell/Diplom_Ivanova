@@ -70,7 +70,7 @@
                             <StackPanel Orientation="Horizontal" Margin="5 0" >
                                 
                                 
-                                <StackPanel Orientation="Vertical" Margin="10 0" >
+                              
 
                                     <Button Style="{StaticResource addButton}" Width="180" Click="OpenInsert">
                                         <StackPanel Orientation="Horizontal">
@@ -80,30 +80,14 @@
                                         </StackPanel>
                                     </Button>
 
-                                    <Button Style="{StaticResource addButton}" Width="180" Click="OpenEdit">
-                                        <StackPanel Orientation="Horizontal">
-                                            <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Margin="0 1 8 0" Width="11" Height="11"/>
-                                            <TextBlock Text="Изменить руководителя" />
-                                        </StackPanel>
-                                    </Button>
-
-                                </StackPanel>
-
-                                <StackPanel Orientation="Vertical">
-
+                                <StackPanel Orientation="Horizontal" Margin="10 0" >
                                     <Button Style="{StaticResource addButton}" Width="180" Command="{Binding Update}">
                                         <StackPanel Orientation="Horizontal">
-                                            <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Margin="0 1 8 0" Width="11" Height="11"/>
-                                            <TextBlock Text="Обновить руководителя" />
+                                            <Icon:PackIconMaterial Kind="Reload" VerticalAlignment="Center" Margin="0 1 8 0" Width="11" Height="11"/>
+                                            <TextBlock Text="Обновить таблицу" />
                                         </StackPanel>
                                     </Button>
 
-                                    <Button Style="{StaticResource addButton}" Width="180" Click="OpenInsert" Command="{Binding DeleteMe}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Margin="0 1 8 0" Width="11" Height="11"/>
-                                            <TextBlock Text="Удалить руководителя" />
-                                        </StackPanel>
-                                    </Button>
 
                                 </StackPanel>
 
@@ -135,8 +119,10 @@
                     </ListView.ItemsPanel>
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Margin="0 0 0 30"  >
+                            <StackPanel >
 
+                              
+                                
                                 <StackPanel Margin="0 0 0 10" >
                                     <TextBlock Text="ФИО" Style="{StaticResource text}"/>
                                     <TextBox Text="{Binding Name}" IsReadOnly="True" Height="60" Width="165"/>
@@ -153,7 +139,20 @@
                                         <TextBox Text="{Binding Parol}" IsReadOnly="True" />
                                     </StackPanel>
 
-                                
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 20 0 0">
+
+                                    <Button Style="{StaticResource gridEditButton}" Click="OpenEdit" >
+                                        <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
+                                    </Button>
+                                    
+                                    <Button Margin="5 0 0 0" Style="{StaticResource gridRemoveButton}" Command="{Binding Delete}">
+                                        <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
+                                    </Button>
+                                    
+                              
+
+
+                                </StackPanel>
 
 
                             </StackPanel>
@@ -183,7 +182,7 @@
                 <Button Command="{Binding Insert}" Background="#AFAFFF" Foreground="Black" FontWeight="SemiBold" Margin="20" Padding="10">Добавить</Button>
             </StackPanel>
         </Grid>
-
+        
         <Grid x:Name="ShowEditData" Background="Gray" Grid.Column="1" Grid.RowSpan="2" Visibility="Collapsed">
             <StackPanel Margin="15" Background="White" MinWidth="300" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Image MouseDown="CloseEdit" VerticalAlignment="Top" HorizontalAlignment="Right" Width="30" Height="30" Source="/Images/icon.png">
@@ -203,6 +202,7 @@
                 <Button Command="{Binding Edit}" CommandParameter="{Binding ElementName=ShowEditData}" Content="Изменить" Background="#AFAFFF" Foreground="Black" FontWeight="SemiBold" Margin="20" Padding="10"/>
             </StackPanel>
         </Grid>
+
 
     </Grid>
 </Page>

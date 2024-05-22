@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Ivanova_UchitDn.Core;
+using System.Collections.Generic;
 using System.ComponentModel;
 using static Ivanova_UchitDn.Core.CoreApp;
 
@@ -113,5 +114,11 @@ namespace Ivanova_UchitDn.Model
             }
         }
 
+        private DeleteCommand DeleteSelf;
+        public DeleteCommand Delete
+        {
+            get => DeleteSelf;
+            set => DeleteSelf = value;
+        }
     }
 }

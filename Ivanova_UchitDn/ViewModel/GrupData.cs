@@ -193,16 +193,6 @@ namespace Ivanova_UchitDn.ViewModel
         }
 
 
-        private DeleteCommand<GrupModel> DeleteSelf;
-        public DeleteCommand<GrupModel> DeleteMe
-        {
-            get => DeleteSelf;
-            set
-            {
-                DeleteSelf = value;
-                OnPropertyChanged("DeleteMe");
-            }
-        }
 
 
         private UpdateData UpdateSelf;
@@ -238,7 +228,6 @@ namespace Ivanova_UchitDn.ViewModel
                 };
 
 
-                DeleteMe = new DeleteCommand<GrupModel> (DeleteData, EditDataSelf);
                 OnPropertyChanged("EditGroup");
             }
         }

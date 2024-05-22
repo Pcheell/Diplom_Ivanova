@@ -1,4 +1,5 @@
 ﻿
+using Ivanova_UchitDn.Core;
 using System.ComponentModel;
 
 namespace Ivanova_UchitDn.Model
@@ -65,6 +66,13 @@ namespace Ivanova_UchitDn.Model
                 ParolSelf = value;
                 OnPropertyChanged("Parol");
             }
+        }
+
+        private DeleteCommand DeleteSelf;
+        public DeleteCommand Delete
+        {
+            get => DeleteSelf;
+            set => DeleteSelf = value;
         }
     }
 }

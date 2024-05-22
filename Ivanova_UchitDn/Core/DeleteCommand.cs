@@ -3,18 +3,16 @@ using System.Windows.Input;
 
 namespace Ivanova_UchitDn.Core
 {
-    public class DeleteCommand<T> : ICommand
-    where T : class
+    public class DeleteCommand : ICommand
     {
-        private Action<T> deleteData;
-        private T item;
+        public Action<int> deleteData;
+        public int v;
 
-        public DeleteCommand(Action<T> deleteData, T item)
+        public DeleteCommand(Action<int> deleteData, int v)
         {
             this.deleteData = deleteData;
-            this.item = item;
+            this.v = v;
         }
-
         public event EventHandler CanExecuteChanged;
 
         public bool CanExecute(object parameter)
@@ -24,7 +22,7 @@ namespace Ivanova_UchitDn.Core
 
         public void Execute(object parameter)
         {
-            deleteData(item);
+            deleteData(v);
         }
     }
 }

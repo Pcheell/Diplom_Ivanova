@@ -206,17 +206,6 @@ namespace Ivanova_UchitDn.ViewModel
 
 
 
-        private DeleteCommand<StudModel> DeleteSelf;
-        public DeleteCommand<StudModel> DeleteMe
-        {
-            get => DeleteSelf;
-            set
-            {
-                DeleteSelf = value;
-                OnPropertyChanged("DeleteMe");
-            }
-        }
-
 
         private UpdateData UpdateSelf;
         public UpdateData Update
@@ -255,7 +244,6 @@ namespace Ivanova_UchitDn.ViewModel
                     Tel = value.Tel
                 };
 
-                DeleteMe = new DeleteCommand<StudModel>(DeleteData, EditDataSelf);
                 OnPropertyChanged("EditStud");
             }
         }

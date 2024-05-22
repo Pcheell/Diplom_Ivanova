@@ -1,18 +1,9 @@
-﻿using Ivanova_UchitDn.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Ivanova_UchitDn.Model;
+using Ivanova_UchitDn.ViewModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
 
 namespace Ivanova_UchitDn.View_Page
 {
@@ -25,6 +16,7 @@ namespace Ivanova_UchitDn.View_Page
         {
             InitializeComponent();
             GridData.DataContext = new UserData();
+           
         }
 
         private void Search_kur_Changed(object sender, TextChangedEventArgs e)
@@ -40,8 +32,27 @@ namespace Ivanova_UchitDn.View_Page
 
         private void OpenEdit(object sender, RoutedEventArgs e)
         {
-            ShowEditData.Visibility = Visibility.Visible;
+            Button btn = sender as Button;
+            if (btn != null)
+            {
+                User selectedUser = btn.DataContext as User;
+                if (selectedUser != null)
+                {
+                    // Получаем DataContext в качестве типа UserData
+                    UserData userData = GridData.DataContext as UserData;
+                    if (userData != null)
+                    {
+                        // Передаем выбранного пользователя в свойство EditUser
+                        userData.EditUser = selectedUser;
+                    }
+                    // Показываем окно редактирования
+                    ShowEditData.Visibility = Visibility.Visible;
+                }
+            }
         }
+
+
+      
 
         private void CloseInsert(object sender, MouseButtonEventArgs e)
         {

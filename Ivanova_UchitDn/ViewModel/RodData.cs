@@ -106,8 +106,9 @@ namespace Ivanova_UchitDn.ViewModel
                 await Task.Delay(100);
                 ListItemSelectStudSelf.Add(new ListItemSelectS()
                 {
-                    IDStud = (int)reader["id_stud"],
-                    FIOStud = string.Format("{0}", reader["FIO_stud"])
+                    IDStud = (int)reader[0],
+                    FIOStud = string.Format("{0}", reader[1]),
+
                 });
 
                 OnPropertyChanged("ListItemSelectStud");
@@ -200,17 +201,7 @@ namespace Ivanova_UchitDn.ViewModel
             sql += string.IsNullOrEmpty(sql) ? value : " and " + value;
         }
 
-        private DeleteCommand<RodModel> DeleteSelf;
-        public DeleteCommand<RodModel> DeleteMe
-        {
-            get => DeleteSelf;
-            set
-            {
-                DeleteSelf = value;
-                OnPropertyChanged("DeleteMe");
-            }
-        }
-
+   
 
         private UpdateData UpdateSelf;
         public UpdateData Update
@@ -248,7 +239,6 @@ namespace Ivanova_UchitDn.ViewModel
                     Rabota = value.Rabota
                 };
 
-                DeleteMe = new DeleteCommand<RodModel>(DeleteData, EditDataSelf);
                 OnPropertyChanged("EditRod");
             }
         }
@@ -359,7 +349,7 @@ namespace Ivanova_UchitDn.ViewModel
         }
 
       
-        private async void DeleteData(RodModel a)
+        private async void DeleteData(int a)
         {
             if (MessageBox.Show("Удалить запись?", "Удаление", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
                 return;
@@ -371,9 +361,7 @@ namespace Ivanova_UchitDn.ViewModel
             MySqlCommand
                 command = new MySqlCommand(sql, con.GetCon());
 
-            Debug.WriteLine(a.IDRod);
-
-            command.Parameters.Add(new MySqlParameter("@i", a.IDRod));
+            command.Parameters.Add(new MySqlParameter("@i", a));
 
             await con.GetOpen();
 

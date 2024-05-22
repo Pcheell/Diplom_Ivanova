@@ -295,9 +295,10 @@
 
 
         <Style x:Key="gridEditButton" TargetType="Button">
-            <Setter Property="Background" Value="#512DA8" />
-            <Setter Property="BorderBrush" Value="#4A148C" />
+            <Setter Property="Background" Value="#B0B9C6" />
+            <Setter Property="BorderBrush" Value="#BCBBBB" />
             <Setter Property="Foreground" Value="#ffffff" />
+            <Setter Property="Width" Value="25" />
             <Setter Property="FocusVisualStyle" Value="{x:Null}" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Template" >
@@ -318,8 +319,8 @@
 
 
         <Style x:Key="gridRemoveButton" TargetType="Button" BasedOn="{StaticResource gridEditButton}">
-            <Setter Property="Background" Value="#D32F2F" />
-            <Setter Property="BorderBrush" Value="#B71C1C" />
+            <Setter Property="Background" Value="#C66C6C" />
+            <Setter Property="BorderBrush" Value="#BC4E4E" />
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#F44336" />

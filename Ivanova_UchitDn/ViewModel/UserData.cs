@@ -1,6 +1,7 @@
 ﻿using Ivanova_UchitDn.Core;
 using Ivanova_UchitDn.Model;
 using MySqlConnector;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -25,7 +26,6 @@ namespace Ivanova_UchitDn.ViewModel
         }
 
         private ObservableCollection<User> UsersSelf;
-
         public IList<User> Users
         {
             get => UsersSelf;
@@ -85,10 +85,12 @@ namespace Ivanova_UchitDn.ViewModel
                 await Task.Delay(200);
                 UsersSelf.Add(new User()
                 {
-                    ID = (int)reader["id_kurator"],
-                    Name = (string)reader["FIO_kurator"],
-                    Login = (string)reader["login"],
-                    Parol = (string)reader["parol"]
+                    ID = (int)reader[0],
+                    Name = (string)reader[1],
+                    Login = (string)reader[2],
+                    Parol = (string)reader[3],
+                    Delete = new DeleteCommand(DeleteData, (int)reader[0])
+
                 });
 
                 OnPropertyChanged("Users");
@@ -127,17 +129,6 @@ namespace Ivanova_UchitDn.ViewModel
         }
 
 
-        private DeleteCommand<User> DeleteSelf;
-        public DeleteCommand<User> DeleteMe
-        {
-            get => DeleteSelf;
-            set
-            {
-                DeleteSelf = value;
-                OnPropertyChanged("DeleteMe");
-            }
-        }
-
 
         private UpdateData UpdateSelf;
         public UpdateData Update
@@ -173,7 +164,6 @@ namespace Ivanova_UchitDn.ViewModel
                 };
 
 
-                DeleteMe = new DeleteCommand<User>(DeleteData, EditUserSelf);
                 OnPropertyChanged("EditUser");
             }
         }
@@ -262,7 +252,7 @@ namespace Ivanova_UchitDn.ViewModel
 
 
 
-        private async void DeleteData(User user)
+        public async void DeleteData(int a)
         {
             if (MessageBox.Show("Удалить запись?", "Удаление", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
                 return;
@@ -274,9 +264,8 @@ namespace Ivanova_UchitDn.ViewModel
             MySqlCommand
                 command = new MySqlCommand(sql, con.GetCon());
 
-            Debug.WriteLine(user.ID);
-
-            command.Parameters.Add(new MySqlParameter("@i", user.ID));
+           
+            command.Parameters.Add(new MySqlParameter("@i", a));
 
             await con.GetOpen();
 
@@ -339,7 +328,6 @@ namespace Ivanova_UchitDn.ViewModel
             LoadData();
             MessageBox.Show("Запись изменена", "Успех");
         }
-
 
 
         public SearchCommand SearchSelf { get; set; }
