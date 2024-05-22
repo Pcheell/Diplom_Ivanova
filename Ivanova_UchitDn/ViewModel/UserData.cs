@@ -14,7 +14,6 @@ namespace Ivanova_UchitDn.ViewModel
 {
     public class UserData : INotifyPropertyChanged
     {
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged(string property)
@@ -25,13 +24,16 @@ namespace Ivanova_UchitDn.ViewModel
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         }
 
+        private ObservableCollection<User> UsersSelf;
 
-
-        private IList<User> UsersSelf;
         public IList<User> Users
         {
             get => UsersSelf;
-            set => UsersSelf = value;
+            set
+            {
+                UsersSelf = value as ObservableCollection<User>;
+                OnPropertyChanged("Users");
+            }
         }
 
         private User NewUserSelf;
@@ -45,8 +47,6 @@ namespace Ivanova_UchitDn.ViewModel
             }
         }
 
-
-
         public UserData()
         {
             LoadData();
@@ -56,18 +56,14 @@ namespace Ivanova_UchitDn.ViewModel
         {
             NewUser = new User();
             EditUser = new User();
-            _ = await UserDataSelect();   
+            _ = await UserDataSelect();
         }
 
         private async Task<bool> UserDataSelect()
         {
-            Connector
-                 con = new Connector();
-            string
-                sql = string.Format("select * from `kurator` {0} limit {1}", SearchTypes(), 999);
-
-            MySqlCommand
-                command = new MySqlCommand(sql, con.GetCon());
+            Connector con = new Connector();
+            string sql = string.Format("select * from `kurator` {0} limit {1}", SearchTypes(), 999);
+            MySqlCommand command = new MySqlCommand(sql, con.GetCon());
 
             Debug.WriteLine(sql);
             command.Parameters.Add(new MySqlParameter("@text", string.Format("%{0}%", SearchText)));
@@ -75,8 +71,7 @@ namespace Ivanova_UchitDn.ViewModel
             await con.GetOpen();
             UsersSelf = new ObservableCollection<User>();
 
-            MySqlDataReader
-                reader = await command.ExecuteReaderAsync();
+            MySqlDataReader reader = await command.ExecuteReaderAsync();
 
             if (!reader.HasRows)
             {
@@ -100,9 +95,11 @@ namespace Ivanova_UchitDn.ViewModel
             }
 
             await con.GetClose();
+            OnPropertyChanged("Users");
             return true;
         }
 
+     
 
         private string SearchTypes()
         {

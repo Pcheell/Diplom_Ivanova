@@ -135,9 +135,6 @@
     <Compile Include="View_Page\StudPage.xaml.cs">
       <DependentUpon>StudPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View_Page\TestDesign.xaml.cs">
-      <DependentUpon>TestDesign.xaml</DependentUpon>
-    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -168,10 +165,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View_Page\StudPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View_Page\TestDesign.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

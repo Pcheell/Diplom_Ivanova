@@ -23,28 +23,28 @@
 
             <Button Style="{StaticResource menuButton}" Click="Kur_btn" >
                 <StackPanel Orientation="Horizontal">
-                    <Icon:PackIconMaterial Kind="CashMultiple" Style="{StaticResource menuButtonIcon}"/>
+                    <Icon:PackIconMaterial Kind="AccountMultipleOutline" Style="{StaticResource menuButtonIcon}"/>
                     <TextBlock Text="Руководители"/>
                 </StackPanel>
             </Button>
 
             <Button Style="{StaticResource menuButton}" Click="Grup_btn">
                 <StackPanel Orientation="Horizontal">
-                    <Icon:PackIconMaterial Kind="CashMultiple" Style="{StaticResource menuButtonIcon}"/>
+                    <Icon:PackIconMaterial Kind="AccountMultipleOutline" Style="{StaticResource menuButtonIcon}"/>
                     <TextBlock Text="Классы"/>
                 </StackPanel>
             </Button>
 
             <Button Style="{StaticResource menuButton}" Click="Stud_btn">
                 <StackPanel Orientation="Horizontal">
-                    <Icon:PackIconMaterial Kind="CashMultiple" Style="{StaticResource menuButtonIcon}"/>
+                    <Icon:PackIconMaterial Kind="AccountMultipleOutline" Style="{StaticResource menuButtonIcon}"/>
                     <TextBlock Text="Ученики"/>
                 </StackPanel>
             </Button>
 
             <Button Style="{StaticResource menuButton}" Click="Rod_btn">
                 <StackPanel Orientation="Horizontal">
-                    <Icon:PackIconMaterial Kind="CashMultiple" Style="{StaticResource menuButtonIcon}"/>
+                    <Icon:PackIconMaterial Kind="AccountMultipleOutline" Style="{StaticResource menuButtonIcon}"/>
                     <TextBlock Text="Родители"/>
                 </StackPanel>
             </Button>

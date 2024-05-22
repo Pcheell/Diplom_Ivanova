@@ -36,10 +36,7 @@ namespace Ivanova_UchitDn
             MyFrame.NavigationService.Navigate(new RoditeliPage());
         }
 
-        private void Test_btn(object sender, RoutedEventArgs e)
-        {
-            MyFrame.NavigationService.Navigate(new TestDesign());
-        }
+       
         private void LoginPageOpen(object sender, RoutedEventArgs e)
         {
             if (this.Owner is VhodPage v)
