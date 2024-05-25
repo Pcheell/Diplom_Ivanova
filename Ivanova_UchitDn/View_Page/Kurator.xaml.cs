@@ -19,12 +19,7 @@ namespace Ivanova_UchitDn.View_Page
            
         }
 
-        private void Search_kur_Changed(object sender, TextChangedEventArgs e)
-        {
-
-        }
-
-        private void CloseEdit(object sender, MouseButtonEventArgs e)
+        private void CloseEdit(object sender, RoutedEventArgs e)
         {
             ShowEditData.Visibility = Visibility.Collapsed;
 
@@ -52,9 +47,7 @@ namespace Ivanova_UchitDn.View_Page
         }
 
 
-      
-
-        private void CloseInsert(object sender, MouseButtonEventArgs e)
+        private void CloseInsert(object sender, RoutedEventArgs e)
         {
             ShowInsertData.Visibility = Visibility.Collapsed;
         }
