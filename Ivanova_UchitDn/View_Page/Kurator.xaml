@@ -38,20 +38,21 @@
                     </Grid.RowDefinitions>
 
                     <StackPanel Grid.ColumnSpan="2">
-              
+                       
                         <Grid Width="300" HorizontalAlignment="Left" Grid.ColumnSpan="2">
                             <TextBlock Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
                                             Margin="20 0" VerticalAlignment="Center" Foreground="#B0B9C6" 
                                        IsHitTestVisible="False"/>
 
-                            <TextBox Name="textBoxSearch" Style="{StaticResource searchTextbox}" />
+                            <TextBox Name="textBoxSearch" Style="{StaticResource searchTextbox}"
+                                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" TextChanged="textBoxSearch_TextChanged"/>
 
                             <Icon:PackIconMaterial Kind="Magnify" Width="15" Height="15" 
                             VerticalAlignment="Center" Margin="0 0 15 0" 
                             Foreground="#B0B9C6" HorizontalAlignment="Right" />
                         </Grid>
-                        
-                        <WrapPanel Margin="10">
+
+                        <WrapPanel >
                             <CheckBox Content="ФИО" Margin="0,0,15,0" IsChecked="{Binding SearchName, UpdateSourceTrigger=PropertyChanged}"/>
                             <CheckBox Content="Логин" Margin="0,0,15,0" IsChecked="{Binding SearchLog, UpdateSourceTrigger=PropertyChanged}"/>
                             <CheckBox Content="Пароль" Margin="0,0,15,0" IsChecked="{Binding SearchParol, UpdateSourceTrigger=PropertyChanged}"/>
@@ -91,22 +92,23 @@
                                
                             </StackPanel>
                         </WrapPanel>
+                        
                     </StackPanel>
 
                 </Grid>
-                <TextBlock Text="Классные руководители" Padding="30 0" FontSize="20" 
-                           FontWeight="SemiBold" Foreground="#121518"/>
+                
             </StackPanel>
 
-            
+            <TextBlock Text="Классные руководители"  FontSize="20" 
+FontWeight="SemiBold" Foreground="#121518" Margin="35 0"/>
         </StackPanel>
 
         
         
         <Grid Grid.Column="1" Grid.Row="1" >
-            <Grid Margin="15 5"  >
+            <Grid Margin="15 0"  >
                 <ListView ItemsSource="{Binding Users}" SelectedItem="{Binding EditUser}" 
-                          Margin="15" BorderThickness="0" 
+                          Margin="15 5" BorderThickness="0" 
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -159,13 +161,14 @@
             </Grid>
         </Grid>
 
-        
-        
-        <Grid x:Name="ShowInsertData"  Grid.Column="1" Grid.RowSpan="2" Visibility="Collapsed" >
+
+
+        <Grid x:Name="ShowInsertData"  Grid.Column="1" Grid.RowSpan="2" 
+              Visibility="Collapsed" Background="Transparent" MouseDown="Window_MouseDown">
             <Border Background="White" BorderBrush="#9575CD" BorderThickness="1" 
                     CornerRadius="7" Margin="15" Width="320" HorizontalAlignment="Center"
-                    VerticalAlignment="Center" Padding="15">
-            <StackPanel >
+                    VerticalAlignment="Center" Padding="15" >
+                <StackPanel >
                 
                 <Button Style="{StaticResource gridEditButton}" Click="CloseInsert" HorizontalAlignment="Right">
                     <Icon:PackIconMaterial Kind="Close" Style="{StaticResource gridButtonIcon}" />
@@ -205,9 +208,10 @@
         </Grid>
 
 
-        <Grid x:Name="ShowEditData"  Grid.Column="1" Grid.RowSpan="2" Visibility="Collapsed" >
+        <Grid x:Name="ShowEditData"  Grid.Column="1" Grid.RowSpan="2" 
+              Visibility="Collapsed" Background="Transparent" MouseDown="Window_MouseDown">
             <Border Background="White" BorderBrush="#9575CD" BorderThickness="1" 
-            CornerRadius="7" Margin="15" Width="320" HorizontalAlignment="Center"
+            CornerRadius="7" Margin="15" Width="320" HorizontalAlignment="Center" 
             VerticalAlignment="Center" Padding="15">
                 <StackPanel >
 

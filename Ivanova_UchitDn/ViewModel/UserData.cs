@@ -1,7 +1,6 @@
 ﻿using Ivanova_UchitDn.Core;
 using Ivanova_UchitDn.Model;
 using MySqlConnector;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -15,6 +14,7 @@ namespace Ivanova_UchitDn.ViewModel
 {
     public class UserData : INotifyPropertyChanged
     {
+        private bool isUpdating = false;
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged(string property)
@@ -54,9 +54,18 @@ namespace Ivanova_UchitDn.ViewModel
 
         private async void LoadData()
         {
+            if (isUpdating)
+            {
+                // Если уже идет процесс обновления данных, прерываем выполнение метода
+                return;
+            }
+            isUpdating = true;
+
+
             NewUser = new User();
             EditUser = new User();
-            _ = await UserDataSelect();
+            await UserDataSelect();
+            isUpdating = false;
         }
 
         private async Task<bool> UserDataSelect()
@@ -82,7 +91,7 @@ namespace Ivanova_UchitDn.ViewModel
 
             while (await reader.ReadAsync())
             {
-                await Task.Delay(200);
+                await Task.Delay(1);
                 UsersSelf.Add(new User()
                 {
                     ID = (int)reader[0],
@@ -102,18 +111,30 @@ namespace Ivanova_UchitDn.ViewModel
         }
 
      
-
         private string SearchTypes()
         {
-            string
-                sql = "";
+            string sql = "";
 
-            if (SearchName)
-                SearchTypesAnd(ref sql, "`FIO_kurator` like @text");
-            if (SearchLog)
-                SearchTypesAnd(ref sql, "`login` like @text");
-            if (SearchParol)
-                SearchTypesAnd(ref sql, "`parol` like @text");
+            // Если ни один чекбокс не выбран, добавляем условия поиска для всех полей
+            if (!SearchName && !SearchLog && !SearchParol)
+            {
+                sql = "`FIO_kurator` LIKE @text OR `login` LIKE @text OR `parol` LIKE @text";
+            }
+            else
+            {
+                List<string> conditions = new List<string>();
+
+                // Добавляем условия поиска в зависимости от выбранных чекбоксов
+                if (SearchName)
+                    conditions.Add("`FIO_kurator` LIKE @text");
+                if (SearchLog)
+                    conditions.Add("`login` LIKE @text");
+                if (SearchParol)
+                    conditions.Add("`parol` LIKE @text");
+
+                // Соединяем условия с помощью оператора OR
+                sql = string.Join(" OR ", conditions);
+            }
 
             return SearchTypesSet(sql);
         }
@@ -350,6 +371,7 @@ namespace Ivanova_UchitDn.ViewModel
             {
                 SearchNameSelf = value;
                 OnPropertyChanged("SearchName");
+                LoadData();
             }
         }
 
@@ -361,6 +383,7 @@ namespace Ivanova_UchitDn.ViewModel
             {
                 SearchLogSelf = value;
                 OnPropertyChanged("SearchLog");
+                LoadData();
             }
         }
 
@@ -372,6 +395,7 @@ namespace Ivanova_UchitDn.ViewModel
             {
                 SearchParolSelf = value;
                 OnPropertyChanged("SearchParol");
+                LoadData();
             }
         }
 
@@ -383,6 +407,7 @@ namespace Ivanova_UchitDn.ViewModel
             {
                 SearchTextSelf = value;
                 OnPropertyChanged("SearchText");
+                LoadData();
             }
         }
 

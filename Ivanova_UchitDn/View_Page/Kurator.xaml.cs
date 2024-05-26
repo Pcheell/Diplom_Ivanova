@@ -18,6 +18,16 @@ namespace Ivanova_UchitDn.View_Page
             GridData.DataContext = new UserData();
            
         }
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            // Проверяем, был ли клик вне границ содержимого окна добавления или редактирования
+            if (e.Source == sender)
+            {
+                // Закрываем окно добавления или редактирования
+                ShowInsertData.Visibility = Visibility.Collapsed;
+                ShowEditData.Visibility = Visibility.Collapsed;
+            }
+        }
 
         private void CloseEdit(object sender, RoutedEventArgs e)
         {

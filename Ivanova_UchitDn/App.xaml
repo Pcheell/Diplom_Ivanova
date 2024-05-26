@@ -46,6 +46,9 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+
+            <EventSetter Event="KeyDown" Handler="TextBox_KeyDown"/>
+            
         </Style>
 
         <Style TargetType="ListViewItem">
@@ -96,6 +99,8 @@
             <Setter Property="Width" Value="250" />
             <Setter Property="FontSize" Value="13" />
             <Setter Property="HorizontalAlignment" Value="Center" />
+            <EventSetter Event="KeyDown" Handler="Button_KeyDown"/>
+
             <Setter Property="Template" >
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -105,12 +110,14 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#7B5CD6" />
                     <Setter Property="Foreground" Value="#ffffff" />
                 </Trigger>
             </Style.Triggers>
+
         </Style>
 
 
