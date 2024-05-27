@@ -1,4 +1,5 @@
 ﻿
+using Ivanova_UchitDn.Core;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -123,6 +124,13 @@ namespace Ivanova_UchitDn.Model
                 ListItemSelectGrupSelf = value;
                 OnPropertyChanged("ListItemSelectGrup");
             }
+        }
+
+        private DeleteCommand DeleteSelf;
+        public DeleteCommand Delete
+        {
+            get => DeleteSelf;
+            set => DeleteSelf = value;
         }
     }
 }

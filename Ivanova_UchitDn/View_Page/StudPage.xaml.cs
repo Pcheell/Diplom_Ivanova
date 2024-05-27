@@ -1,18 +1,8 @@
-﻿using Ivanova_UchitDn.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Ivanova_UchitDn.Model;
+using Ivanova_UchitDn.ViewModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Ivanova_UchitDn.View_Page
 {
@@ -26,33 +16,48 @@ namespace Ivanova_UchitDn.View_Page
             InitializeComponent();
             GridData.DataContext = new StudData();
         }
-
-        private void AddGrup(object sender, RoutedEventArgs e)
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            ShowInsertData.Visibility = Visibility.Visible;
+            // Проверяем, был ли клик вне границ содержимого окна добавления или редактирования
+            if (e.Source == sender)
+            {
+                // Закрываем окно добавления или редактирования
+                ShowInsertData.Visibility = Visibility.Collapsed;
+                ShowEditData.Visibility = Visibility.Collapsed;
+            }
         }
 
-        private void CloseEdit(object sender, MouseButtonEventArgs e)
+        private void OpenEdit(object sender, RoutedEventArgs e)
+        {
+            Button btn = sender as Button;
+            if (btn != null)
+            {
+                StudModel selectedUser = btn.DataContext as StudModel;
+                if (selectedUser != null)
+                {
+                    StudData userData = GridData.DataContext as StudData;
+                    if (userData != null)
+                    {
+                        userData.EditStud = selectedUser;
+                    }
+                    ShowEditData.Visibility = Visibility.Visible;
+                }
+            }
+        }
+
+        private void CloseEdit(object sender, RoutedEventArgs e)
         {
             ShowEditData.Visibility = Visibility.Collapsed;
 
         }
-
-        private void CloseInsert(object sender, MouseButtonEventArgs e)
+        private void CloseInsert(object sender, RoutedEventArgs e)
         {
             ShowInsertData.Visibility = Visibility.Collapsed;
-
         }
 
         private void OpenInsert(object sender, RoutedEventArgs e)
         {
             ShowInsertData.Visibility = Visibility.Visible;
-        }
-
-        private void OpenEdit(object sender, RoutedEventArgs e)
-        {
-            ShowEditData.Visibility = Visibility.Visible;
-
         }
     }
 }

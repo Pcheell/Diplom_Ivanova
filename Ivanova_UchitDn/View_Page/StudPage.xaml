@@ -4,6 +4,8 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Ivanova_UchitDn.View_Page"
+      xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="1200"
      Title="Student">
@@ -12,7 +14,7 @@
 
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="220"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         
@@ -20,7 +22,6 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
 
 
         <StackPanel Grid.Column="1" Grid.Row="0"  >
@@ -32,196 +33,302 @@
                         <ColumnDefinition Width="67*"/>
                         <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
-                    
+
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
-                    
-                    <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Padding="10" Grid.ColumnSpan="2" />
-                    <Button Content="Найти" Grid.Column="2" MinWidth="200" Padding="10" Margin="5,0,0,0" Style="{DynamicResource BtnStyle}" Command="{Binding Search}"/>
-                    <StackPanel Grid.Row="1" Background="#DFDFFF" Grid.ColumnSpan="3" Margin="0,5,0,0">
+
+                    <StackPanel Grid.ColumnSpan="2">
+
+                        <Grid Width="300" HorizontalAlignment="Left" Grid.ColumnSpan="2">
+                            <TextBlock Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
+                                          Margin="20 0" VerticalAlignment="Center" Foreground="#B0B9C6" 
+                                     IsHitTestVisible="False"/>
+
+                            <TextBox Name="textBoxSearch" Style="{StaticResource searchTextbox}"
+                                   Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Icon:PackIconMaterial Kind="Magnify" Width="15" Height="15" 
+                          VerticalAlignment="Center" Margin="0 0 15 0" 
+                          Foreground="#B0B9C6" HorizontalAlignment="Right" />
+                        </Grid>
+
                         <WrapPanel Margin="10">
                             <CheckBox Content="ФИО" Margin="0,0,15,0" IsChecked="{Binding SearchName, UpdateSourceTrigger=PropertyChanged}"/>
                             <CheckBox Content="Адрес" Margin="0,0,15,0" IsChecked="{Binding SearchAdr, UpdateSourceTrigger=PropertyChanged}"/>
                             <CheckBox Content="Дата рождения" Margin="0,0,15,0" IsChecked="{Binding SearchDate, UpdateSourceTrigger=PropertyChanged}"/>
                             <CheckBox Content="Телефон" Margin="0,0,15,0" IsChecked="{Binding SearchTel, UpdateSourceTrigger=PropertyChanged}"/>
+
+
                         </WrapPanel>
+
                     </StackPanel>
 
 
-                    <StackPanel Grid.Row="2" Background="#AFAFFF" Grid.ColumnSpan="3" Margin="0,5,0,0">
-                        <WrapPanel Margin="10,5,10,10">
-                            <StackPanel Background="#eee" Margin="0,5,5,0">
-                                <StackPanel Margin="5">
-                                    <Label Content="Дата рождения" Grid.ColumnSpan="2" FontWeight="Bold" Padding="5,10" Background="#DFDFFF" Margin="0,0,0,2"/>
-                                    <StackPanel Orientation="Horizontal">
-                                        <StackPanel Orientation="Horizontal" Grid.Row="1">
-                                            <Label Content="от: " Margin="0,2"/>
-                                            <DatePicker Grid.Row="1" Grid.Column="1" Margin="0,2" SelectedDate="{Binding SearchDataStart}"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal" Grid.Row="1">
-                                            <Label Content="до: " Margin="0,2"/>
-                                            <DatePicker Grid.Row="1" Grid.Column="1" Margin="0,2" SelectedDate="{Binding SearchDataEnd}"/>
-                                        </StackPanel>
+
+                    <StackPanel Grid.Row="2" Grid.ColumnSpan="3">
+                        <WrapPanel Orientation="Vertical" Margin="5 10">
+
+
+                            <StackPanel Orientation="Horizontal">
+
+
+                                <StackPanel>
+                                    <TextBlock Text="Дата рождения:" />
+
+                                    <StackPanel Orientation="Horizontal" Margin="0 5">
+                                        <TextBlock Text="от:" Margin="0 5 10 0"/>
+                                        <DatePicker SelectedDate="{Binding SearchDataStart}" Height="30" Width="150" />
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal" >
+                                        <TextBlock Text="до:" Margin="0 5 10 0"/>
+                                        <DatePicker SelectedDate="{Binding SearchDataEnd}" Height="30" Width="150"/>
                                     </StackPanel>
                                 </StackPanel>
-                            </StackPanel>
 
-                            <StackPanel Background="#eee" Margin="0,5,5,0" MinWidth="200">
-                                <StackPanel Margin="5">
-                                    <Label Content="Класс" Grid.ColumnSpan="2" FontWeight="Bold" Padding="5,10" Background="#DFDFFF" Margin="0,0,0,2"/>
-                                    <ComboBox Background="Honeydew" ItemsSource="{Binding ListItemSelectGrup}" 
-                                          IsEnabled="True" SelectedValue="{Binding SearchSelectGroup}" 
-                                          SelectedValuePath="IDGrup" 
-                                          DisplayMemberPath="NameGrup" Margin="0 5" Padding="5" />
-                                </StackPanel>
-                            </StackPanel>
+                                <StackPanel Margin="20 0 0 0">
+                                    <TextBlock Text="Класс" Margin="0 3"/>
 
-                            <StackPanel MinWidth="200" Orientation="Horizontal" Margin="5 0">
-                                <StackPanel Orientation="Vertical">
-                                    <Button Style="{DynamicResource BtnStyle}" Content="Добавить" Click="OpenInsert" MinWidth="150" Padding="10" Margin="0 5"/>
-                                    <Button Style="{DynamicResource BtnStyle}" Content="Редактировать" Click="OpenEdit" Padding="10" />
+                                    <ComboBox ItemsSource="{Binding ListItemSelectGrup}" 
+IsEnabled="True" SelectedItem="{Binding SearchSelectGroup}" 
+SelectedValuePath="IDGrup" Width="150" Height="30" Background="White" HorizontalAlignment="Left"
+DisplayMemberPath="NameGrup" x:Name="KuratorComboBox"/>
                                 </StackPanel>
 
-                                <StackPanel Orientation="Vertical">
-                                    <Button Style="{DynamicResource BtnStyle}" Content="Обновить" Padding="10" MinWidth="150" Margin="5 5 5 0" Command="{Binding Update}"/>
-                                    <Button Style="{DynamicResource BtnStyle}" Content="Удалить" Padding="10" Margin="5" Command="{Binding DeleteMe}"/>
-                                </StackPanel>
+
+
                             </StackPanel>
 
+
+
+
+                            <StackPanel Orientation="Horizontal">
+                                <Button Style="{StaticResource addButton}" Width="180" Click="OpenInsert">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" 
+                                                                 Margin="0 1 8 0" Width="11" Height="11"/>
+                                        <TextBlock Text="Добавить ученика" />
+                                    </StackPanel>
+                                </Button>
+
+                                <StackPanel Margin="10 0" >
+                                    <Button Style="{StaticResource addButton}" Width="180" Command="{Binding Update}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Icon:PackIconMaterial Kind="Reload" VerticalAlignment="Center" Margin="0 1 8 0" Width="11" Height="11"/>
+                                            <TextBlock Text="Обновить таблицу" />
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+
+                            </StackPanel>
                         </WrapPanel>
-                    </StackPanel>
 
+                    </StackPanel>
                 </Grid>
             </StackPanel>
+            <TextBlock Text="Ученики" FontSize="20" FontWeight="SemiBold" Foreground="#121518" Margin="35 0"/>
         </StackPanel>
 
 
+        <Grid Grid.Column="1" Grid.Row="1" >
+            <Grid Margin="15 0"  >
+                <ListView ItemsSource="{Binding Users}" SelectedItem="{Binding EditStud}" 
+                 Margin="15 5" BorderThickness="0" 
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel ItemWidth="200" />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel >
+                                
+                                <StackPanel Margin="0 0 0 10" >
+                                    <TextBlock Text="ФИО ученика" Style="{StaticResource text}"/>
+                                    <TextBox Text="{Binding FIOStud}" IsReadOnly="True" Height="60" Width="165"/>
+                                </StackPanel>
 
-        <Grid Grid.Column="1" Grid.Row="1" Margin="15,0,15,5" >
-            <Grid Background="#DFDFFF" Margin="15,5">
-                <DataGrid  Margin="15" 
-                           ItemsSource="{Binding Users}" 
-                           SelectedItem="{Binding EditStud}" 
-                           Grid.ColumnSpan="7" AutoGenerateColumns="False" IsReadOnly="True" Grid.RowSpan="5">
-                    <DataGrid.Columns>
+                                <StackPanel Margin="0 0 0 10">
+                                    <TextBlock Text="Классный руководитель" Style="{StaticResource text}" Margin="0"/>
+                                    <ComboBox Background="Honeydew"  
+          ItemsSource="{Binding ListItemSelectGrup}" 
+          IsEnabled="False" Width="165"
+          SelectedValue="{Binding IDGrup}" 
+          SelectedValuePath="IDGrup" 
+           FontSize="14">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding NameGrup}" TextWrapping="Wrap" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                </StackPanel>
+
+                                <StackPanel Margin="0 0 0 10" >
+                                    <TextBlock Text="Дата рождения" Style="{StaticResource text}"/>
+                                    <TextBlock Text="{Binding DRStud,StringFormat=dd-MM-yyyy}" Padding="5"/>
+                                </StackPanel>
 
 
-                        <DataGridTemplateColumn Header="Класс" Width="250">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <ComboBox Background="Honeydew"  ItemsSource="{Binding ListItemSelectGrup}" 
-                                          IsEnabled="False" SelectedValue="{Binding IDGrup}" 
-                                          SelectedValuePath="IDGrup" 
-                                          DisplayMemberPath="NameGrup" Padding="5" />
-                                    </Grid>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
+                                <StackPanel Margin="0 0 0 10" >
+                                    <TextBlock Text="Адрес" Style="{StaticResource text}"/>
+                                    <TextBox Text="{Binding Adr}" IsReadOnly="True" Height="60" Width="165"/>
+                                </StackPanel>
 
-                        <DataGridTextColumn Header="ФИО ученика" Binding="{Binding FIOStud}" Width="250"/>
+                                <StackPanel Margin="0 0 0 10" >
+                                    <TextBlock Text="Телефон" Style="{StaticResource text}"/>
+                                    <TextBox Text="{Binding Tel}" IsReadOnly="True" Height="60" Width="165"/>
+                                </StackPanel>
 
 
-                        <DataGridTemplateColumn Header="Дата рождения" Width="150">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <TextBlock Text="{Binding DRStud,StringFormat=dd-MM-yyyy}" Padding="5"/>
-                                    </Grid>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 20 0 0">
 
-                        <DataGridTextColumn Header="Адрес" Binding="{Binding Adr}" Width="300"/>
-                        <DataGridTextColumn Header="Телефон" Binding="{Binding Tel}" Width="*"/>
+                                    <Button Style="{StaticResource gridEditButton}" Click="OpenEdit" >
+                                        <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
+                                    </Button>
 
-                    </DataGrid.Columns>
-                </DataGrid>
+                                    <Button Margin="5 0 0 0" Style="{StaticResource gridRemoveButton}" Command="{Binding Delete}">
+                                        <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </Grid>
         </Grid>
 
 
-        <Grid x:Name="ShowInsertData" Background="Gray" Grid.Column="1" Grid.RowSpan="2" Visibility="Collapsed" >
-            <StackPanel Margin="15" Background="White" MinWidth="300" HorizontalAlignment="Center" VerticalAlignment="Center">
 
-                <Image MouseDown="CloseInsert" VerticalAlignment="Top" HorizontalAlignment="Right" 
-                       Width="30" Height="30" Source="/Images/icon.png">
-                    <Image.RenderTransform>
-                        <TranslateTransform Y="10" X="-10"/>
-                    </Image.RenderTransform>
-                </Image>
 
-                <Label Content="Добавление данных" FontSize="24" Margin="5" HorizontalAlignment="Center"/>
+        <Grid x:Name="ShowInsertData"  Grid.Column="1" Grid.RowSpan="2" 
+Visibility="Collapsed" Background="Transparent" MouseDown="Window_MouseDown">
+            <Border Background="White" BorderBrush="#9575CD" BorderThickness="1" 
+      CornerRadius="7" Margin="15" Width="320" HorizontalAlignment="Center"
+      VerticalAlignment="Center" Padding="15" >
+                <StackPanel >
 
-                <StackPanel DataContext="{Binding NewStud}" Margin="15">
-                    <TextBlock Text="ID группы" Margin="5"/>
-                    <ComboBox Background="Honeydew" Margin="5" 
-                              ItemsSource="{Binding ListItemSelectGrup}" 
-                              IsEnabled="True" SelectedValue="{Binding IDGrup}" 
-                              SelectedValuePath="IDGrup" 
-                              DisplayMemberPath="NameGrup" Padding="5" />
+                    <Button Style="{StaticResource gridEditButton}" Click="CloseInsert" HorizontalAlignment="Right">
+                        <Icon:PackIconMaterial Kind="Close" Style="{StaticResource gridButtonIcon}" />
+                    </Button>
 
-                    <TextBlock Text="ФИО студента" Margin="5"/>
-                    <TextBox Text="{Binding FIOStud, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                    <Label Content="Добавление" HorizontalAlignment="Center" FontSize="22" 
+             FontWeight="SemiBold" Foreground="#121518"/>
+                    <Label Content="Введите данные об ученике" Margin="0 0 0 10" 
+         FontSize="12" HorizontalAlignment="Center" Foreground="#6E7783"/>
 
-                    <TextBlock Text="Дата рождения" Margin="5"/>
-                    <DatePicker SelectedDate="{Binding DRStud, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
 
-                    <TextBlock Text="Адрес" Margin="5"/>
-                    <TextBox Text="{Binding Adr, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                    <StackPanel DataContext="{Binding NewStud}" Margin="15">
 
-                    <TextBlock Text="Телефон" Margin="5"/>
-                    <TextBox Text="{Binding Tel, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+
+                        <StackPanel Margin="0 0 0 10" >
+
+                            <TextBlock Text="Класс ученика" Style="{StaticResource text}"/>
+                            <ComboBox Background="Honeydew"  
+      ItemsSource="{Binding ListItemSelectGrup}" 
+      IsEnabled="True"  Height="30" 
+      SelectedValue="{Binding IDGrup}" 
+      SelectedValuePath="IDGrup" 
+      DisplayMemberPath="NameGrup" 
+      Margin="5" />
+                        </StackPanel>
+
+                        <StackPanel>
+                            <TextBlock Text="Фамилия, имя, отчество (ФИО)" Style="{StaticResource text}" Margin="0"/>
+                            <TextBox Text="{Binding FIOStud, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                        </StackPanel>
+
+                        <StackPanel>
+                            <TextBlock Text="Дата рождения" Style="{StaticResource text}" Margin="0"/>
+                            <DatePicker SelectedDate="{Binding DRStud, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+
+                        </StackPanel>
+
+                        <StackPanel>
+                            <TextBlock Text="Адрес" Style="{StaticResource text}" Margin="0"/>
+                            <TextBox Text="{Binding Adr, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                        </StackPanel>
+
+                        <StackPanel>
+                            <TextBlock Text="Телефон" Style="{StaticResource text}" Margin="0"/>
+                            <TextBox Text="{Binding Tel, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                        </StackPanel>
+
+                    </StackPanel>
+                    <Button Content="Добавить" Command="{Binding Insert}" Margin="0 10"/>
+
                 </StackPanel>
-
-                <Button Command="{Binding Insert}" Background="#AFAFFF" Foreground="Black" FontWeight="SemiBold" Margin="20" Padding="10" >Добавить</Button>
-            </StackPanel>
+            </Border>
         </Grid>
 
 
+        <Grid x:Name="ShowEditData"  Grid.Column="1" Grid.RowSpan="2" Visibility="Collapsed" Background="Transparent" MouseDown="Window_MouseDown">
+            <Border Background="White" BorderBrush="#9575CD" BorderThickness="1" 
+CornerRadius="7" Margin="15" Width="320" HorizontalAlignment="Center"
+VerticalAlignment="Center" Padding="15" >
+                <StackPanel >
 
-        <Grid x:Name="ShowEditData" Background="Gray" Grid.Column="1" Grid.RowSpan="2" Visibility="Collapsed">
-            <StackPanel Margin="15" Background="White" MinWidth="300" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Button Style="{StaticResource gridEditButton}" Click="CloseEdit" HorizontalAlignment="Right">
+                        <Icon:PackIconMaterial Kind="Close" Style="{StaticResource gridButtonIcon}" />
+                    </Button>
 
-                <Image MouseDown="CloseEdit" VerticalAlignment="Top" HorizontalAlignment="Right" 
-                       Width="30" Height="30" Source="/Images/icon.png">
-                    <Image.RenderTransform>
-                        <TranslateTransform Y="10" X="-10"/>
-                    </Image.RenderTransform>
-                </Image>
+                    <Label Content="Редактирование" HorizontalAlignment="Center" FontSize="22" 
+       FontWeight="SemiBold" Foreground="#121518"/>
+                    <Label Content="Измените данные об ученике" Margin="0 0 0 10" 
+   FontSize="12" HorizontalAlignment="Center" Foreground="#6E7783"/>
 
-                <Label Content="Редактирование"  FontSize="24" Margin="5" HorizontalAlignment="Center"/>
 
-                <StackPanel DataContext="{Binding EditStud}" Margin="15">
-                    <TextBlock Text="ID группы" Margin="5"/>
-                    <ComboBox Background="Honeydew" Margin="5" 
-                              ItemsSource="{Binding ListItemSelectGrup}" 
-                              IsEnabled="True" SelectedValue="{Binding IDGrup}" 
-                              SelectedValuePath="IDGrup" 
-                              DisplayMemberPath="NameGrup" Padding="5" />
+                    <StackPanel DataContext="{Binding EditStud}" Margin="15">
 
-                    <TextBlock Text="ФИО студента" Margin="5"/>
-                    <TextBox Text="{Binding FIOStud, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                        <StackPanel Margin="0 0 0 10" >
 
-                    <TextBlock Text="Дата рождения" Margin="5"/>
-                    <DatePicker SelectedDate="{Binding DRStud, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                            <TextBlock Text="Класс ученика" Style="{StaticResource text}"/>
+                            <ComboBox Background="Honeydew"  
+ItemsSource="{Binding ListItemSelectGrup}" 
+IsEnabled="True"  Height="30" 
+SelectedValue="{Binding IDGrup}" 
+SelectedValuePath="IDGrup" 
+DisplayMemberPath="NameGrup" 
+Margin="5" />
+                        </StackPanel>
 
-                    <TextBlock Text="Адрес" Margin="5"/>
-                    <TextBox Text="{Binding Adr, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                        <StackPanel>
+                            <TextBlock Text="Фамилия, имя, отчество (ФИО)" Style="{StaticResource text}" Margin="0"/>
+                            <TextBox Text="{Binding FIOStud, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                        </StackPanel>
 
-                    <TextBlock Text="Телефон" Margin="5"/>
-                    <TextBox Text="{Binding Tel, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                        <StackPanel>
+                            <TextBlock Text="Дата рождения" Style="{StaticResource text}" Margin="0"/>
+                            <DatePicker SelectedDate="{Binding DRStud, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+
+                        </StackPanel>
+
+                        <StackPanel>
+                            <TextBlock Text="Адрес" Style="{StaticResource text}" Margin="0"/>
+                            <TextBox Text="{Binding Adr, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                        </StackPanel>
+
+                        <StackPanel>
+                            <TextBlock Text="Телефон" Style="{StaticResource text}" Margin="0"/>
+                            <TextBox Text="{Binding Tel, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                        </StackPanel>
+
+
+
+
+                    </StackPanel>
+                    <Button Content="Редактировать" Command="{Binding Edit}" CommandParameter="{Binding ElementName=ShowEditData}" Margin="0 10"/>
+
+
                 </StackPanel>
-
-                <Button Command="{Binding Edit}" CommandParameter="{Binding ElementName=ShowEditData}"
-                                Content="Изменить" Background="#AFAFFF" Foreground="Black" FontWeight="SemiBold" Margin="20" Padding="10" />
-
-            </StackPanel>
+            </Border>
         </Grid>
+
 
     </Grid>
 </Page>

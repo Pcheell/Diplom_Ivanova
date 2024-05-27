@@ -1,6 +1,9 @@
-﻿using Ivanova_UchitDn.Core;
+﻿using Google.Protobuf.WellKnownTypes;
+using Ivanova_UchitDn.Core;
 using Ivanova_UchitDn.Model;
+using Ivanova_UchitDn.View_Page;
 using MySqlConnector;
+using Org.BouncyCastle.Tls;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,12 +12,17 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Shapes;
 using static Ivanova_UchitDn.Core.CoreApp;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Ivanova_UchitDn.ViewModel
 {
     public class StudData : INotifyPropertyChanged
     {
+        private bool isUpdating = false;
+
         /// <summary>
         /// Событие оповещения об изменениях
         /// </summary>
@@ -72,11 +80,20 @@ namespace Ivanova_UchitDn.ViewModel
 
         private async void LoadData()
         {
+            if (isUpdating)
+            {
+                return;
+            }
+            isUpdating = true;
+
             NewStud = new StudModel();
             EditStud = new StudModel();
             _ = await GroupDataList();
             OnPropertyChanged("SearchSelectGroup");
             _ = await StudDataSelect();
+
+            isUpdating = false;
+
         }
 
         private async Task<bool> GroupDataList()
@@ -158,7 +175,9 @@ namespace Ivanova_UchitDn.ViewModel
                     FIOStud = (string)reader["FIO_stud"],
                     DRStud = Convert.ToDateTime(reader["dr_stud"]),
                     Adr = (string)reader["address_stud"],
-                    Tel = (string)reader["tel_stud"]
+                    Tel = (string)reader["tel_stud"],
+                    Delete = new DeleteCommand(DeleteData, (int)reader[0])
+
 
                 });
 
@@ -177,34 +196,46 @@ namespace Ivanova_UchitDn.ViewModel
             string
                 sql = "";
 
-            if (SearchName)
-                SearchTypesAnd(ref sql, "`FIO_stud` like @text");
-            if (SearchAdr)
-                SearchTypesAnd(ref sql, "`address_stud` like @text");
-            if (SearchTel)
-                SearchTypesAnd(ref sql, "`tel_stud` like @text");
-
             if (!GroupInsertNotValid(SearchSelectGroup))
                 SearchTypesAnd(ref sql, "`id_grup` = @grup");
 
             if (SearchDate)
                 SearchTypesAnd(ref sql, "CAST(`dr_stud` AS DATE) BETWEEN str_to_date(@date_start, '%Y-%m-%d') AND str_to_date(@date_end, '%Y-%m-%d')");
+          
 
+            // Если ни один чекбокс не выбран, добавляем условия поиска для всех полей
+            if (!SearchName && !SearchAdr && !SearchTel)
+            {
+                sql = "`FIO_stud` LIKE @text OR `address_stud` " +
+                    "LIKE @text OR `tel_stud` LIKE @text";
+            }
+            else
+            {
+                List<string> conditions = new List<string>();
+
+                // Добавляем условия поиска в зависимости от выбранных чекбоксов
+                if (SearchName)
+                    conditions.Add("`FIO_stud` LIKE @text");
+                if (SearchAdr)
+                    conditions.Add("`address_stud` LIKE @text");
+                if (SearchTel)
+                    conditions.Add("`tel_stud` LIKE @text");
+              
+
+                // Соединяем условия с помощью оператора OR
+                sql = string.Join(" OR ", conditions);
+            }
             return SearchTypesSet(sql);
         }
-
         private string SearchTypesSet(string sql)
         {
             return string.IsNullOrEmpty(sql) ? sql : " where " + sql;
         }
-
         private void SearchTypesAnd(ref string sql, string value)
         {
             sql += string.IsNullOrEmpty(sql) ? value : " and " + value;
         }
-
-
-
+  
 
 
         private UpdateData UpdateSelf;
@@ -347,7 +378,7 @@ namespace Ivanova_UchitDn.ViewModel
             MessageBox.Show("Таблица добавлена", "Подтверждение");
         }
 
-        private async void DeleteData(StudModel a)
+        private async void DeleteData(int a)
         {
             if (MessageBox.Show("Удалить запись?", "Удаление", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
                 return;
@@ -359,9 +390,8 @@ namespace Ivanova_UchitDn.ViewModel
             MySqlCommand
                 command = new MySqlCommand(sql, con.GetCon());
 
-            Debug.WriteLine(a.IDStud);
 
-            command.Parameters.Add(new MySqlParameter("@i", a.IDStud));
+            command.Parameters.Add(new MySqlParameter("@i", a));
 
             await con.GetOpen();
 
@@ -479,6 +509,8 @@ namespace Ivanova_UchitDn.ViewModel
             {
                 SearchNameSelf = value;
                 OnPropertyChanged("SearchName");
+                LoadData();
+
             }
         }
 
@@ -490,6 +522,8 @@ namespace Ivanova_UchitDn.ViewModel
             {
                 SearchAdrSelf = value;
                 OnPropertyChanged("SearchAdr");
+                LoadData();
+
             }
         }
 
@@ -501,6 +535,8 @@ namespace Ivanova_UchitDn.ViewModel
             {
                 SearchTelSelf = value;
                 OnPropertyChanged("SearchTel");
+                LoadData();
+
             }
         }
 
@@ -512,6 +548,8 @@ namespace Ivanova_UchitDn.ViewModel
             {
                 SearchTextSelf = value;
                 OnPropertyChanged("SearchText");
+                LoadData();
+
             }
         }
 
