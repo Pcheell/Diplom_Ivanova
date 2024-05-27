@@ -17,6 +17,8 @@ namespace Ivanova_UchitDn.ViewModel
     public class GrupData : INotifyPropertyChanged
     {
 
+        private bool isUpdating = false;
+
         /// <summary>
         /// Событие оповещения об изменениях
         /// </summary>
@@ -76,14 +78,24 @@ namespace Ivanova_UchitDn.ViewModel
 
         public async void LoadData()
         {
+            if (isUpdating)
+            {
+                return;
+            }
+            isUpdating = true;
+
+
             NewGroup = new GrupModel();
             EditGroup = new GrupModel();
             _ = await GroupDataList();
             OnPropertyChanged("SearchSelectKur");
             _ = await GroupDataSelect();
+
+            isUpdating = false;
+
         }
 
-        private async Task<bool> GroupDataList()
+        async Task<bool> GroupDataList()
         {
             Connector
                  con = new Connector();
@@ -107,7 +119,7 @@ namespace Ivanova_UchitDn.ViewModel
 
             while (await reader.ReadAsync())
             {
-                await Task.Delay(100);
+                await Task.Delay(1);
                 ListItemSelectKurSelf.Add(new ListItemSelect()
                 {
                     IDKur = (int)reader["id_kurator"],
@@ -132,7 +144,6 @@ namespace Ivanova_UchitDn.ViewModel
             MySqlCommand
                 command = new MySqlCommand(sql, con.GetCon());
 
-            Debug.WriteLine(sql);
             command.Parameters.Add(new MySqlParameter("@text", string.Format("%{0}%", SearchText)));
             command.Parameters.Add(new MySqlParameter("@kurator", SearchSelectKur));
 
@@ -151,14 +162,16 @@ namespace Ivanova_UchitDn.ViewModel
 
             while (await reader.ReadAsync())
             {
-                await Task.Delay(200);
+                await Task.Delay(1);
                 GroupsSelf.Add(new GrupModel()
                 {
                     IDGrup = (int)reader["id_grup"],
                     IDKur = (int)reader["id_kurator"],
                     ListItemSelectKur = ListItemSelectKurSelf,
-                    NameGrup = (string)reader["name_grup"]
-                    
+                    NameGrup = (string)reader["name_grup"],
+                    Delete = new DeleteCommand(DeleteData, (int)reader[0])
+
+
                 });
 
                 OnPropertyChanged("Users");
@@ -178,6 +191,23 @@ namespace Ivanova_UchitDn.ViewModel
 
             if (!GroupInsertNotValid(SearchSelectKur))
                 SearchTypesAnd(ref sql, "`id_kurator` = @kurator");
+
+            if (SearchKurator)
+            {
+                SearchTypesAnd(ref sql, "`id_kurator` IN (SELECT `id_kurator` FROM `kurator` WHERE `FIO_kurator` LIKE @text)");
+            }
+
+            // Если ни один чекбокс не выбран, искать по имени группы и ФИО куратора
+            if (!SearchName && !SearchKurator && !string.IsNullOrEmpty(SearchText))
+            {
+                SearchTypesAnd(ref sql, "`name_grup` like @text OR `id_kurator` IN (SELECT `id_kurator` FROM `kurator` WHERE `FIO_kurator` LIKE @text)");
+            }
+
+            // Если оба чекбокса выбраны, искать по имени группы и ФИО куратора
+            if (SearchName && SearchKurator && !string.IsNullOrEmpty(SearchText))
+            {
+                SearchTypesAnd(ref sql, "`name_grup` like @text AND `id_kurator` IN (SELECT `id_kurator` FROM `kurator` WHERE `FIO_kurator` LIKE @text)");
+            }
 
             return SearchTypesSet(sql);
         }
@@ -231,6 +261,8 @@ namespace Ivanova_UchitDn.ViewModel
                 OnPropertyChanged("EditGroup");
             }
         }
+
+      
 
         public InsertCommand InsertSelf { get; set; }
         public InsertCommand Insert
@@ -309,7 +341,7 @@ namespace Ivanova_UchitDn.ViewModel
             MessageBox.Show("Таблица добавлена", "Подтверждение");
         }
 
-        private async void DeleteData(GrupModel a)
+        private async void DeleteData(int a)
         {
             if (MessageBox.Show("Удалить запись?", "Удаление", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
                 return;
@@ -321,9 +353,8 @@ namespace Ivanova_UchitDn.ViewModel
             MySqlCommand
                 command = new MySqlCommand(sql, con.GetCon());
 
-            Debug.WriteLine(a.IDGrup);
 
-            command.Parameters.Add(new MySqlParameter("@i", a.IDGrup));
+            command.Parameters.Add(new MySqlParameter("@i", a));
 
             await con.GetOpen();
 
@@ -420,6 +451,21 @@ namespace Ivanova_UchitDn.ViewModel
             {
                 SearchNameSelf = value;
                 OnPropertyChanged("SearchName");
+                LoadData();
+
+            }
+        }
+
+        public bool SearchKuratorSelf;
+        public bool SearchKurator
+        {
+            get => SearchKuratorSelf;
+            set
+            {
+                SearchKuratorSelf = value;
+                OnPropertyChanged("SearchKurator");
+                LoadData();
+
             }
         }
 
@@ -431,8 +477,11 @@ namespace Ivanova_UchitDn.ViewModel
             {
                 SearchTextSelf = value;
                 OnPropertyChanged("SearchText");
+                LoadData();
+
             }
         }
+
 
         private int SearchSelectKurSelf;
         public int SearchSelectKur

@@ -72,7 +72,7 @@
 
                             <StackPanel Background="#eee" Margin="0,5,5,0" MinWidth="200">
                                 <StackPanel Margin="5">
-                                    <Label Content="Группы" Grid.ColumnSpan="2" FontWeight="Bold" Padding="5,10" Background="#DFDFFF" Margin="0,0,0,2"/>
+                                    <Label Content="Класс" Grid.ColumnSpan="2" FontWeight="Bold" Padding="5,10" Background="#DFDFFF" Margin="0,0,0,2"/>
                                     <ComboBox Background="Honeydew" ItemsSource="{Binding ListItemSelectGrup}" 
                                           IsEnabled="True" SelectedValue="{Binding SearchSelectGroup}" 
                                           SelectedValuePath="IDGrup" 
@@ -109,9 +109,8 @@
                            Grid.ColumnSpan="7" AutoGenerateColumns="False" IsReadOnly="True" Grid.RowSpan="5">
                     <DataGrid.Columns>
 
-                        <DataGridTextColumn Header="ID студента" Binding="{Binding IDStud}" Width="100"/>
 
-                        <DataGridTemplateColumn Header="Группа" Width="250">
+                        <DataGridTemplateColumn Header="Класс" Width="250">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Grid>
@@ -124,7 +123,7 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <DataGridTextColumn Header="ФИО студента" Binding="{Binding FIOStud}" Width="250"/>
+                        <DataGridTextColumn Header="ФИО ученика" Binding="{Binding FIOStud}" Width="250"/>
 
 
                         <DataGridTemplateColumn Header="Дата рождения" Width="150">

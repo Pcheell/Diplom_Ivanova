@@ -29,11 +29,7 @@ namespace Ivanova_UchitDn.View_Page
             }
         }
 
-        private void CloseEdit(object sender, RoutedEventArgs e)
-        {
-            ShowEditData.Visibility = Visibility.Collapsed;
-
-        }
+       
 
         private void OpenEdit(object sender, RoutedEventArgs e)
         {
@@ -56,7 +52,11 @@ namespace Ivanova_UchitDn.View_Page
             }
         }
 
+        private void CloseEdit(object sender, RoutedEventArgs e)
+        {
+            ShowEditData.Visibility = Visibility.Collapsed;
 
+        }
         private void CloseInsert(object sender, RoutedEventArgs e)
         {
             ShowInsertData.Visibility = Visibility.Collapsed;

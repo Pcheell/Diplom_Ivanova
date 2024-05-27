@@ -55,7 +55,7 @@
 
                             <StackPanel Background="#eee" Margin="0,5,5,0" MinWidth="200">
                                 <StackPanel Margin="5">
-                                    <Label Content="Студент" Grid.ColumnSpan="2" FontWeight="Bold" Padding="5,10" Background="#DFDFFF" Margin="0,0,0,2"/>
+                                    <Label Content="Ученик" Grid.ColumnSpan="2" FontWeight="Bold" Padding="5,10" Background="#DFDFFF" Margin="0,0,0,2"/>
                                     <ComboBox Background="Honeydew" ItemsSource="{Binding ListItemSelectStud}" 
                                           IsEnabled="True" SelectedValue="{Binding SearchSelectStud}" 
                                           SelectedValuePath="IDStud" 
@@ -91,9 +91,8 @@
                            Grid.ColumnSpan="7" AutoGenerateColumns="False" IsReadOnly="True" Grid.RowSpan="5">
                     <DataGrid.Columns>
 
-                        <DataGridTextColumn Header="ID родителя" Binding="{Binding IDRod}" Width="100"/>
 
-                        <DataGridTemplateColumn Header="Студент" Width="250">
+                        <DataGridTemplateColumn Header="Ученик" Width="250">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Grid>

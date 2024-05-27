@@ -4,7 +4,6 @@ using MySqlConnector;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -70,11 +69,13 @@ namespace Ivanova_UchitDn.ViewModel
 
         private async Task<bool> UserDataSelect()
         {
-            Connector con = new Connector();
-            string sql = string.Format("select * from `kurator` {0} limit {1}", SearchTypes(), 999);
-            MySqlCommand command = new MySqlCommand(sql, con.GetCon());
+            Connector 
+                con = new Connector();
+            string 
+                sql = string.Format("select * from `kurator` {0} limit {1}", SearchTypes(), 999);
+            MySqlCommand 
+                command = new MySqlCommand(sql, con.GetCon());
 
-            Debug.WriteLine(sql);
             command.Parameters.Add(new MySqlParameter("@text", string.Format("%{0}%", SearchText)));
 
             await con.GetOpen();

@@ -1,10 +1,7 @@
 ﻿using Ivanova_UchitDn.Core;
 using Ivanova_UchitDn.ViewModel;
-using MySqlConnector;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Windows;
 using static Ivanova_UchitDn.Core.CoreApp;
 
 namespace Ivanova_UchitDn.Model
@@ -86,7 +83,16 @@ namespace Ivanova_UchitDn.Model
                 ListItemSelectKurSelf = value;
                 OnPropertyChanged("ListItemSelectKur");
             }
-        } 
+        }
+
+
+
+        private DeleteCommand DeleteSelf;
+        public DeleteCommand Delete
+        {
+            get => DeleteSelf;
+            set => DeleteSelf = value;
+        }
 
     }
 }

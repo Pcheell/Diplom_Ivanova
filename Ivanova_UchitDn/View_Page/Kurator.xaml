@@ -45,14 +45,14 @@
                                        IsHitTestVisible="False"/>
 
                             <TextBox Name="textBoxSearch" Style="{StaticResource searchTextbox}"
-                                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" TextChanged="textBoxSearch_TextChanged"/>
+                                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <Icon:PackIconMaterial Kind="Magnify" Width="15" Height="15" 
                             VerticalAlignment="Center" Margin="0 0 15 0" 
                             Foreground="#B0B9C6" HorizontalAlignment="Right" />
                         </Grid>
-
-                        <WrapPanel >
+                        
+                        <WrapPanel Margin="10">
                             <CheckBox Content="ФИО" Margin="0,0,15,0" IsChecked="{Binding SearchName, UpdateSourceTrigger=PropertyChanged}"/>
                             <CheckBox Content="Логин" Margin="0,0,15,0" IsChecked="{Binding SearchLog, UpdateSourceTrigger=PropertyChanged}"/>
                             <CheckBox Content="Пароль" Margin="0,0,15,0" IsChecked="{Binding SearchParol, UpdateSourceTrigger=PropertyChanged}"/>
@@ -118,9 +118,6 @@ FontWeight="SemiBold" Foreground="#121518" Margin="35 0"/>
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel >
-
-                              
-                                
                                 <StackPanel Margin="0 0 0 10" >
                                     <TextBlock Text="ФИО" Style="{StaticResource text}"/>
                                     <TextBox Text="{Binding Name}" IsReadOnly="True" Height="60" Width="165"/>
@@ -146,15 +143,8 @@ FontWeight="SemiBold" Foreground="#121518" Margin="35 0"/>
                                     <Button Margin="5 0 0 0" Style="{StaticResource gridRemoveButton}" Command="{Binding Delete}">
                                         <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
                                     </Button>
-                                    
-                              
-
-
                                 </StackPanel>
-
-
                             </StackPanel>
-                           
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
