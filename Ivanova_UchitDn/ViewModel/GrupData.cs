@@ -506,17 +506,34 @@ namespace Ivanova_UchitDn.ViewModel
                 command = new MySqlCommand(deleteSql, con.GetCon());
                 await command.ExecuteNonQueryAsync();
 
+                string updateSql = "UPDATE `grup` SET `name_grup` = REPLACE(`name_grup`, '10', '11') WHERE `name_grup` LIKE '10%';";
+                command = new MySqlCommand(updateSql, con.GetCon());
+                await command.ExecuteNonQueryAsync();
+
+               
+
                 // Переименовываем остальные классы
                 for (int i = 10; i >= 1; i--)
                 {
                     string oldNamePattern = $"{i}%";
                     string newNumber = $"{i + 1}";
-                    string updateSql = "UPDATE `grup` SET `name_grup` = CONCAT(@newNumber, SUBSTRING(`name_grup`, 2)) WHERE `name_grup` LIKE @oldNamePattern";
-                    command = new MySqlCommand(updateSql, con.GetCon());
-                    command.Parameters.AddWithValue("@newNumber", newNumber);
-                    command.Parameters.AddWithValue("@oldNamePattern", oldNamePattern);
-                    await command.ExecuteNonQueryAsync();
+
+                    if (i < 10 && i > 1) // Для классов от 2 до 9 меняем номер на номер+1
+                    {
+                        updateSql = "UPDATE `grup` SET `name_grup` = CONCAT(@newNumber, SUBSTRING(`name_grup`, 2)) WHERE `name_grup` LIKE @oldNamePattern";
+                        command = new MySqlCommand(updateSql, con.GetCon());
+                        command.Parameters.AddWithValue("@newNumber", newNumber);
+                        command.Parameters.AddWithValue("@oldNamePattern", oldNamePattern);
+                        await command.ExecuteNonQueryAsync();
+                    }
+                    
                 }
+
+                string updateSqlFor1To2 = "UPDATE `grup` SET `name_grup` = REPLACE(`name_grup`, '1', '2') " +
+                    "WHERE `name_grup` LIKE '1%' AND LENGTH(`name_grup`) > 1 AND SUBSTRING(`name_grup`, 2, 1) BETWEEN 'а' AND 'я';";
+                command = new MySqlCommand(updateSqlFor1To2, con.GetCon());
+                await command.ExecuteNonQueryAsync();
+
 
                 MessageBox.Show("Классы успешно переведены", "Успех");
             }
@@ -530,6 +547,9 @@ namespace Ivanova_UchitDn.ViewModel
                 LoadData(); // Обновить данные после перевода
             }
         }
+
+
+
 
 
 

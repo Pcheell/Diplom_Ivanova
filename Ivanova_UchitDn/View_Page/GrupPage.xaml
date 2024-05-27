@@ -93,7 +93,17 @@
                                             </StackPanel>
                                         </Button>
                                     </StackPanel>
+
+                                <StackPanel  >
+                                    <Button Style="{StaticResource addButton}" Width="180" Command="{Binding PromoteClassesCommand}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Icon:PackIconMaterial Kind="Reload" VerticalAlignment="Center" Margin="0 1 8 0" Width="11" Height="11"/>
+                                            <TextBlock Text="Перевести классы" />
+                                        </StackPanel>
+                                    </Button>
                                 </StackPanel>
+                                    
+                            </StackPanel>
                         </WrapPanel>
 
                         </StackPanel>
