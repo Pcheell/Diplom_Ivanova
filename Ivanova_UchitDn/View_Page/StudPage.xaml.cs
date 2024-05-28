@@ -15,6 +15,7 @@ namespace Ivanova_UchitDn.View_Page
         {
             InitializeComponent();
             GridData.DataContext = new StudData();
+            DataContext = new StudData();
         }
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -58,6 +59,11 @@ namespace Ivanova_UchitDn.View_Page
         private void OpenInsert(object sender, RoutedEventArgs e)
         {
             ShowInsertData.Visibility = Visibility.Visible;
+        }
+        private void SearchByDateOfBirth_Click(object sender, RoutedEventArgs e)
+        {
+            StudData studData = new StudData(); // Создание экземпляра класса StudData
+            studData.SearchByDateOfBirth(); // Вызов метода через экземпляр класса
         }
     }
 }

@@ -126,6 +126,7 @@ namespace Ivanova_UchitDn.Model
             }
         }
 
+
         private DeleteCommand DeleteSelf;
         public DeleteCommand Delete
         {

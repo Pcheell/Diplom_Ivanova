@@ -21,6 +21,7 @@ namespace Ivanova_UchitDn.ViewModel
 {
     public class StudData : INotifyPropertyChanged
     {
+
         private bool isUpdating = false;
 
         /// <summary>
@@ -72,8 +73,6 @@ namespace Ivanova_UchitDn.ViewModel
 
         public StudData()
         {
-            SearchDataStartSelf = DateTime.Today;
-            SearchDataEndSelf = DateTime.Today;
             ListItemSelectGrup = new ObservableCollection<ListItemSelectG>();
             LoadData();
         }
@@ -145,11 +144,11 @@ namespace Ivanova_UchitDn.ViewModel
             MySqlCommand
                 command = new MySqlCommand(sql, con.GetCon());
 
-            Debug.WriteLine(sql);
             command.Parameters.Add(new MySqlParameter("@text", string.Format("%{0}%", SearchText)));
             command.Parameters.Add(new MySqlParameter("@grup", SearchSelectGroup));
-            command.Parameters.Add(new MySqlParameter("@date_start", SearchDataStart));
-            command.Parameters.Add(new MySqlParameter("@date_end", SearchDataEnd));
+            command.Parameters.Add(new MySqlParameter("@date_start", SearchDataStart.ToString("yyyy-MM-dd")));
+            command.Parameters.Add(new MySqlParameter("@date_end", SearchDataEnd.ToString("yyyy-MM-dd")));
+
 
             await con.GetOpen();
             StudsSelf = new ObservableCollection<StudModel>();
@@ -189,25 +188,34 @@ namespace Ivanova_UchitDn.ViewModel
 
         }
 
-
+        public void SearchByDateOfBirth()
+        {
+            SearchDate = true;
+            LoadData();
+        }
 
         private string SearchTypes()
         {
             string
                 sql = "";
 
+          
             if (!GroupInsertNotValid(SearchSelectGroup))
                 SearchTypesAnd(ref sql, "`id_grup` = @grup");
 
             if (SearchDate)
-                SearchTypesAnd(ref sql, "CAST(`dr_stud` AS DATE) BETWEEN str_to_date(@date_start, '%Y-%m-%d') AND str_to_date(@date_end, '%Y-%m-%d')");
-          
+                SearchTypesAnd(ref sql, "`dr_stud` BETWEEN @date_start AND @date_end");
+
+            if (SearchGrup)
+            {
+                SearchTypesAnd(ref sql, "`id_grup` IN (SELECT `id_grup` FROM `grup` WHERE `name_grup` LIKE @text)");
+            }
 
             // Если ни один чекбокс не выбран, добавляем условия поиска для всех полей
-            if (!SearchName && !SearchAdr && !SearchTel)
+            if (!SearchName && !SearchAdr && !SearchTel && !string.IsNullOrEmpty(SearchText))
             {
-                sql = "`FIO_stud` LIKE @text OR `address_stud` " +
-                    "LIKE @text OR `tel_stud` LIKE @text";
+                sql = "`FIO_stud` LIKE @text OR `address_stud` LIKE @text OR `tel_stud` LIKE @text " +
+                    "OR `id_grup` IN (SELECT `id_grup` FROM `grup` WHERE `name_grup` LIKE @text)";
             }
             else
             {
@@ -220,13 +228,17 @@ namespace Ivanova_UchitDn.ViewModel
                     conditions.Add("`address_stud` LIKE @text");
                 if (SearchTel)
                     conditions.Add("`tel_stud` LIKE @text");
-              
+                if (SearchGrup)
+                    conditions.Add("`id_grup` IN (SELECT `id_grup` FROM `grup` WHERE `name_grup` LIKE @text)");
+
 
                 // Соединяем условия с помощью оператора OR
                 sql = string.Join(" OR ", conditions);
             }
             return SearchTypesSet(sql);
         }
+
+
         private string SearchTypesSet(string sql)
         {
             return string.IsNullOrEmpty(sql) ? sql : " where " + sql;
@@ -509,6 +521,19 @@ namespace Ivanova_UchitDn.ViewModel
             {
                 SearchNameSelf = value;
                 OnPropertyChanged("SearchName");
+                LoadData();
+
+            }
+        }
+
+        public bool SearchGrupSelf;
+        public bool SearchGrup
+        {
+            get => SearchGrupSelf;
+            set
+            {
+                SearchGrupSelf = value;
+                OnPropertyChanged("SearchGrup");
                 LoadData();
 
             }
