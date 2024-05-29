@@ -9,14 +9,9 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="1200"
      Title="Student">
-    
-    
-
 
     <Grid x:Name="GridData" >
-
-        
-        
+  
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="220"/>
             <ColumnDefinition Width="*"/>

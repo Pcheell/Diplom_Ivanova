@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Ivanova_UchitDn.View_Page"
+      xmlns:local="clr-namespace:Ivanova_UchitDn.View_Page" xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="1000"
       Title="Roditeli">
@@ -12,7 +12,7 @@
 
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="220"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
@@ -20,8 +20,12 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Column="1" Grid.Row="0"  >
-            <StackPanel Background="white" Margin="15,15,15,5">
+
+       
+
+
+        <StackPanel Grid.Column="1" Grid.Row="0" Background="White" >
+            <StackPanel Margin="15,15,15,5">
                 <Grid Margin="15" >
 
                     <Grid.ColumnDefinitions>
@@ -37,173 +41,317 @@
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
 
-                    <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Padding="10" Grid.ColumnSpan="2" />
-                    <Button Content="Найти" Grid.Column="2" MinWidth="200" Padding="10" Margin="5,0,0,0" Style="{DynamicResource BtnStyle}" Command="{Binding Search}"/>
-                    <StackPanel Grid.Row="1" Background="#DFDFFF" Grid.ColumnSpan="3" Margin="0,5,0,0">
-                        <WrapPanel Margin="10">
-                            <CheckBox Content="ФИО" Margin="0,0,15,0" IsChecked="{Binding SearchName, UpdateSourceTrigger=PropertyChanged}"/>
-                            <CheckBox Content="Степень родства" Margin="0,0,15,0" IsChecked="{Binding SearchStep, UpdateSourceTrigger=PropertyChanged}"/>
-                            <CheckBox Content="Адрес" Margin="0,0,15,0" IsChecked="{Binding SearchAdr, UpdateSourceTrigger=PropertyChanged}"/>
-                            <CheckBox Content="Телефон" Margin="0,0,15,0" IsChecked="{Binding SearchTel, UpdateSourceTrigger=PropertyChanged}"/>
-                            <CheckBox Content="Работа" Margin="0,0,15,0" IsChecked="{Binding SearchRab, UpdateSourceTrigger=PropertyChanged}"/>
-                        </WrapPanel>
+                    <StackPanel Grid.ColumnSpan="2" Orientation="Horizontal">
+
+                        <StackPanel Grid.ColumnSpan="2">
+
+                            <Grid Width="300" HorizontalAlignment="Left" Grid.ColumnSpan="2">
+
+                                <TextBlock Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
+                                          Margin="20 0" VerticalAlignment="Center" Foreground="#B0B9C6" 
+                                     IsHitTestVisible="False"/>
+
+                                <TextBox Name="textBoxSearch" Style="{StaticResource searchTextbox}"
+                                   Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
+
+                                <Icon:PackIconMaterial Kind="Magnify" Width="15" Height="15" 
+                          VerticalAlignment="Center" Margin="0 0 15 0" 
+                          Foreground="#B0B9C6" HorizontalAlignment="Right" />
+
+                            </Grid>
+
+                            <WrapPanel Margin="10 0 0 10">
+                                <CheckBox Content="ФИО" Margin="0,0,15,0" IsChecked="{Binding SearchName, UpdateSourceTrigger=PropertyChanged}"/>
+                                <CheckBox Content="Ученик" Margin="0,0,15,0" IsChecked="{Binding SearchStud, UpdateSourceTrigger=PropertyChanged}"/>
+                                <CheckBox Content="Адрес" Margin="0,0,15,0" IsChecked="{Binding SearchAdr, UpdateSourceTrigger=PropertyChanged}"/>
+                                <CheckBox Content="Телефон" Margin="0,0,15,0" IsChecked="{Binding SearchTel, UpdateSourceTrigger=PropertyChanged}"/>
+                                <CheckBox Content="Работа" Margin="0,0,15,0" IsChecked="{Binding SearchRab, UpdateSourceTrigger=PropertyChanged}"/>
+
+
+                            </WrapPanel>
+                        </StackPanel>
+
+
                     </StackPanel>
 
 
-                    <StackPanel Grid.Row="2" Background="#AFAFFF" Grid.ColumnSpan="3" Margin="0,5,0,0">
-                        <WrapPanel Margin="10,5,10,10">
 
-                            <StackPanel Background="#eee" Margin="0,5,5,0" MinWidth="200">
-                                <StackPanel Margin="5">
-                                    <Label Content="Ученик" Grid.ColumnSpan="2" FontWeight="Bold" Padding="5,10" Background="#DFDFFF" Margin="0,0,0,2"/>
-                                    <ComboBox Background="Honeydew" ItemsSource="{Binding ListItemSelectStud}" 
-                                          IsEnabled="True" SelectedValue="{Binding SearchSelectStud}" 
-                                          SelectedValuePath="IDStud" 
-                                          DisplayMemberPath="FIOStud" Margin="0 5" Padding="5" />
+                    <StackPanel Grid.Row="2" Grid.ColumnSpan="3">
+                        <WrapPanel Orientation="Vertical" Margin="5 0">
+
+                            <StackPanel Orientation="Horizontal">
+                                <Button Style="{StaticResource addButton}" Width="180" Click="OpenInsert">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" 
+                                                                 Margin="0 1 8 0" Width="11" Height="11"/>
+                                        <TextBlock Text="Добавить родителя" />
+                                    </StackPanel>
+                                </Button>
+
+                                <StackPanel Margin="10 0" >
+                                    <Button Style="{StaticResource addButton}" Width="180" Command="{Binding Update}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Icon:PackIconMaterial Kind="Reload" VerticalAlignment="Center" Margin="0 1 8 0" Width="11" Height="11"/>
+                                            <TextBlock Text="Обновить таблицу" />
+                                        </StackPanel>
+                                    </Button>
                                 </StackPanel>
+
+
                             </StackPanel>
-
-                            <StackPanel MinWidth="200" Orientation="Horizontal" Margin="5 0">
-                                <StackPanel Orientation="Vertical">
-                                    <Button Style="{DynamicResource BtnStyle}" Content="Добавить" Click="OpenInsert" MinWidth="150" Padding="10" Margin="0 5"/>
-                                    <Button Style="{DynamicResource BtnStyle}" Content="Редактировать" Click="OpenEdit" Padding="10" />
-                                </StackPanel>
-
-                                <StackPanel Orientation="Vertical">
-                                    <Button Style="{DynamicResource BtnStyle}" Content="Обновить" Padding="10" MinWidth="150" Margin="5 5 5 0" Command="{Binding Update}"/>
-                                    <Button Style="{DynamicResource BtnStyle}" Content="Удалить" Padding="10" Margin="5" Command="{Binding DeleteMe}"/>
-                                </StackPanel>
-                            </StackPanel>
-
                         </WrapPanel>
-                    </StackPanel>
 
+                    </StackPanel>
                 </Grid>
             </StackPanel>
+            <TextBlock Text="Родители" FontSize="20" FontWeight="SemiBold" Foreground="#121518" Margin="35 0"/>
         </StackPanel>
 
 
-        <Grid Grid.Column="1" Grid.Row="1" Margin="15,0,15,5">
-            <Grid Background="#DFDFFF" Margin="15,5">
-                <DataGrid  Margin="15" 
-                           ItemsSource="{Binding Users}" 
-                           SelectedItem="{Binding EditRod}" 
-                           Grid.ColumnSpan="7" AutoGenerateColumns="False" IsReadOnly="True" Grid.RowSpan="5">
-                    <DataGrid.Columns>
+        <Grid Grid.Column="1" Grid.Row="1" >
+            <Grid Margin="15 0"  >
+                <ListView ItemsSource="{Binding Users}" SelectedItem="{Binding EditRod}" 
+         Margin="15 5" BorderThickness="0" Foreground="#000"
+         ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel ItemWidth="200" />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+
+                            <StackPanel >
+
+                                <StackPanel Margin="0 0 0 10" >
+                                    <TextBlock Text="ФИО родителя" Style="{StaticResource text}"/>
+                                    <TextBox Text="{Binding FIORod}" IsReadOnly="True" Height="60" Width="165"/>
+                                </StackPanel>
+
+                                <StackPanel Margin="0 0 0 10">
+                                    <TextBlock Text="Ученик" Style="{StaticResource text}" Margin="0"/>
+
+                                        <ComboBox 
+  ItemsSource="{Binding ListItemSelectStud}" SelectedValue="{Binding IDStud}" SelectedValuePath="IDStud" 
+  IsEnabled="False" Height="60" Foreground="#363636" 
+    DisplayMemberPath="FIOStud"
+  Background="#F5F7F9" BorderBrush="#F5F7F9" FontSize="14" >
+
+                                        <ComboBox.Resources>
+                                            <ResourceDictionary>
+                                                <ResourceDictionary.MergedDictionaries>
+                                                    <ResourceDictionary Source="pack://application:,,,/Ivanova_UchitDn;component/MaterialDesignResources.xaml" />
+                                                </ResourceDictionary.MergedDictionaries>
+                                            </ResourceDictionary>
+                                        </ComboBox.Resources>
+                                        <ComboBox.Style>
+                                            <StaticResource ResourceKey="MaterialDesignComboBox" />
+                                        </ComboBox.Style>
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding FIOStud}" TextWrapping="Wrap" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
 
 
-                        <DataGridTemplateColumn Header="Ученик" Width="250">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <ComboBox Background="Honeydew"  
-                                          ItemsSource="{Binding ListItemSelectStud}" 
-                                          IsEnabled="False" 
-                                          SelectedValue="{Binding IDStud}" 
-                                          SelectedValuePath="IDStud" 
-                                          DisplayMemberPath="FIOStud" Padding="5" />
-                                    </Grid>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
+                                </StackPanel>
 
-                        <DataGridTextColumn Header="ФИО родителя" Binding="{Binding FIORod}" Width="250"/>
-                        <DataGridTextColumn Header="Адрес" Binding="{Binding Adr}" Width="350"/>
-                        <DataGridTextColumn Header="Телефон" Binding="{Binding Tel}" Width="150"/>
-                        <DataGridTextColumn Header="Работа" Binding="{Binding Rabota}" Width="*"/>
 
-                    </DataGrid.Columns>
-                </DataGrid>
+
+                                <StackPanel Margin="0 0 0 10" >
+                                    <TextBlock Text="Адрес" Style="{StaticResource text}"/>
+                                    <TextBox Text="{Binding Adr}" IsReadOnly="True" Height="60" Width="165"/>
+                                </StackPanel>
+
+                                <StackPanel Margin="0 0 0 10" >
+                                    <TextBlock Text="Телефон" Style="{StaticResource text}"/>
+                                    <TextBox Text="{Binding Tel}" IsReadOnly="True" Height="60" Width="165"/>
+                                </StackPanel>
+
+                                <StackPanel Margin="0 0 0 10" >
+                                    <TextBlock Text="Работа" Style="{StaticResource text}"/>
+                                    <TextBox Text="{Binding Rabota}" IsReadOnly="True" Height="60" Width="165"/>
+                                </StackPanel>
+
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 20 0 0">
+
+                                    <Button Style="{StaticResource gridEditButton}" Click="OpenEdit" >
+                                        <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
+                                    </Button>
+
+                                    <Button Margin="5 0 0 0" Style="{StaticResource gridRemoveButton}" Command="{Binding Delete}">
+                                        <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </Grid>
         </Grid>
 
 
 
+        <Grid x:Name="ShowInsertData"  Grid.Column="1" Grid.RowSpan="2" 
+Visibility="Collapsed" Background="Transparent" MouseDown="Window_MouseDown">
+            <Border Background="White" BorderBrush="#9575CD" BorderThickness="1" 
+      CornerRadius="7" Margin="15" Width="320" HorizontalAlignment="Center"
+      VerticalAlignment="Center" Padding="15" >
+                <StackPanel >
 
-        <Grid x:Name="ShowInsertData" Background="Gray" Grid.Column="1" Grid.RowSpan="2" Visibility="Collapsed" >
-            <StackPanel Margin="15" Background="White" MinWidth="300" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Button Style="{StaticResource gridEditButton}" Click="CloseInsert" HorizontalAlignment="Right">
+                        <Icon:PackIconMaterial Kind="Close" Style="{StaticResource gridButtonIcon}" />
+                    </Button>
 
-                <Image MouseDown="CloseInsert" VerticalAlignment="Top" HorizontalAlignment="Right" 
-                       Width="30" Height="30" Source="/Images/icon.png">
-                    <Image.RenderTransform>
-                        <TranslateTransform Y="10" X="-10"/>
-                    </Image.RenderTransform>
-                </Image>
+                    <Label Content="Добавление" HorizontalAlignment="Center" FontSize="22" 
+             FontWeight="SemiBold" Foreground="#121518"/>
+                    <Label Content="Введите данные о родителе" Margin="0 0 0 10" 
+         FontSize="12" HorizontalAlignment="Center" Foreground="#6E7783"/>
 
-                <Label Content="Добавление данных" FontSize="24" Margin="5" HorizontalAlignment="Center"/>
 
-                <StackPanel DataContext="{Binding NewRod}" Margin="15">
-                    <TextBlock Text="ID студента" Margin="5"/>
-                    <ComboBox Background="Honeydew"  
-                              ItemsSource="{Binding ListItemSelectStud}" 
-                              IsEnabled="True" 
-                              SelectedValue="{Binding IDStud}" 
-                              SelectedValuePath="IDStud" 
-                              DisplayMemberPath="FIOStud" 
-                              Padding="5" />
+                    <StackPanel DataContext="{Binding NewRod}" Margin="15">
 
-                    <TextBlock Text="ФИО родителя" Margin="5"/>
-                    <TextBox Text="{Binding FIORod, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
 
-                   
-                    <TextBlock Text="Адрес" Margin="5"/>
-                    <TextBox Text="{Binding Adr, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                        <StackPanel Margin="0 0 0 10" >
 
-                    <TextBlock Text="Телефон" Margin="5"/>
-                    <TextBox Text="{Binding Tel, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                            <TextBlock Text="Ученик" Style="{StaticResource text}"/>
 
-                    <TextBlock Text="Работа" Margin="5"/>
-                    <TextBox Text="{Binding Rabota, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                            <ComboBox 
+      ItemsSource="{Binding ListItemSelectStud}"  SelectedValue="{Binding IDStud}" SelectedValuePath="IDStud"
+ IsEnabled="true" Height="50" Foreground="#363636" FontSize="14"
+ Background="#F5F7F9"
+  BorderBrush="#F5F7F9" 
+      Margin="5" >
+                                <ComboBox.Resources>
+                                    <ResourceDictionary>
+                                        <ResourceDictionary.MergedDictionaries>
+                                            <ResourceDictionary Source="pack://application:,,,/Ivanova_UchitDn;component/MaterialDesignResources.xaml" />
+                                        </ResourceDictionary.MergedDictionaries>
+                                    </ResourceDictionary>
+                                </ComboBox.Resources>
+                                <ComboBox.Style>
+                                    <StaticResource ResourceKey="MaterialDesignComboBox" />
+                                </ComboBox.Style>
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding FIOStud}" TextWrapping="Wrap" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+
+                        </StackPanel>
+
+                        <StackPanel>
+                            <TextBlock Text="Фамилия, имя, отчество (ФИО)" Style="{StaticResource text}" Margin="0"/>
+                            <TextBox Text="{Binding FIORod, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                        </StackPanel>
+
+                       
+                        <StackPanel>
+                            <TextBlock Text="Адрес" Style="{StaticResource text}" Margin="0"/>
+                            <TextBox Text="{Binding Adr, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                        </StackPanel>
+
+                        <StackPanel>
+                            <TextBlock Text="Телефон" Style="{StaticResource text}" Margin="0"/>
+                            <TextBox Text="{Binding Tel, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                        </StackPanel>
+
+                        <StackPanel>
+                            <TextBlock Text="Работа" Style="{StaticResource text}" Margin="0"/>
+                            <TextBox Text="{Binding Rabota, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                        </StackPanel>
+
+                    </StackPanel>
+                    <Button Content="Добавить" Command="{Binding Insert}" Margin="0 10"/>
+
                 </StackPanel>
-
-                <Button Command="{Binding Insert}" Background="#AFAFFF" Foreground="Black" FontWeight="SemiBold" Margin="20" Padding="10" >Добавить</Button>
-            </StackPanel>
+            </Border>
         </Grid>
 
 
-        <Grid x:Name="ShowEditData" Background="Gray"  Grid.Column="1" Grid.RowSpan="2" Visibility="Collapsed">
-            <StackPanel Margin="15" Background="White" MinWidth="300" HorizontalAlignment="Center" VerticalAlignment="Center">
 
-                <Image MouseDown="CloseEdit" VerticalAlignment="Top" HorizontalAlignment="Right" 
-                       Width="30" Height="30" Source="/Images/icon.png">
-                    <Image.RenderTransform>
-                        <TranslateTransform Y="10" X="-10"/>
-                    </Image.RenderTransform>
-                </Image>
 
-                <Label Content="Редактирование"  FontSize="24" Margin="5" HorizontalAlignment="Center"/>
 
-                <StackPanel DataContext="{Binding EditRod}" Margin="15">
-                    <TextBlock Text="ID студента" Margin="5"/>
-                    <ComboBox Background="Honeydew"  
-                              ItemsSource="{Binding ListItemSelectStud}" 
-                              IsEnabled="True" 
-                              SelectedValue="{Binding IDStud}" 
-                              SelectedValuePath="IDStud" 
-                              DisplayMemberPath="FIOStud" 
-                              Margin="5" />
+        <Grid x:Name="ShowEditData"  Grid.Column="1" Grid.RowSpan="2" Visibility="Collapsed" Background="Transparent" MouseDown="Window_MouseDown">
+            <Border Background="White" BorderBrush="#9575CD" BorderThickness="1" 
+CornerRadius="7" Margin="15" Width="320" HorizontalAlignment="Center"
+VerticalAlignment="Center" Padding="15" >
+                <StackPanel >
 
-                    <TextBlock Text="ФИО родителя" Margin="5"/>
-                    <TextBox Text="{Binding FIORod, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                    <Button Style="{StaticResource gridEditButton}" Click="CloseEdit" HorizontalAlignment="Right">
+                        <Icon:PackIconMaterial Kind="Close" Style="{StaticResource gridButtonIcon}" />
+                    </Button>
 
-                    
-                    <TextBlock Text="Адрес" Margin="5"/>
-                    <TextBox Text="{Binding Adr, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                    <Label Content="Редактирование" HorizontalAlignment="Center" FontSize="22" 
+       FontWeight="SemiBold" Foreground="#121518"/>
+                    <Label Content="Измените данные о родителе" Margin="0 0 0 10" 
+   FontSize="12" HorizontalAlignment="Center" Foreground="#6E7783"/>
 
-                    <TextBlock Text="Телефон" Margin="5"/>
-                    <TextBox Text="{Binding Tel, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
 
-                    <TextBlock Text="Работа" Margin="5"/>
-                    <TextBox Text="{Binding Rabota, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                    <StackPanel DataContext="{Binding EditRod}" Margin="15">
+
+                        <StackPanel Margin="0 0 0 10" >
+                            <TextBlock Text="Ученик" Style="{StaticResource text}"/>
+
+                            <ComboBox 
+     ItemsSource="{Binding ListItemSelectStud}"  SelectedValue="{Binding IDStud}" SelectedValuePath="IDStud"
+IsEnabled="true" Height="50" Foreground="#363636" FontSize="14"
+Background="#F5F7F9"
+ BorderBrush="#F5F7F9" 
+     Margin="5" >
+                                <ComboBox.Resources>
+                                    <!-- Подключение MaterialDesignResources.xaml как локальный ресурс -->
+                                    <ResourceDictionary>
+                                        <ResourceDictionary.MergedDictionaries>
+                                            <ResourceDictionary Source="pack://application:,,,/Ivanova_UchitDn;component/MaterialDesignResources.xaml" />
+                                        </ResourceDictionary.MergedDictionaries>
+                                    </ResourceDictionary>
+                                </ComboBox.Resources>
+                                <ComboBox.Style>
+                                    <StaticResource ResourceKey="MaterialDesignComboBox" />
+                                </ComboBox.Style>
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding FIOStud}" TextWrapping="Wrap" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+
+                        </StackPanel>
+
+                        <StackPanel>
+                            <TextBlock Text="Фамилия, имя, отчество (ФИО)" Style="{StaticResource text}" Margin="0"/>
+                            <TextBox Text="{Binding FIORod, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                        </StackPanel>
+
+
+                        <StackPanel>
+                            <TextBlock Text="Адрес" Style="{StaticResource text}" Margin="0"/>
+                            <TextBox Text="{Binding Adr, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                        </StackPanel>
+
+                        <StackPanel>
+                            <TextBlock Text="Телефон" Style="{StaticResource text}" Margin="0"/>
+                            <TextBox Text="{Binding Tel, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                        </StackPanel>
+
+                        <StackPanel>
+                            <TextBlock Text="Работа" Style="{StaticResource text}" Margin="0"/>
+                            <TextBox Text="{Binding Rabota, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                        </StackPanel>
+                        
+
+                    </StackPanel>
+                    <Button Content="Редактировать" Command="{Binding Edit}" CommandParameter="{Binding ElementName=ShowEditData}" Margin="0 10"/>
+
 
                 </StackPanel>
-
-                <Button Command="{Binding Edit}" CommandParameter="{Binding ElementName=ShowEditData}"
-                                Content="Изменить" Background="#AFAFFF" Foreground="Black" FontWeight="SemiBold" Margin="20" Padding="10" />
-
-
-            </StackPanel>
+            </Border>
         </Grid>
 
+     
     </Grid>
 </Page>

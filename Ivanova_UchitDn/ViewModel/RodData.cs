@@ -14,6 +14,8 @@ namespace Ivanova_UchitDn.ViewModel
 {
     public class RodData : INotifyPropertyChanged
     {
+        private bool isUpdating = false;
+
         /// <summary>
         /// Событие оповещения об изменениях
         /// </summary>
@@ -70,11 +72,19 @@ namespace Ivanova_UchitDn.ViewModel
 
         private async void LoadData()
         {
+            if (isUpdating)
+            {
+                return;
+            }
+            isUpdating = true;
+
             NewRod = new RodModel();
             EditRod = new RodModel();
             _ = await StudDataList();
             OnPropertyChanged("SearchSelectStud");
             _ = await RodDataList();
+
+            isUpdating = false;
 
         }
 
@@ -103,11 +113,11 @@ namespace Ivanova_UchitDn.ViewModel
 
             while (await reader.ReadAsync())
             {
-                await Task.Delay(100);
+                await Task.Delay(1);
                 ListItemSelectStudSelf.Add(new ListItemSelectS()
                 {
-                    IDStud = (int)reader[0],
-                    FIOStud = string.Format("{0}", reader[1]),
+                    IDStud = (int)reader["id_stud"],
+                    FIOStud = string.Format("{0}", reader["FIO_stud"]),
 
                 });
 
@@ -130,7 +140,6 @@ namespace Ivanova_UchitDn.ViewModel
             MySqlCommand
                 command = new MySqlCommand(sql, con.GetCon());
 
-            Debug.WriteLine(sql);
             command.Parameters.Add(new MySqlParameter("@text", string.Format("%{0}%", SearchText)));
             command.Parameters.Add(new MySqlParameter("@kart_stud", SearchSelectStud));
 
@@ -150,17 +159,18 @@ namespace Ivanova_UchitDn.ViewModel
 
             while (await reader.ReadAsync())
             {
-                await Task.Delay(200);
+                await Task.Delay(1);
                 RodsSelf.Add(new RodModel()
                 {
                     IDRod = (int)reader["id_roditel"],
                     IDStud = (int)reader["id_stud"],
                     ListItemSelectStud = ListItemSelectStudSelf,
                     FIORod = (string)reader["FIO_roditel"],
-                   // StepRod = (string)reader["step_rod"],
                     Adr = (string)reader["address_rod"],
                     Tel = (string)reader["tel_rod"],
-                    Rabota = (string)reader["rabota_rod"]
+                    Rabota = (string)reader["rabota_rod"],
+                    Delete = new DeleteCommand(DeleteData, (int)reader[0])
+
                 });
 
                 OnPropertyChanged("Users");
@@ -175,18 +185,42 @@ namespace Ivanova_UchitDn.ViewModel
             string
                 sql = "";
 
-            if (SearchName)
-                SearchTypesAnd(ref sql, "`FIO_roditel` like @text");
-          
-            if (SearchAdr)
-                SearchTypesAnd(ref sql, "`address_rod` like @text");
-            if (SearchTel)
-                SearchTypesAnd(ref sql, "`tel_rod` like @text");
-            if (SearchRab)
-                SearchTypesAnd(ref sql, "`rabota_rod` like @text");
-
             if (!GroupInsertNotValid(SearchSelectStud))
                 SearchTypesAnd(ref sql, "`id_stud` = @kart_stud");
+
+
+            if (SearchStud)
+            {
+                SearchTypesAnd(ref sql, "`id_stud` IN (SELECT `id_stud` FROM `kart_stud` WHERE `FIO_stud` LIKE @text)");
+            }
+
+            // Если ни один чекбокс не выбран, добавляем условия поиска для всех полей
+            if (!SearchName && !SearchAdr && !SearchTel && !string.IsNullOrEmpty(SearchText))
+            {
+                sql = "`FIO_roditel` LIKE @text OR `address_rod` LIKE @text OR `tel_rod` LIKE @text " +
+                    "OR `rabota_rod` LIKE @text OR `id_stud` IN (SELECT `id_stud` FROM `kart_stud` WHERE `FIO_stud` LIKE @text)";
+            }
+            else
+            {
+                List<string> conditions = new List<string>();
+
+                // Добавляем условия поиска в зависимости от выбранных чекбоксов
+                if (SearchName)
+                    conditions.Add("`FIO_roditel` LIKE @text");
+                if (SearchAdr)
+                    conditions.Add("`address_rod` LIKE @text");
+                if (SearchTel)
+                    conditions.Add("`tel_rod` LIKE @text");
+                if (SearchRab)
+                    conditions.Add("`rabota_rod` LIKE @text");
+                if (SearchStud)
+                    conditions.Add("`id_stud` IN (SELECT `id_stud` FROM `kart_stud` WHERE `FIO_stud` LIKE @text)");
+
+
+                // Соединяем условия с помощью оператора OR
+                sql = string.Join(" OR ", conditions);
+            }
+
 
             return SearchTypesSet(sql);
         }
@@ -233,7 +267,6 @@ namespace Ivanova_UchitDn.ViewModel
                     IDStud = value.IDStud,
                     ListItemSelectStud = ListItemSelectStudSelf,
                     FIORod = value.FIORod,
-                    //StepRod = value.StepRod,
                     Adr = value.Adr,
                     Tel = value.Tel,
                     Rabota = value.Rabota
@@ -295,12 +328,6 @@ namespace Ivanova_UchitDn.ViewModel
                 return;
             }
 
-           /* if (string.IsNullOrEmpty(NewRodSelf.StepRod))
-            {
-                MessageBox.Show("Не указано степень родства");
-                return;
-            }*/
-
             if (string.IsNullOrEmpty(NewRodSelf.Adr))
             {
                 MessageBox.Show("Не указан адрес");
@@ -329,7 +356,6 @@ namespace Ivanova_UchitDn.ViewModel
 
             command.Parameters.Add(new MySqlParameter("@i", NewRodSelf.IDStud));
             command.Parameters.Add(new MySqlParameter("@f", NewRodSelf.FIORod));
-            //command.Parameters.Add(new MySqlParameter("@s", NewRodSelf.StepRod));
             command.Parameters.Add(new MySqlParameter("@a", NewRodSelf.Adr));
             command.Parameters.Add(new MySqlParameter("@t", NewRodSelf.Tel));
             command.Parameters.Add(new MySqlParameter("@r", NewRodSelf.Rabota));
@@ -392,12 +418,6 @@ namespace Ivanova_UchitDn.ViewModel
                 return;
             }
 
-           /* if (string.IsNullOrEmpty(EditRod.StepRod))
-            {
-                MessageBox.Show("Не указано степень родства");
-                return;
-            }*/
-
             if (string.IsNullOrEmpty(EditRod.Adr))
             {
                 MessageBox.Show("Не указан адрес");
@@ -422,14 +442,13 @@ namespace Ivanova_UchitDn.ViewModel
             Connector
                  con = new Connector();
             string
-                sql = "UPDATE `roditeli` SET `id_stud`=@id, `FIO_roditel`=@f, `address_rod`=@f, `tel_rod`=@t, `rabota_rod`=@r WHERE `id_roditel`=@i;";
+                sql = "UPDATE `roditeli` SET `id_stud`=@id, `FIO_roditel`=@f, `address_rod`=@a, `tel_rod`=@t, `rabota_rod`=@r WHERE `id_roditel`=@i;";
             MySqlCommand
                 command = new MySqlCommand(sql, con.GetCon());
 
 
             command.Parameters.Add(new MySqlParameter("@id",EditRod.IDStud));
             command.Parameters.Add(new MySqlParameter("@f", EditRod.FIORod));
-            //command.Parameters.Add(new MySqlParameter("@s", EditRod.StepRod));
             command.Parameters.Add(new MySqlParameter("@a", EditRod.Adr));
             command.Parameters.Add(new MySqlParameter("@t", EditRod.Tel));
             command.Parameters.Add(new MySqlParameter("@r", EditRod.Rabota));
@@ -487,6 +506,8 @@ namespace Ivanova_UchitDn.ViewModel
             {
                 SearchNameSelf = value;
                 OnPropertyChanged("SearchName");
+                LoadData();
+
             }
         }
         
@@ -498,6 +519,8 @@ namespace Ivanova_UchitDn.ViewModel
             {
                 SearchStepSelf = value;
                 OnPropertyChanged("SearchStep");
+                LoadData();
+
             }
         }
         
@@ -509,9 +532,24 @@ namespace Ivanova_UchitDn.ViewModel
             {
                 SearchAdrSelf = value;
                 OnPropertyChanged("SearchAdr");
+                LoadData();
+
             }
         }
-        
+
+        public bool SearchStudSelf;
+        public bool SearchStud
+        {
+            get => SearchStudSelf;
+            set
+            {
+                SearchStudSelf = value;
+                OnPropertyChanged("SearchStud");
+                LoadData();
+
+            }
+        }
+
         public bool SearchTelSelf;
         public bool SearchTel
         {
@@ -520,6 +558,8 @@ namespace Ivanova_UchitDn.ViewModel
             {
                 SearchTelSelf = value;
                 OnPropertyChanged("SearchTel");
+                LoadData();
+
             }
         }
 
@@ -531,6 +571,8 @@ namespace Ivanova_UchitDn.ViewModel
             {
                 SearchRabSelf = value;
                 OnPropertyChanged("SearchRab");
+                LoadData();
+
             }
         }
 
@@ -542,6 +584,8 @@ namespace Ivanova_UchitDn.ViewModel
             {
                 SearchTextSelf = value;
                 OnPropertyChanged("SearchText");
+                LoadData();
+
             }
         }
 

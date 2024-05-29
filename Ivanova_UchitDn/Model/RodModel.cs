@@ -56,17 +56,6 @@ namespace Ivanova_UchitDn.Model
         }
 
 
-        private string StepRodSelf;
-        public string StepRod
-        {
-            get => StepRodSelf;
-            set
-            {
-                StepRodSelf = value;
-                OnPropertyChanged("StepRod");
-            }
-        }
-
         private string AdrSelf;
 
         public string Adr

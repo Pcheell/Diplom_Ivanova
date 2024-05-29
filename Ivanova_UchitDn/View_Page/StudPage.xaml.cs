@@ -62,8 +62,7 @@ namespace Ivanova_UchitDn.View_Page
         }
         private void SearchByDateOfBirth_Click(object sender, RoutedEventArgs e)
         {
-            StudData studData = new StudData(); // Создание экземпляра класса StudData
-            studData.SearchByDateOfBirth(); // Вызов метода через экземпляр класса
+            
         }
     }
 }

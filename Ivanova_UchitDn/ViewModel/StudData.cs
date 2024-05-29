@@ -1,21 +1,14 @@
-﻿using Google.Protobuf.WellKnownTypes;
-using Ivanova_UchitDn.Core;
+﻿using Ivanova_UchitDn.Core;
 using Ivanova_UchitDn.Model;
-using Ivanova_UchitDn.View_Page;
 using MySqlConnector;
-using Org.BouncyCastle.Tls;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Shapes;
 using static Ivanova_UchitDn.Core.CoreApp;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Ivanova_UchitDn.ViewModel
 {
@@ -188,11 +181,7 @@ namespace Ivanova_UchitDn.ViewModel
 
         }
 
-        public void SearchByDateOfBirth()
-        {
-            SearchDate = true;
-            LoadData();
-        }
+   
 
         private string SearchTypes()
         {
@@ -273,8 +262,6 @@ namespace Ivanova_UchitDn.ViewModel
                     EditDataSelf = new StudModel();
                     return;
                 }
-
-
 
                 EditDataSelf = new StudModel()
                 {
