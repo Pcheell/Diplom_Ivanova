@@ -70,7 +70,7 @@ namespace Ivanova_UchitDn.View_Page
             FAdrTextEdit.Visibility = Visibility.Collapsed;
 
             // Дублируем значение из поля для адреса проживания в поле для фактического адреса
-            FAdrTextBoxEdit.Text = AdrTextBox.Text;
+            FAdrTextBoxEdit.Text = AdrTextBoxEdit.Text;
         }
 
         private void CheckBoxEdit_Unchecked(object sender, RoutedEventArgs e)
@@ -79,6 +79,15 @@ namespace Ivanova_UchitDn.View_Page
             FAdrTextBoxEdit.Visibility = Visibility.Visible;
             FAdrTextEdit.Visibility = Visibility.Visible;
 
+        }
+
+        private void AdrTextBoxEdit_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            // Если чекбокс "Совпадает с фактическим" отмечен, обновляем текст в поле фактического адреса
+            if (FactCheckBox.IsChecked == true)
+            {
+                FAdrTextBoxEdit.Text = AdrTextBoxEdit.Text;
+            }
         }
 
         private void CloseEdit(object sender, RoutedEventArgs e)

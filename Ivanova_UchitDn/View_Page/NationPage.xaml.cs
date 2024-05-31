@@ -4,19 +4,18 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-
 namespace Ivanova_UchitDn.View_Page
 {
     /// <summary>
-    /// Логика взаимодействия для Kurator.xaml
+    /// Логика взаимодействия для NationPage.xaml
     /// </summary>
-    public partial class Kurator : Page
+    public partial class NationPage : Page
     {
-        public Kurator()
+        public NationPage()
         {
             InitializeComponent();
-            GridData.DataContext = new UserData();
-           
+            GridData.DataContext = new NationData();
+
         }
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -29,20 +28,22 @@ namespace Ivanova_UchitDn.View_Page
             }
         }
 
+
+
         private void OpenEdit(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
             if (btn != null)
             {
-                User selectedUser = btn.DataContext as User;
-                if (selectedUser != null)
+                NationModel selectedNatiion = btn.DataContext as NationModel;
+                if (selectedNatiion != null)
                 {
                     // Получаем DataContext в качестве типа UserData
-                    UserData userData = GridData.DataContext as UserData;
-                    if (userData != null)
+                    NationData nationData = GridData.DataContext as NationData;
+                    if (nationData != null)
                     {
                         // Передаем выбранного пользователя в свойство EditUser
-                        userData.EditUser = selectedUser;
+                        nationData.EditNation = selectedNatiion;
                     }
                     // Показываем окно редактирования
                     ShowEditData.Visibility = Visibility.Visible;

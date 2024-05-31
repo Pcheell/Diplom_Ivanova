@@ -48,7 +48,14 @@
                     <TextBlock Text="Родители"/>
                 </StackPanel>
             </Button>
-            
+
+            <Button Style="{StaticResource menuButton}" Click="Nat_btn">
+                <StackPanel Orientation="Horizontal">
+                    <Icon:PackIconMaterial Kind="Earth" Style="{StaticResource menuButtonIcon}"/>
+                    <TextBlock Text="Национальности"/>
+                </StackPanel>
+            </Button>
+
         </StackPanel>
 
         <Button Style="{StaticResource menuButton}" VerticalAlignment="Bottom" Click="LoginPageOpen" Margin="15 0 15 50">

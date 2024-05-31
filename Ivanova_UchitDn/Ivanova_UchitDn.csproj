@@ -132,6 +132,7 @@
       <DependentUpon>VhodPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\GrupData.cs" />
+    <Compile Include="ViewModel\NationData.cs" />
     <Compile Include="ViewModel\RodData.cs" />
     <Compile Include="ViewModel\StudData.cs" />
     <Compile Include="ViewModel\UpdateData.cs" />
@@ -141,6 +142,9 @@
     </Compile>
     <Compile Include="View_Page\Kurator.xaml.cs">
       <DependentUpon>Kurator.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View_Page\NationPage.xaml.cs">
+      <DependentUpon>NationPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="View_Page\RoditeliPage.xaml.cs">
       <DependentUpon>RoditeliPage.xaml</DependentUpon>
@@ -174,6 +178,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View_Page\Kurator.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View_Page\NationPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

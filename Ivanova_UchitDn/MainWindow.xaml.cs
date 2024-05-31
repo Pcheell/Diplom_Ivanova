@@ -36,7 +36,12 @@ namespace Ivanova_UchitDn
             MyFrame.NavigationService.Navigate(new RoditeliPage());
         }
 
-       
+        private void Nat_btn(object sender, RoutedEventArgs e)
+        {
+            MyFrame.NavigationService.Navigate(new NationPage());
+
+        }
+
         private void LoginPageOpen(object sender, RoutedEventArgs e)
         {
             if (this.Owner is VhodPage v)
@@ -49,5 +54,6 @@ namespace Ivanova_UchitDn
             this.Close();
         }
 
+      
     }
 }

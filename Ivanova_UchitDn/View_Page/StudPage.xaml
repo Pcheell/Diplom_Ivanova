@@ -256,6 +256,7 @@ Background="#F5F7F9" BorderBrush="#F5F7F9" FontSize="14" >
 
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 0 0 0">
 
+
                                         <Button Style="{StaticResource gridEditButton}" Click="OpenEdit" >
                                             <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
@@ -605,10 +606,10 @@ Background="#F5F7F9" Width="200"
 
                             <StackPanel Margin="0 8 0 0">
                                 <TextBlock Text="Адрес проживания"  Style="{StaticResource text}" Margin="0"/>
-                                <TextBox Text="{Binding Adr, UpdateSourceTrigger=PropertyChanged}" x:Name="AdrTextBoxEdit" Margin="5" Width="200" MinHeight="50"/>
+                                <TextBox Text="{Binding Adr, UpdateSourceTrigger=PropertyChanged}" TextChanged="AdrTextBoxEdit_TextChanged" x:Name="AdrTextBoxEdit" Margin="5" Width="200" MinHeight="50" />
                             </StackPanel>
 
-                            <CheckBox Content="Совпадает с фактическим" Margin="5 0 0 10" Checked="CheckBoxEdit_Checked" Unchecked="CheckBoxEdit_Unchecked"/>
+                            <CheckBox x:Name="FactCheckBox" Content="Совпадает с фактическим" Margin="5 0 0 10" Checked="CheckBoxEdit_Checked" Unchecked="CheckBoxEdit_Unchecked"/>
 
                             <StackPanel>
                                 <TextBlock Text="Фактический адрес проживания" x:Name="FAdrTextEdit"  Style="{StaticResource text}" Margin="0"/>

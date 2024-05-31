@@ -1,0 +1,219 @@
+﻿<Page x:Class="Ivanova_UchitDn.View_Page.NationPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Ivanova_UchitDn.View_Page" xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="1000"
+      Title="Nation">
+
+    <Grid x:Name="GridData">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Column="1" Grid.Row="0" Background="White">
+            <StackPanel Background="white" Margin="15,15,15,5">
+                <Grid Margin="15">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60*"/>
+                        <ColumnDefinition Width="67*"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.ColumnSpan="2">
+
+                        <Grid Width="300" HorizontalAlignment="Left" Grid.ColumnSpan="2">
+                            <TextBlock Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
+                                            Margin="20 0" VerticalAlignment="Center" Foreground="#B0B9C6" 
+                                       IsHitTestVisible="False"/>
+
+                            <TextBox Name="textBoxSearch" Style="{StaticResource searchTextbox}"
+                                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Icon:PackIconMaterial Kind="Magnify" Width="15" Height="15" 
+                            VerticalAlignment="Center" Margin="0 0 15 0" 
+                            Foreground="#B0B9C6" HorizontalAlignment="Right" />
+                        </Grid>
+
+                        <WrapPanel Margin="10">
+                            <CheckBox Content="ФИО" Margin="0,0,15,0" IsChecked="{Binding SearchName, UpdateSourceTrigger=PropertyChanged}"/>
+                            </WrapPanel>
+
+                    </StackPanel>
+
+
+
+                    <StackPanel Grid.Row="2" Grid.ColumnSpan="3">
+                        <WrapPanel >
+                            <StackPanel Orientation="Horizontal" Margin="5 0" >
+
+
+
+
+                                <Button Style="{StaticResource addButton}" Width="190" Click="OpenInsert">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" 
+                                                                   Margin="0 1 8 0" Width="11" Height="11"/>
+                                        <TextBlock Text="Добавить национальность" />
+                                    </StackPanel>
+                                </Button>
+
+                                <StackPanel Orientation="Horizontal" Margin="10 0" >
+                                    <Button Style="{StaticResource addButton}" Width="180" Command="{Binding Update}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Icon:PackIconMaterial Kind="Reload" VerticalAlignment="Center" Margin="0 1 8 0" Width="11" Height="11"/>
+                                            <TextBlock Text="Обновить таблицу" />
+                                        </StackPanel>
+                                    </Button>
+
+
+                                </StackPanel>
+
+
+
+                            </StackPanel>
+                        </WrapPanel>
+
+                    </StackPanel>
+
+                </Grid>
+
+            </StackPanel>
+
+            <TextBlock Text="Национальности"  FontSize="20" 
+FontWeight="SemiBold" Foreground="#121518" Margin="35 0"/>
+        </StackPanel>
+
+
+
+        <Grid Grid.Column="1" Grid.Row="1" >
+            <Grid Margin="15 0"  >
+                <ListView ItemsSource="{Binding Nations}" SelectedItem="{Binding EditNations}" 
+                          Margin="15 5" BorderThickness="0" 
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel ItemWidth="200" />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel >
+                                <StackPanel Margin="0 0 0 10" >
+                                    <TextBlock Text="Название национальности" Style="{StaticResource text}"/>
+                                    <TextBox Text="{Binding NameNation}" IsReadOnly="True" Height="60" Width="165"/>
+
+                                </StackPanel>
+
+                             
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 20 0 0">
+
+                                    <Button Style="{StaticResource gridEditButton}" Click="OpenEdit" >
+                                        <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
+                                    </Button>
+
+                                    <Button Margin="5 0 0 0" Style="{StaticResource gridRemoveButton}" Command="{Binding Delete}">
+                                        <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+        </Grid>
+
+
+
+        <Grid x:Name="ShowInsertData"  Grid.Column="1" Grid.RowSpan="2" 
+              Visibility="Collapsed" Background="Transparent" MouseDown="Window_MouseDown">
+            <Border Background="White" BorderBrush="#9575CD" BorderThickness="1" 
+                    CornerRadius="7" Margin="15" Width="320" HorizontalAlignment="Center"
+                    VerticalAlignment="Center" Padding="15" >
+                <StackPanel >
+
+                    <Button Style="{StaticResource gridEditButton}" Click="CloseInsert" HorizontalAlignment="Right">
+                        <Icon:PackIconMaterial Kind="Close" Style="{StaticResource gridButtonIcon}" />
+                    </Button>
+
+                    <Label Content="Добавление" HorizontalAlignment="Center" FontSize="22" 
+                           FontWeight="SemiBold" Foreground="#121518"/>
+                    <Label Content="Введите данные о национальности" Margin="0 0 0 10" 
+                       FontSize="12" HorizontalAlignment="Center" Foreground="#6E7783"/>
+
+
+                    <StackPanel DataContext="{Binding NewNation}" Margin="15">
+
+
+                        <StackPanel Margin="0 0 0 10" >
+                            <TextBlock Text="Название национальности" Style="{StaticResource text}"/>
+                            <TextBox Text="{Binding NameNation, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                        </StackPanel>
+
+                     
+
+                    </StackPanel>
+                    <Button Content="Добавить" Command="{Binding Insert}" Margin="0 10"/>
+
+                </StackPanel>
+            </Border>
+        </Grid>
+
+
+        <Grid x:Name="ShowEditData"  Grid.Column="1" Grid.RowSpan="2" 
+              Visibility="Collapsed" Background="Transparent" MouseDown="Window_MouseDown">
+            <Border Background="White" BorderBrush="#9575CD" BorderThickness="1" 
+            CornerRadius="7" Margin="15" Width="320" HorizontalAlignment="Center" 
+            VerticalAlignment="Center" Padding="15">
+                <StackPanel >
+
+                    <Button Style="{StaticResource gridEditButton}" Click="CloseEdit" HorizontalAlignment="Right">
+                        <Icon:PackIconMaterial Kind="Close" Style="{StaticResource gridButtonIcon}" />
+                    </Button>
+
+                    <Label Content="Редактирование" HorizontalAlignment="Center" FontSize="22" 
+                   FontWeight="SemiBold" Foreground="#121518"/>
+                    <Label Content="Измените данные о национальности" Margin="0 0 0 10" 
+               FontSize="12" HorizontalAlignment="Center" Foreground="#6E7783"/>
+
+
+                    <StackPanel DataContext="{Binding EditNation}" Margin="15">
+
+
+                        <StackPanel Margin="0 0 0 10" >
+                            <TextBlock Text="Фамилия, имя, отчество (ФИО)" Style="{StaticResource text}"/>
+                            <TextBox Text="{Binding NameNation, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                        </StackPanel>
+
+                     
+
+                    </StackPanel>
+                    <Button Content="Редактировать" Command="{Binding Edit}" CommandParameter="{Binding ElementName=ShowEditData}" Margin="0 10"/>
+
+                </StackPanel>
+            </Border>
+        </Grid>
+
+
+
+
+    </Grid>
+</Page>
