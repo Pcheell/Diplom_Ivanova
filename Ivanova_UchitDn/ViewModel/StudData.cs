@@ -17,6 +17,7 @@ namespace Ivanova_UchitDn.ViewModel
 
         private bool isUpdating = false;
 
+
         /// <summary>
         /// Событие оповещения об изменениях
         /// </summary>
@@ -43,6 +44,14 @@ namespace Ivanova_UchitDn.ViewModel
         }
 
 
+        private IList<ListItemSelectN> ListItemSelectNationSelf;
+        public IList<ListItemSelectN> ListItemSelectNation
+        {
+            get => ListItemSelectNationSelf;
+            set => ListItemSelectNationSelf = value;
+        }
+
+
         private IList<StudModel> StudsSelf;
         public IList<StudModel> Users
         {
@@ -62,12 +71,18 @@ namespace Ivanova_UchitDn.ViewModel
             }
         }
 
-
+   
 
         public StudData()
         {
+            SearchDataStartSelf = DateTime.Today;
+            SearchDataEndSelf = DateTime.Today;
+
             ListItemSelectGrup = new ObservableCollection<ListItemSelectG>();
+            ListItemSelectNation = new ObservableCollection<ListItemSelectN>();
             LoadData();
+
+
         }
 
         private async void LoadData()
@@ -81,7 +96,9 @@ namespace Ivanova_UchitDn.ViewModel
             NewStud = new StudModel();
             EditStud = new StudModel();
             _ = await GroupDataList();
+            _ = await NationDataList();
             OnPropertyChanged("SearchSelectGroup");
+            OnPropertyChanged("SearchSelectNation");
             _ = await StudDataSelect();
 
             isUpdating = false;
@@ -126,6 +143,44 @@ namespace Ivanova_UchitDn.ViewModel
             return true;
         }
 
+        private async Task<bool> NationDataList()
+        {
+            Connector
+                 con = new Connector();
+            string
+                sql = "select * from `nation` limit 50";
+            MySqlCommand
+                command = new MySqlCommand(sql, con.GetCon());
+
+            await con.GetOpen();
+
+            MySqlDataReader
+                reader = await command.ExecuteReaderAsync();
+
+            ListItemSelectNationSelf = new ObservableCollection<ListItemSelectN>() { new ListItemSelectN() { NameNation = "Все" } };
+
+            if (!reader.HasRows)
+            {
+                await con.GetClose();
+                return false;
+            }
+
+            while (await reader.ReadAsync())
+            {
+                ListItemSelectNationSelf.Add(new ListItemSelectN()
+                {
+                    IDNation = (int)reader["id_nation"],
+                    NameNation = string.Format("{0}", reader["name_nation"])
+                });
+
+                OnPropertyChanged("ListItemSelectNation");
+            }
+
+            NewStudSelf.ListItemSelectNation = ListItemSelectNationSelf;
+            await con.GetClose();
+            return true;
+        }
+
         private async Task<bool> StudDataSelect()
         {
 
@@ -139,8 +194,10 @@ namespace Ivanova_UchitDn.ViewModel
 
             command.Parameters.Add(new MySqlParameter("@text", string.Format("%{0}%", SearchText)));
             command.Parameters.Add(new MySqlParameter("@grup", SearchSelectGroup));
+            command.Parameters.Add(new MySqlParameter("@nation", SearchSelectNation));
             command.Parameters.Add(new MySqlParameter("@date_start", SearchDataStart.ToString("yyyy-MM-dd")));
             command.Parameters.Add(new MySqlParameter("@date_end", SearchDataEnd.ToString("yyyy-MM-dd")));
+
 
 
             await con.GetOpen();
@@ -167,7 +224,13 @@ namespace Ivanova_UchitDn.ViewModel
                     FIOStud = (string)reader["FIO_stud"],
                     DRStud = Convert.ToDateTime(reader["dr_stud"]),
                     Adr = (string)reader["address_stud"],
+                    FAdr = (string)reader["faddress_stud"],
                     Tel = (string)reader["tel_stud"],
+                    IDNation = (int)reader["id_nation"],
+                    ListItemSelectNation = ListItemSelectNationSelf,
+                    Section = reader["section_stud"] == DBNull.Value ? null : (string)reader["section_stud"],
+                    Img = reader["img_stud"] == DBNull.Value ? null : (string)reader["img_stud"],
+                    Note = reader["note_stud"] == DBNull.Value ? null : (string)reader["note_stud"],
                     Delete = new DeleteCommand(DeleteData, (int)reader[0])
 
 
@@ -181,7 +244,7 @@ namespace Ivanova_UchitDn.ViewModel
 
         }
 
-   
+
 
         private string SearchTypes()
         {
@@ -192,8 +255,7 @@ namespace Ivanova_UchitDn.ViewModel
             if (!GroupInsertNotValid(SearchSelectGroup))
                 SearchTypesAnd(ref sql, "`id_grup` = @grup");
 
-            if (SearchDate)
-                SearchTypesAnd(ref sql, "`dr_stud` BETWEEN @date_start AND @date_end");
+            if (SearchDate) SearchTypesAnd(ref sql, "`dr_stud` BETWEEN @date_start AND @date_end");
 
             if (SearchGrup)
             {
@@ -267,11 +329,17 @@ namespace Ivanova_UchitDn.ViewModel
                 {
                     IDStud = value.IDStud,
                     IDGrup = value.IDGrup,
+                    IDNation = value.IDNation,
                     ListItemSelectGrup = ListItemSelectGrupSelf,
+                    ListItemSelectNation = ListItemSelectNationSelf,
                     FIOStud = value.FIOStud,
                     DRStud = value.DRStud,
                     Adr = value.Adr,
-                    Tel = value.Tel
+                    FAdr = value.FAdr,
+                    Tel = value.Tel,
+                    Section = value.Section,
+                    Note = value.Note,
+                    Img = value.Img
                 };
 
                 OnPropertyChanged("EditStud");
@@ -325,6 +393,13 @@ namespace Ivanova_UchitDn.ViewModel
                 return;
             }
 
+            if (GroupInsertNotValidNation(NewStudSelf.IDNation))
+            {
+                MessageBox.Show("Не выбрана группа");
+                return;
+            }
+
+
             if (string.IsNullOrEmpty(NewStudSelf.FIOStud))
             {
                 MessageBox.Show("Не указано ФИО");
@@ -350,18 +425,26 @@ namespace Ivanova_UchitDn.ViewModel
             }
 
 
+
+
             Connector
                  con = new Connector();
             string
-                sql = "INSERT INTO `kart_stud` (id_grup, FIO_stud, dr_stud, address_stud, tel_stud) VALUES (@id, @f, @d, @a, @t);";
+                sql = "INSERT INTO `kart_stud` (id_grup, id_nation, FIO_stud, dr_stud, address_stud, faddress_stud, tel_stud, section_stud, note_stud, img_stud) " +
+                "VALUES (@idg, @idn, @f, @d, @a, @fa, @t, @s, @note, @img);";
             MySqlCommand
                 command = new MySqlCommand(sql, con.GetCon());
 
-            command.Parameters.Add(new MySqlParameter("@id", NewStudSelf.IDGrup));
+            command.Parameters.Add(new MySqlParameter("@idg", NewStudSelf.IDGrup));
+            command.Parameters.Add(new MySqlParameter("@idn", NewStudSelf.IDNation));
             command.Parameters.Add(new MySqlParameter("@f", NewStudSelf.FIOStud));
             command.Parameters.Add(new MySqlParameter("@d", NewStudSelf.DRStud));
             command.Parameters.Add(new MySqlParameter("@a", NewStudSelf.Adr));
+            command.Parameters.Add(new MySqlParameter("@fa", NewStudSelf.FAdr));
             command.Parameters.Add(new MySqlParameter("@t", NewStudSelf.Tel));
+            command.Parameters.Add(new MySqlParameter("@s", NewStudSelf.Section));
+            command.Parameters.Add(new MySqlParameter("@note", NewStudSelf.Note));
+            command.Parameters.Add(new MySqlParameter("@img", NewStudSelf.Img));
 
             await con.GetOpen();
 
@@ -415,6 +498,12 @@ namespace Ivanova_UchitDn.ViewModel
                 return;
             }
 
+            if (GroupInsertNotValidNation(EditStud.IDNation))
+            {
+                MessageBox.Show("Не выбрана национальность");
+                return;
+            }
+
             if (string.IsNullOrEmpty(EditStud.FIOStud))
             {
                 MessageBox.Show("Не указано ФИО");
@@ -439,21 +528,29 @@ namespace Ivanova_UchitDn.ViewModel
                 return;
             }
 
+         
+
             if (element is Grid g)
                 g.Visibility = Visibility.Collapsed;
 
             Connector
                  con = new Connector();
             string
-                sql = "UPDATE `kart_stud` SET `id_grup`=@id, `FIO_stud`=@f, `dr_stud`=@d, `address_stud`=@a, `tel_stud`=@t WHERE `id_stud`=@i;";
+                sql = "UPDATE `kart_stud` SET `id_grup`=@idg, `id_nation`=@idn, `FIO_stud`=@f, `dr_stud`=@d, " +
+                "`address_stud`=@a, `faddress_stud`=@fa, `tel_stud`=@t, `section_stud`=@s, `note_stud`=@note, `img_stud`=@img WHERE `id_stud`=@i;";
             MySqlCommand
                 command = new MySqlCommand(sql, con.GetCon());
 
-            command.Parameters.Add(new MySqlParameter("@id",EditStud.IDGrup));
+            command.Parameters.Add(new MySqlParameter("@idg",EditStud.IDGrup));
+            command.Parameters.Add(new MySqlParameter("@idn",EditStud.IDNation));
             command.Parameters.Add(new MySqlParameter("@f", EditStud.FIOStud));
             command.Parameters.Add(new MySqlParameter("@d", EditStud.DRStud));
             command.Parameters.Add(new MySqlParameter("@a", EditStud.Adr));
+            command.Parameters.Add(new MySqlParameter("@fa", EditStud.FAdr));
             command.Parameters.Add(new MySqlParameter("@t", EditStud.Tel));
+            command.Parameters.Add(new MySqlParameter("@s", EditStud.Section));
+            command.Parameters.Add(new MySqlParameter("@note", EditStud.Note));
+            command.Parameters.Add(new MySqlParameter("@img", EditStud.Img));
             command.Parameters.Add(new MySqlParameter("@i", EditStud.IDStud));
 
 
@@ -481,6 +578,21 @@ namespace Ivanova_UchitDn.ViewModel
             foreach (ListItemSelectG group in ListItemSelectGrup)
             {
                 if (group.IDGrup != key)
+                    continue;
+
+                return false;
+            }
+            return true;
+        }
+
+        private bool GroupInsertNotValidNation(int key)
+        {
+            if (key < 1)
+                return true;
+
+            foreach (ListItemSelectN nation in ListItemSelectNation)
+            {
+                if (nation.IDNation != key)
                     continue;
 
                 return false;
@@ -526,6 +638,19 @@ namespace Ivanova_UchitDn.ViewModel
             }
         }
 
+        public bool SearchNationSelf;
+        public bool SearchNation
+        {
+            get => SearchNationSelf;
+            set
+            {
+                SearchNationSelf = value;
+                OnPropertyChanged("SearchNation");
+                LoadData();
+
+            }
+        }
+
         public bool SearchAdrSelf;
         public bool SearchAdr
         {
@@ -565,12 +690,61 @@ namespace Ivanova_UchitDn.ViewModel
             }
         }
 
+        private string SearchSectionSelf;
+        public string SearchSection
+        {
+            get => SearchSectionSelf;
+            set
+            {
+                SearchSectionSelf = value;
+                OnPropertyChanged("SearchSection");
+                LoadData();
+
+            }
+        }
+
+        private string SearchNoteSelf;
+        public string SearchNote
+        {
+            get => SearchNoteSelf;
+            set
+            {
+                SearchNoteSelf = value;
+                OnPropertyChanged("SearchNote");
+                LoadData();
+
+            }
+        }
+
+        private string SearchImgSelf;
+        public string SearchImg
+        {
+            get => SearchImgSelf;
+            set
+            {
+                SearchImgSelf = value;
+                OnPropertyChanged("SearchImg");
+                LoadData();
+
+            }
+        }
+
+
         private int SearchSelectGroupSelf;
         public int SearchSelectGroup
         {
             get => SearchSelectGroupSelf;
             set { SearchSelectGroupSelf = value; LoadData(); OnPropertyChanged("SearchSelectGroup"); }
         }
+
+        private int SearchSelectNationSelf;
+        public int SearchSelectNation
+        {
+            get => SearchSelectNationSelf;
+            set { SearchSelectNationSelf = value; LoadData(); OnPropertyChanged("SearchSelectNation"); }
+        }
+
+
 
         private bool SearchDateSelf;
         public bool SearchDate
@@ -579,6 +753,7 @@ namespace Ivanova_UchitDn.ViewModel
             set { SearchDateSelf = value; OnPropertyChanged("SearchDate"); }
         }
 
+        //private DateTime searchDataStartSelf = DateTime.Now.AddMonths(-1); // Начальная дата
         private DateTime SearchDataStartSelf;
         public DateTime SearchDataStart
         {
@@ -592,10 +767,11 @@ namespace Ivanova_UchitDn.ViewModel
                 }
 
                 SearchDataStartSelf = value;
-                LoadData();
                 OnPropertyChanged("SearchDataStart");
             }
         }
+
+        //private DateTime searchDataEndSelf = DateTime.Now; // Конечная дата
 
         private DateTime SearchDataEndSelf;
         public DateTime SearchDataEnd
@@ -610,9 +786,9 @@ namespace Ivanova_UchitDn.ViewModel
                 }
 
                 SearchDataEndSelf = value;
-                LoadData();
                 OnPropertyChanged("SearchDataEnd");
             }
         }
+
     }
 }

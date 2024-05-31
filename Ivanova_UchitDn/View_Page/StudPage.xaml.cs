@@ -45,6 +45,41 @@ namespace Ivanova_UchitDn.View_Page
                 }
             }
         }
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            // Скрываем поле для фактического адреса
+            FAdrTextBox.Visibility = Visibility.Collapsed;
+            FAdrText.Visibility = Visibility.Collapsed;
+
+            // Дублируем значение из поля для адреса проживания в поле для фактического адреса
+            FAdrTextBox.Text = AdrTextBox.Text;
+        }
+
+        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            // Показываем поле для фактического адреса
+            FAdrTextBox.Visibility = Visibility.Visible;
+            FAdrText.Visibility = Visibility.Visible;
+
+        }
+
+        private void CheckBoxEdit_Checked(object sender, RoutedEventArgs e)
+        {
+            // Скрываем поле для фактического адреса
+            FAdrTextBoxEdit.Visibility = Visibility.Collapsed;
+            FAdrTextEdit.Visibility = Visibility.Collapsed;
+
+            // Дублируем значение из поля для адреса проживания в поле для фактического адреса
+            FAdrTextBoxEdit.Text = AdrTextBox.Text;
+        }
+
+        private void CheckBoxEdit_Unchecked(object sender, RoutedEventArgs e)
+        {
+            // Показываем поле для фактического адреса
+            FAdrTextBoxEdit.Visibility = Visibility.Visible;
+            FAdrTextEdit.Visibility = Visibility.Visible;
+
+        }
 
         private void CloseEdit(object sender, RoutedEventArgs e)
         {

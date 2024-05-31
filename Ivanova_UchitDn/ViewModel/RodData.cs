@@ -43,7 +43,7 @@ namespace Ivanova_UchitDn.ViewModel
             set => ListItemSelectStudSelf = value;
         }
 
-
+      
         private IList<RodModel> RodsSelf;
         public IList<RodModel> Users
         {

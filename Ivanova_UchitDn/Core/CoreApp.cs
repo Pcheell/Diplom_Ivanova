@@ -23,8 +23,12 @@ namespace Ivanova_UchitDn.Core
             public string FIOStud { get; set; }
         }
 
-     
-        
+        public class ListItemSelectN
+        {
+            public int IDNation { get; set; }
+            public string NameNation { get; set; }
+        }
+
 
     }
 }

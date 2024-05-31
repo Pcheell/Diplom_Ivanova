@@ -23,21 +23,21 @@
 
             <Button Style="{StaticResource menuButton}" Click="Kur_btn" >
                 <StackPanel Orientation="Horizontal">
-                    <Icon:PackIconMaterial Kind="AccountMultipleOutline" Style="{StaticResource menuButtonIcon}"/>
+                    <Icon:PackIconMaterial Kind="AccountCircleOutline" Style="{StaticResource menuButtonIcon}"/>
                     <TextBlock Text="Руководители"/>
                 </StackPanel>
             </Button>
 
             <Button Style="{StaticResource menuButton}" Click="Grup_btn">
                 <StackPanel Orientation="Horizontal">
-                    <Icon:PackIconMaterial Kind="AccountMultipleOutline" Style="{StaticResource menuButtonIcon}"/>
+                    <Icon:PackIconMaterial Kind="AccountGroupOutline" Style="{StaticResource menuButtonIcon}"/>
                     <TextBlock Text="Классы"/>
                 </StackPanel>
             </Button>
 
             <Button Style="{StaticResource menuButton}" Click="Stud_btn">
                 <StackPanel Orientation="Horizontal">
-                    <Icon:PackIconMaterial Kind="AccountMultipleOutline" Style="{StaticResource menuButtonIcon}"/>
+                    <Icon:PackIconMaterial Kind="CardAccountDetailsOutline" Style="{StaticResource menuButtonIcon}"/>
                     <TextBlock Text="Ученики"/>
                 </StackPanel>
             </Button>

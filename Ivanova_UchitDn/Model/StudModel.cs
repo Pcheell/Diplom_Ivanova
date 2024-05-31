@@ -1,9 +1,13 @@
 ﻿
 using Ivanova_UchitDn.Core;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
+using System.Windows.Input;
 using static Ivanova_UchitDn.Core.CoreApp;
+
 
 namespace Ivanova_UchitDn.Model
 {
@@ -60,6 +64,18 @@ namespace Ivanova_UchitDn.Model
         }
 
 
+        private int IDNationSelf;
+        public int IDNation
+        {
+            get => IDNationSelf;
+            set
+            {
+                IDNationSelf = value;
+                OnPropertyChanged("IDNation");
+            }
+        }
+
+
         /// <summary>
         /// Свойство FIO_stid
         /// </summary>
@@ -91,7 +107,6 @@ namespace Ivanova_UchitDn.Model
         }
 
         private string AdrSelf;
-
         public string Adr
         {
             get => AdrSelf;
@@ -99,6 +114,17 @@ namespace Ivanova_UchitDn.Model
             {
                 AdrSelf = value;
                 OnPropertyChanged("Adr");
+            }
+        }
+
+        private string FAdrSelf;
+        public string FAdr
+        {
+            get => FAdrSelf;
+            set
+            {
+                FAdrSelf = value;
+                OnPropertyChanged("FAdr");
             }
         }
 
@@ -114,6 +140,28 @@ namespace Ivanova_UchitDn.Model
             }
         }
 
+        private string SectionSelf;
+        public string Section
+        {
+            get => SectionSelf;
+            set
+            {
+                SectionSelf = value;
+                OnPropertyChanged("Section");
+            }
+        }
+
+        private string NoteSelf;
+        public string Note
+        {
+            get => NoteSelf;
+            set
+            {
+                NoteSelf = value;
+                OnPropertyChanged("Note");
+            }
+        }
+
 
         private IList<ListItemSelectG> ListItemSelectGrupSelf;
         public IList<ListItemSelectG> ListItemSelectGrup
@@ -126,6 +174,16 @@ namespace Ivanova_UchitDn.Model
             }
         }
 
+        private IList<ListItemSelectN> ListItemSelectNationSelf;
+        public IList<ListItemSelectN> ListItemSelectNation
+        {
+            get => ListItemSelectNationSelf;
+            set
+            {
+                ListItemSelectNationSelf = value;
+                OnPropertyChanged("ListItemSelectNation");
+            }
+        }
 
         private DeleteCommand DeleteSelf;
         public DeleteCommand Delete
@@ -133,5 +191,75 @@ namespace Ivanova_UchitDn.Model
             get => DeleteSelf;
             set => DeleteSelf = value;
         }
+
+        private string _img;
+        private const string DefaultImgPath = "pack://application:,,,/Ivanova_UchitDn;component/Images/avatar.jpg";
+
+        public string Img
+        {
+            get => _img;
+            set
+            {
+                _img = value;
+                OnPropertyChanged(nameof(Img));
+                OnPropertyChanged(nameof(ImgPath));
+            }
+        }
+        public string ImgPath => string.IsNullOrEmpty(Img) || !File.Exists(Img) ? DefaultImgPath : Img;
+
+
+        private ICommand _uploadPhotoCommand;
+
+        public ICommand UploadPhotoCommand
+        {
+            get
+            {
+                return _uploadPhotoCommand ?? (_uploadPhotoCommand = new PhotoRelayCommand(UploadPhoto));
+            }
+        }
+
+        private void UploadPhoto(object parameter)
+        {
+
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image Files (*.jpg, *.png)|*.jpg;*.png|All Files (*.*)|*.*";
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string selectedFilePath = openFileDialog.FileName;
+                string savedPath = PhotoUploader.UploadPhotoAndSavePath(selectedFilePath);
+                Img = savedPath; // Устанавливаем свойство Img, чтобы обновить TextBox
+            }
+        }
+
+        public class PhotoRelayCommand : ICommand
+        {
+            private readonly Action<object> _execute;
+            private readonly Func<bool> _canExecute;
+
+            public PhotoRelayCommand(Action<object> execute, Func<bool> canExecute = null)
+            {
+                _execute = execute ?? throw new ArgumentNullException(nameof(execute));
+                _canExecute = canExecute;
+            }
+
+            public event EventHandler CanExecuteChanged;
+
+            public bool CanExecute(object parameter)
+            {
+                return _canExecute == null || _canExecute();
+            }
+
+            public void Execute(object parameter)
+            {
+                _execute(parameter);
+            }
+
+            public void RaiseCanExecuteChanged()
+            {
+                CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
     }
 }
