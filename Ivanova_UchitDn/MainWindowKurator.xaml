@@ -1,0 +1,59 @@
+﻿<Window x:Class="Ivanova_UchitDn.MainWindowKurator"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Ivanova_UchitDn" xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+       Title="Журнал классного руководителя" MinHeight="600" MinWidth="1200" Height="600" Width="1000">
+
+    <Grid x:Name="GridData">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+
+        <StackPanel Grid.Column="0" Background="#623ED0">
+
+            <Label Content="Меню" Foreground="White" FontSize="22" HorizontalAlignment="Center" FontWeight="Medium"  Margin="0 50 0 0"/>
+            <Separator Margin="20" Background="#7E5FDC" Height="0.6" Width="150"/>
+
+
+
+            <Button Style="{StaticResource menuButton}" Click="Stud_btn">
+                <StackPanel Orientation="Horizontal">
+                    <Icon:PackIconMaterial Kind="CardAccountDetailsOutline" Style="{StaticResource menuButtonIcon}"/>
+                    <TextBlock Text="Ученики"/>
+                </StackPanel>
+            </Button>
+
+            <Button Style="{StaticResource menuButton}" Click="Rod_btn">
+                <StackPanel Orientation="Horizontal">
+                    <Icon:PackIconMaterial Kind="AccountMultipleOutline" Style="{StaticResource menuButtonIcon}"/>
+                    <TextBlock Text="Родители"/>
+                </StackPanel>
+            </Button>
+
+            <Button Style="{StaticResource menuButton}" Click="Nat_btn">
+                <StackPanel Orientation="Horizontal">
+                    <Icon:PackIconMaterial Kind="Earth" Style="{StaticResource menuButtonIcon}"/>
+                    <TextBlock Text="Национальности"/>
+                </StackPanel>
+            </Button>
+
+        </StackPanel>
+
+        <Button Style="{StaticResource menuButton}" VerticalAlignment="Bottom" Click="LoginPageOpen" Margin="15 0 15 50">
+            <StackPanel Orientation="Horizontal">
+                <Icon:PackIconMaterial Kind="Logout" Style="{StaticResource menuButtonIcon}"/>
+                <TextBlock Text="Выйти"/>
+            </StackPanel>
+        </Button>
+
+
+        <Frame NavigationUIVisibility="Hidden" Name="MyFrame" Grid.Row="0" Grid.ColumnSpan="3"></Frame>
+    </Grid>
+    </Window>

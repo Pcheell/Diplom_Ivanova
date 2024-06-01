@@ -124,13 +124,13 @@
     <Compile Include="Core\RelayCommand.cs" />
     <Compile Include="Core\ReloadCommand.cs" />
     <Compile Include="Core\SearchCommand.cs" />
+    <Compile Include="MainWindowKurator.xaml.cs">
+      <DependentUpon>MainWindowKurator.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Model\GrupModel.cs" />
     <Compile Include="Model\NationModel.cs" />
     <Compile Include="Model\RodModel.cs" />
     <Compile Include="Model\StudModel.cs" />
-    <Compile Include="RoditeliToStudent\RoditelWindow.xaml.cs">
-      <DependentUpon>RoditelWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="VhodPage.xaml.cs">
       <DependentUpon>VhodPage.xaml</DependentUpon>
     </Compile>
@@ -168,11 +168,11 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="MaterialDesignResources.xaml">
+    <Page Include="MainWindowKurator.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="RoditeliToStudent\RoditelWindow.xaml">
+    <Page Include="MaterialDesignResources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

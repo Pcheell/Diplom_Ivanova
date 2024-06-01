@@ -1,39 +1,28 @@
-﻿using Ivanova_UchitDn.Model;
-using Ivanova_UchitDn.View_Page;
+﻿using Ivanova_UchitDn.View_Page;
 using Ivanova_UchitDn.ViewModel;
 using System.Windows;
+using System.Windows.Controls;
 
 
 namespace Ivanova_UchitDn
 {
     /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
+    /// Логика взаимодействия для MainWindowKurator.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindowKurator : Window
     {
         private int userId; // Переменная для хранения ID пользователя
 
-        public MainWindow(int userId)
+        public MainWindowKurator(int userId)
         {
             InitializeComponent();
-            MyFrame.NavigationService.Navigate(new Kurator());
+            MyFrame.NavigationService.Navigate(new StudPage(userId));
 
             this.userId = userId; // Сохраняем ID пользователя
             var studData = new StudData(userId);
             var rodData = new RodData(userId);
-
         }
-
-        private void Kur_btn(object sender, RoutedEventArgs e)
-        {
-            MyFrame.NavigationService.Navigate(new Kurator());
-        }
-
-
-        private void Grup_btn(object sender, RoutedEventArgs e)
-        {
-            MyFrame.NavigationService.Navigate(new GrupPage());
-        }
+      
 
         private void Stud_btn(object sender, RoutedEventArgs e)
         {
@@ -63,6 +52,5 @@ namespace Ivanova_UchitDn
             this.Close();
         }
 
-      
     }
 }

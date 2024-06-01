@@ -17,9 +17,9 @@
             <Label Content="Добро пожаловать!" FontSize="12" HorizontalAlignment="Center" FontWeight="SemiBold" Foreground="#8B8994"/>
             <Label Content="Авторизация" FontSize="30" HorizontalAlignment="Center" FontWeight="Bold" Margin="0 0 0 10"/>
             <TextBlock Text="Логин" FontSize="14" Margin="0 5"/>
-            <TextBox x:Name="LoginTxt" Padding="5" Margin="0 5" />
+            <TextBox Text="admin" x:Name="LoginTxt" Padding="5" Margin="0 5" />
             <TextBlock Text="Пароль" FontSize="14" Margin="0 5"/>
-            <TextBox x:Name="ParolTxt" Padding="5" Margin="0 5" />
+            <TextBox Text="1" x:Name="ParolTxt" Padding="5" Margin="0 5" />
             <Button Content="Вход" Click="Btn_Vhod" Padding="10" Margin="0 20"/>
         </StackPanel>
 

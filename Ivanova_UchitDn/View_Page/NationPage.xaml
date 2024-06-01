@@ -52,9 +52,7 @@
                             Foreground="#B0B9C6" HorizontalAlignment="Right" />
                         </Grid>
 
-                        <WrapPanel Margin="10">
-                            <CheckBox Content="ФИО" Margin="0,0,15,0" IsChecked="{Binding SearchName, UpdateSourceTrigger=PropertyChanged}"/>
-                            </WrapPanel>
+                      
 
                     </StackPanel>
 

@@ -1,21 +1,9 @@
 ﻿using Ivanova_UchitDn.Core;
 using Ivanova_UchitDn.Model;
 using MySqlConnector;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
 
 namespace Ivanova_UchitDn
 {
@@ -24,6 +12,7 @@ namespace Ivanova_UchitDn
     /// </summary>
     public partial class VhodPage : Window
     {
+        private int userId;
         public VhodPage()
         {
             InitializeComponent();
@@ -31,45 +20,56 @@ namespace Ivanova_UchitDn
 
         private async void Btn_Vhod(object sender, RoutedEventArgs e)
         {
-            if (await UserDataSelectFalse())
+            userId = await GetUserId(); // Сохраняем ID пользователя
+
+            if (userId == -1)
             {
                 MessageBox.Show("Неправильно введен логин или пароль");
                 return;
             }
 
-            MainWindow menu = new MainWindow();
-
-            menu.Owner = this;
-            menu.Show();
-            this.Hide();
+            string login = LoginTxt.Text;
+            // Проверяем, если FIO_kurator = "admin", то переходим на меню администратора
+            if (login == "admin")
+            {
+                MainWindow menu = new MainWindow(userId); // Передаем ID пользователя в конструктор MainWindow
+                menu.Owner = this;
+                menu.Show();
+                this.Hide();
+            }
+            else
+            {
+                // В остальных случаях оставляем текущее поведение
+                MainWindowKurator menuKurator = new MainWindowKurator(userId); // Передаем ID пользователя в конструктор MainWindowKurator
+                menuKurator.Owner = this;
+                menuKurator.Show();
+                this.Hide();
+            }
         }
 
-        private async Task<bool> UserDataSelectFalse()
+        private async Task<int> GetUserId()
         {
-            Connector
-                 con = new Connector();
-            string
-                sql = string.Format("select * from `kurator`  where login = @l and parol = @p ");
+            Connector con = new Connector();
+            string sql = string.Format("SELECT id_kurator FROM `kurator` WHERE login = @l AND parol = @p");
 
-            MySqlCommand
-                command = new MySqlCommand(sql, con.GetCon());
- 
+            MySqlCommand command = new MySqlCommand(sql, con.GetCon());
             command.Parameters.Add(new MySqlParameter("@l", LoginTxt.Text));
             command.Parameters.Add(new MySqlParameter("@p", ParolTxt.Text));
 
             await con.GetOpen();
 
-            MySqlDataReader
-                reader = await command.ExecuteReaderAsync();
+            MySqlDataReader reader = await command.ExecuteReaderAsync();
 
-            if (!reader.HasRows)
+            int userId = -1;
+
+            if (reader.HasRows)
             {
-                await con.GetClose();
-                return true;
+                reader.Read();
+                userId = reader.GetInt32(0);
             }
 
             await con.GetClose();
-            return false;
+            return userId;
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Ivanova_UchitDn.Core;
 using Ivanova_UchitDn.Model;
-using Ivanova_UchitDn.RoditeliToStudent;
 using Ivanova_UchitDn.ViewModel;
 using MySqlConnector;
 using System.Collections.ObjectModel;
@@ -17,12 +16,12 @@ namespace Ivanova_UchitDn.View_Page
     public partial class StudPage : Page
     {
         private StudModel selectedStudent;
-        public StudPage()
+        public StudPage(int userId)
         {
             InitializeComponent();
-            GridData.DataContext = new StudData();
-            GridDataRoditeli.DataContext = new RodData();
-            DataContext = new StudData();
+            GridData.DataContext = new StudData(userId);
+            GridDataRoditeli.DataContext = new RodData(userId);
+            DataContext = new StudData(userId);
         }
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {

@@ -11,11 +11,11 @@ namespace Ivanova_UchitDn.View_Page
     /// </summary>
     public partial class RoditeliPage : Page
     {
-        public RoditeliPage()
+        public RoditeliPage(int userId)
         {
             InitializeComponent();
-            GridData.DataContext = new RodData();
-            DataContext = new RodData();
+            GridData.DataContext = new RodData(userId);
+            DataContext = new RodData(userId);
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)

@@ -1,6 +1,7 @@
 ﻿using Ivanova_UchitDn.Core;
 using Ivanova_UchitDn.Model;
 using MySqlConnector;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -13,6 +14,7 @@ namespace Ivanova_UchitDn.ViewModel
 {
     public class RodData : INotifyPropertyChanged
     {
+        private readonly int userId;
         private bool isUpdating = false;
 
         public int IDStud { get; set; }
@@ -86,11 +88,12 @@ namespace Ivanova_UchitDn.ViewModel
             }
         }
 
-        public RodData()
+        public RodData(int userId)
         {
             ListItemSelectStud = new ObservableCollection<ListItemSelectS>();
             rodList = new ObservableCollection<RodModel>();
             LoadData();
+            this.userId = userId;
         }
 
         private async void LoadData()
@@ -106,6 +109,8 @@ namespace Ivanova_UchitDn.ViewModel
             _ = await StudDataList();
             OnPropertyChanged("SearchSelectStud");
             _ = await RodDataList();
+            OnPropertyChanged("Users");
+
 
             isUpdating = false;
 
@@ -152,101 +157,125 @@ namespace Ivanova_UchitDn.ViewModel
             return true;
         }
 
-
         private async Task<bool> RodDataList()
         {
-            Connector
-                 con = new Connector();
-            string
-                sql = string.Format("select * from `roditeli` {0} limit {1}", SearchTypes(), 999);
-
-            MySqlCommand
-                command = new MySqlCommand(sql, con.GetCon());
-
-            command.Parameters.Add(new MySqlParameter("@text", string.Format("%{0}%", SearchText)));
-            command.Parameters.Add(new MySqlParameter("@kart_stud", SearchSelectStud));
-
-            await con.GetOpen();
-            RodsSelf = new ObservableCollection<RodModel>();
-
-            MySqlDataReader
-                reader = await command.ExecuteReaderAsync();
-
-            if (!reader.HasRows)
+            try
             {
+                Connector con = new Connector();
+                string existingSql = "SELECT * FROM `roditeli`";
+
+                if (userId != 1)
+                {
+                    existingSql += " WHERE `id_stud` IN (SELECT `id_stud` FROM `kart_stud` WHERE `id_grup` IN (SELECT `id_grup` FROM `grup` WHERE `id_kurator` = @kuratorId))";
+                }
+
+                string sql = SearchTypes(existingSql);
+
+                if (string.IsNullOrEmpty(sql))
+                {
+                    throw new InvalidOperationException("CommandText must be specified");
+                }
+
+                MySqlCommand command = new MySqlCommand(sql, con.GetCon());
+
+                // Параметры для поиска
+                command.Parameters.Add(new MySqlParameter("@text", string.Format("%{0}%", SearchText)));
+                command.Parameters.Add(new MySqlParameter("@kart_stud", SearchSelectStud));
+                command.Parameters.Add(new MySqlParameter("@kuratorId", userId));  // Добавляем параметр kuratorId
+
+                await con.GetOpen();
+                RodsSelf = new ObservableCollection<RodModel>();
+
+                MySqlDataReader reader = await command.ExecuteReaderAsync();
+
+                if (!reader.HasRows)
+                {
+                    await con.GetClose();
+                    OnPropertyChanged("Users");
+                    return false;
+                }
+
+                while (await reader.ReadAsync())
+                {
+                    RodsSelf.Add(new RodModel()
+                    {
+                        IDRod = (int)reader["id_roditel"],
+                        IDStud = (int)reader["id_stud"],
+                        ListItemSelectStud = ListItemSelectStudSelf,
+                        FIORod = (string)reader["FIO_roditel"],
+                        Adr = (string)reader["address_rod"],
+                        Tel = (string)reader["tel_rod"],
+                        Rabota = (string)reader["rabota_rod"],
+                        Delete = new DeleteCommand(DeleteData, (int)reader[0])
+                    });
+
+                    OnPropertyChanged("Users");
+                }
+
                 await con.GetClose();
-                OnPropertyChanged("Users");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Вызвано исключение: " + ex.Message);
                 return false;
             }
-
-
-            while (await reader.ReadAsync())
-            {
-                await Task.Delay(1);
-                RodsSelf.Add(new RodModel()
-                {
-                    IDRod = (int)reader["id_roditel"],
-                    IDStud = (int)reader["id_stud"],
-                    ListItemSelectStud = ListItemSelectStudSelf,
-                    FIORod = (string)reader["FIO_roditel"],
-                    Adr = (string)reader["address_rod"],
-                    Tel = (string)reader["tel_rod"],
-                    Rabota = (string)reader["rabota_rod"],
-                    Delete = new DeleteCommand(DeleteData, (int)reader[0])
-
-                });
-
-                OnPropertyChanged("Users");
-            }
-
-            await con.GetClose();
-            return true;
         }
 
-        private string SearchTypes()
+
+
+        private string SearchTypes(string existingSql)
         {
-            string
-                sql = "";
-
-            if (!GroupInsertNotValid(SearchSelectStud))
-                SearchTypesAnd(ref sql, "`id_stud` = @kart_stud");
-
-
-            if (SearchStud)
+            try
             {
-                SearchTypesAnd(ref sql, "`id_stud` IN (SELECT `id_stud` FROM `kart_stud` WHERE `FIO_stud` LIKE @text)");
-            }
+                string sql = "";
 
-            // Если ни один чекбокс не выбран, добавляем условия поиска для всех полей
-            if (!SearchName && !SearchAdr && !SearchTel && !string.IsNullOrEmpty(SearchText))
-            {
-                sql = "`FIO_roditel` LIKE @text OR `address_rod` LIKE @text OR `tel_rod` LIKE @text " +
-                    "OR `rabota_rod` LIKE @text OR `id_stud` IN (SELECT `id_stud` FROM `kart_stud` WHERE `FIO_stud` LIKE @text)";
-            }
-            else
-            {
-                List<string> conditions = new List<string>();
+                if (!GroupInsertNotValid(SearchSelectStud))
+                    SearchTypesAnd(ref sql, "`id_stud` = @kart_stud");
 
-                // Добавляем условия поиска в зависимости от выбранных чекбоксов
-                if (SearchName)
-                    conditions.Add("`FIO_roditel` LIKE @text");
-                if (SearchAdr)
-                    conditions.Add("`address_rod` LIKE @text");
-                if (SearchTel)
-                    conditions.Add("`tel_rod` LIKE @text");
-                if (SearchRab)
-                    conditions.Add("`rabota_rod` LIKE @text");
                 if (SearchStud)
-                    conditions.Add("`id_stud` IN (SELECT `id_stud` FROM `kart_stud` WHERE `FIO_stud` LIKE @text)");
+                {
+                    SearchTypesAnd(ref sql, "`id_stud` IN (SELECT `id_stud` FROM `kart_stud` WHERE `FIO_stud` LIKE @text)");
+                }
 
+                if (!SearchName && !SearchAdr && !SearchTel && !string.IsNullOrEmpty(SearchText))
+                {
+                    sql = "`FIO_roditel` LIKE @text OR `address_rod` LIKE @text OR `tel_rod` LIKE @text " +
+                          "OR `rabota_rod` LIKE @text OR `id_stud` IN (SELECT `id_stud` FROM `kart_stud` WHERE `FIO_stud` LIKE @text)";
+                }
+                else
+                {
+                    List<string> conditions = new List<string>();
 
-                // Соединяем условия с помощью оператора OR
-                sql = string.Join(" OR ", conditions);
+                    if (SearchName)
+                        conditions.Add("`FIO_roditel` LIKE @text");
+                    if (SearchAdr)
+                        conditions.Add("`address_rod` LIKE @text");
+                    if (SearchTel)
+                        conditions.Add("`tel_rod` LIKE @text");
+                    if (SearchRab)
+                        conditions.Add("`rabota_rod` LIKE @text");
+                    if (SearchStud)
+                        conditions.Add("`id_stud` IN (SELECT `id_stud` FROM `kart_stud` WHERE `FIO_stud` LIKE @text)");
+
+                    sql = string.Join(" OR ", conditions);
+                }
+
+                if (!string.IsNullOrEmpty(sql))
+                {
+                    existingSql += existingSql.Contains("WHERE") ? " AND (" + sql + ")" : " WHERE " + sql;
+                }
+
+                return existingSql;
             }
-
-
-            return SearchTypesSet(sql);
+            catch (Exception ex)
+            {
+                Console.WriteLine("Вызвано исключение в SearchTypes: " + ex.Message);
+                return existingSql;
+            }
         }
+
+
 
         private string SearchTypesSet(string sql)
         {

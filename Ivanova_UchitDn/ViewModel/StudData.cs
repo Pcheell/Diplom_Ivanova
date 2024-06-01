@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,7 +16,7 @@ namespace Ivanova_UchitDn.ViewModel
 {
     public class StudData : INotifyPropertyChanged
     {
-
+        private readonly int userId;
         private bool isUpdating = false;
 
 
@@ -71,7 +73,7 @@ namespace Ivanova_UchitDn.ViewModel
             }
         }
 
-        public StudData()
+        public StudData(int userId)
         {
             SearchDataStartSelf = DateTime.Today;
             SearchDataEndSelf = DateTime.Today;
@@ -79,6 +81,7 @@ namespace Ivanova_UchitDn.ViewModel
             ListItemSelectGrup = new ObservableCollection<ListItemSelectG>();
             ListItemSelectNation = new ObservableCollection<ListItemSelectN>();
             LoadData();
+            this.userId = userId;
         }
 
         private async void LoadData()
@@ -96,7 +99,7 @@ namespace Ivanova_UchitDn.ViewModel
             OnPropertyChanged("SearchSelectGroup");
             OnPropertyChanged("SearchSelectNation");
             _ = await StudDataSelect();
-
+            OnPropertyChanged("Users");
 
             isUpdating = false;
 
@@ -178,94 +181,84 @@ namespace Ivanova_UchitDn.ViewModel
             return true;
         }
 
+
         private async Task<bool> StudDataSelect()
         {
-
-            Connector
-                 con = new Connector();
-            string
-                sql = string.Format("select * from `kart_stud` {0} limit {1}", SearchTypes(), 999);
-
-            MySqlCommand
-                command = new MySqlCommand(sql, con.GetCon());
-
-            command.Parameters.Add(new MySqlParameter("@text", string.Format("%{0}%", SearchText)));
-            command.Parameters.Add(new MySqlParameter("@grup", SearchSelectGroup));
-            command.Parameters.Add(new MySqlParameter("@nation", SearchSelectNation));
-            command.Parameters.Add(new MySqlParameter("@date_start", SearchDataStart.ToString("yyyy-MM-dd")));
-            command.Parameters.Add(new MySqlParameter("@date_end", SearchDataEnd.ToString("yyyy-MM-dd")));
-
-
-
-            await con.GetOpen();
-            StudsSelf = new ObservableCollection<StudModel>();
-
-            MySqlDataReader
-                reader = await command.ExecuteReaderAsync();
-
-            if (!reader.HasRows)
+            try
             {
+                Connector con = new Connector();
+                string existingSql = "SELECT * FROM `kart_stud`";
+
+                // Для администратора выводим всех учеников без ограничений
+                if (userId != 1)
+                {
+                    existingSql += " WHERE `id_grup` IN (SELECT `id_grup` FROM `grup` WHERE `id_kurator` = @kuratorId)";
+                }
+
+                string sql = SearchTypes(existingSql);
+
+                MySqlCommand command = new MySqlCommand(sql, con.GetCon());
+
+                // Параметры для поиска
+                command.Parameters.Add(new MySqlParameter("@kuratorId", userId));
+                command.Parameters.Add(new MySqlParameter("@text", string.Format("%{0}%", SearchText)));
+                command.Parameters.Add(new MySqlParameter("@grup", SearchSelectGroup));
+                command.Parameters.Add(new MySqlParameter("@nation", SearchSelectNation));
+                command.Parameters.Add(new MySqlParameter("@date_start", SearchDataStart.ToString("yyyy-MM-dd")));
+                command.Parameters.Add(new MySqlParameter("@date_end", SearchDataEnd.ToString("yyyy-MM-dd")));
+
+                await con.GetOpen();
+                Users = new ObservableCollection<StudModel>();
+
+                MySqlDataReader reader = await command.ExecuteReaderAsync();
+
+                if (!reader.HasRows)
+                {
+                    await con.GetClose();
+                    OnPropertyChanged("Users");
+                    return false;
+                }
+
+                while (await reader.ReadAsync())
+                {
+                    Users.Add(new StudModel()
+                    {
+                        IDStud = (int)reader["id_stud"],
+                        IDGrup = (int)reader["id_grup"],
+                        ListItemSelectGrup = ListItemSelectGrupSelf,
+                        FIOStud = (string)reader["FIO_stud"],
+                        DRStud = Convert.ToDateTime(reader["dr_stud"]),
+                        Adr = (string)reader["address_stud"],
+                        FAdr = (string)reader["faddress_stud"],
+                        Tel = (string)reader["tel_stud"],
+                        IDNation = (int)reader["id_nation"],
+                        ListItemSelectNation = ListItemSelectNationSelf,
+                        Section = reader["section_stud"] == DBNull.Value ? null : (string)reader["section_stud"],
+                        Img = reader["img_stud"] == DBNull.Value ? null : (string)reader["img_stud"],
+                        Note = reader["note_stud"] == DBNull.Value ? null : (string)reader["note_stud"],
+                    Delete = new DeleteCommand(DeleteData, (int)reader[0])
+                    });
+
+                    OnPropertyChanged("Users");
+                }
+
                 await con.GetClose();
-                OnPropertyChanged("Users");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Если возникает исключение, выводим его сообщение в консоль для отладки
+                Console.WriteLine("Вызвано исключение: " + ex.Message);
                 return false;
             }
-
-            while (await reader.ReadAsync())
-            {
-                await Task.Delay(1);
-                StudsSelf.Add(new StudModel()
-                {
-                    IDStud = (int)reader["id_stud"],
-                    IDGrup = (int)reader["id_grup"],
-                    ListItemSelectGrup = ListItemSelectGrupSelf,
-                    FIOStud = (string)reader["FIO_stud"],
-                    DRStud = Convert.ToDateTime(reader["dr_stud"]),
-                    Adr = (string)reader["address_stud"],
-                    FAdr = (string)reader["faddress_stud"],
-                    Tel = (string)reader["tel_stud"],
-                    IDNation = (int)reader["id_nation"],
-                    ListItemSelectNation = ListItemSelectNationSelf,
-                    Section = reader["section_stud"] == DBNull.Value ? null : (string)reader["section_stud"],
-                    Img = reader["img_stud"] == DBNull.Value ? null : (string)reader["img_stud"],
-                    Note = reader["note_stud"] == DBNull.Value ? null : (string)reader["note_stud"],
-                    Delete = new DeleteCommand(DeleteData, (int)reader[0])
-
-
-                });
-
-                OnPropertyChanged("Users");
-            }
-
-            await con.GetClose();
-            return true;
-
         }
 
 
 
-        private string SearchTypes()
+
+        private string SearchTypes(string existingSql)
         {
-            string
-                sql = "";
-
-          
-            if (!GroupInsertNotValid(SearchSelectGroup))
-                SearchTypesAnd(ref sql, "`id_grup` = @grup");
-
-            if (SearchDate) SearchTypesAnd(ref sql, "`dr_stud` BETWEEN @date_start AND @date_end");
-
-            if (SearchGrup)
-            {
-                SearchTypesAnd(ref sql, "`id_grup` IN (SELECT `id_grup` FROM `grup` WHERE `name_grup` LIKE @text)");
-            }
-
-            // Если ни один чекбокс не выбран, добавляем условия поиска для всех полей
-            if (!SearchName && !SearchAdr && !SearchTel && !string.IsNullOrEmpty(SearchText))
-            {
-                sql = "`FIO_stud` LIKE @text OR `address_stud` LIKE @text OR `tel_stud` LIKE @text " +
-                    "OR `id_grup` IN (SELECT `id_grup` FROM `grup` WHERE `name_grup` LIKE @text)";
-            }
-            else
+            try
             {
                 List<string> conditions = new List<string>();
 
@@ -279,12 +272,31 @@ namespace Ivanova_UchitDn.ViewModel
                 if (SearchGrup)
                     conditions.Add("`id_grup` IN (SELECT `id_grup` FROM `grup` WHERE `name_grup` LIKE @text)");
 
+                // Если ни один чекбокс не выбран, добавляем условия поиска для всех полей
+                if (!SearchName && !SearchAdr && !SearchTel && !SearchGrup && !string.IsNullOrEmpty(SearchText))
+                {
+                    conditions.Add("`FIO_stud` LIKE @text OR `address_stud` LIKE @text OR `tel_stud` LIKE @text " +
+                        "OR `id_grup` IN (SELECT `id_grup` FROM `grup` WHERE `name_grup` LIKE @text)");
+                }
 
-                // Соединяем условия с помощью оператора OR
-                sql = string.Join(" OR ", conditions);
+                // Если есть добавленные условия, объединяем их с основным SQL запросом
+                if (conditions.Any())
+                {
+                    string whereClause = string.Join(" OR ", conditions);
+                    existingSql += " WHERE " + whereClause; // Заменяем AND на WHERE, так как это первое условие
+                }
+
+                return existingSql;
             }
-            return SearchTypesSet(sql);
+            catch (Exception ex)
+            {
+                Console.WriteLine("Вызвано исключение в SearchTypes: " + ex.Message);
+                return existingSql;
+            }
         }
+
+
+
 
 
         private string SearchTypesSet(string sql)
