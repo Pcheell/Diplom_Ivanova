@@ -128,6 +128,9 @@
     <Compile Include="Model\NationModel.cs" />
     <Compile Include="Model\RodModel.cs" />
     <Compile Include="Model\StudModel.cs" />
+    <Compile Include="RoditeliToStudent\RoditelWindow.xaml.cs">
+      <DependentUpon>RoditelWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="VhodPage.xaml.cs">
       <DependentUpon>VhodPage.xaml</DependentUpon>
     </Compile>
@@ -166,6 +169,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="MaterialDesignResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RoditeliToStudent\RoditelWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -26,7 +26,6 @@ namespace Ivanova_UchitDn.Model
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         }
-
         /// <summary>
         /// Свойство id_stud
         /// </summary>
@@ -258,6 +257,17 @@ namespace Ivanova_UchitDn.Model
             public void RaiseCanExecuteChanged()
             {
                 CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        private IList<RodModel> _roditel;
+        public IList<RodModel> Roditeli
+        {
+            get => _roditel;
+            set
+            {
+                _roditel = value;
+                OnPropertyChanged("Roditeli");
             }
         }
 

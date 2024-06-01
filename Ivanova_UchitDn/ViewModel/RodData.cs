@@ -15,6 +15,7 @@ namespace Ivanova_UchitDn.ViewModel
     {
         private bool isUpdating = false;
 
+        public int IDStud { get; set; }
         /// <summary>
         /// Событие оповещения об изменениях
         /// </summary>
@@ -31,9 +32,6 @@ namespace Ivanova_UchitDn.ViewModel
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         }
-
-
-
 
         private IList<ListItemSelectS> ListItemSelectStudSelf;
         public IList<ListItemSelectS> ListItemSelectStud
@@ -63,9 +61,35 @@ namespace Ivanova_UchitDn.ViewModel
         }
 
 
+
+
+        private ObservableCollection<RodModel> rodList;
+        public ObservableCollection<RodModel> RodList
+        {
+            get { return rodList; }
+            set
+            {
+                rodList = value;
+                OnPropertyChanged("RodList");
+            }
+        }
+
+
+        private string fioStud;
+        public string FIOStud
+        {
+            get { return fioStud; }
+            set
+            {
+                fioStud = value;
+                OnPropertyChanged("FIOStud");
+            }
+        }
+
         public RodData()
         {
             ListItemSelectStud = new ObservableCollection<ListItemSelectS>();
+            rodList = new ObservableCollection<RodModel>();
             LoadData();
         }
 

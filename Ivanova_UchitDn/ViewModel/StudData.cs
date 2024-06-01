@@ -71,8 +71,6 @@ namespace Ivanova_UchitDn.ViewModel
             }
         }
 
-   
-
         public StudData()
         {
             SearchDataStartSelf = DateTime.Today;
@@ -81,8 +79,6 @@ namespace Ivanova_UchitDn.ViewModel
             ListItemSelectGrup = new ObservableCollection<ListItemSelectG>();
             ListItemSelectNation = new ObservableCollection<ListItemSelectN>();
             LoadData();
-
-
         }
 
         private async void LoadData()
@@ -100,6 +96,7 @@ namespace Ivanova_UchitDn.ViewModel
             OnPropertyChanged("SearchSelectGroup");
             OnPropertyChanged("SearchSelectNation");
             _ = await StudDataSelect();
+
 
             isUpdating = false;
 
@@ -567,6 +564,7 @@ namespace Ivanova_UchitDn.ViewModel
             LoadData();
             MessageBox.Show("Запись изменена", "Успех");
         }
+
 
 
 

@@ -9,14 +9,16 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="1200"
      Title="Student">
-
+    
+    
+    <Grid>
     <Grid x:Name="GridData" >
-  
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="220"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        
+
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
@@ -43,73 +45,73 @@
                     <StackPanel Grid.ColumnSpan="2" Orientation="Horizontal">
 
                         <StackPanel>
-                        <Grid Width="300" Grid.ColumnSpan="2">
+                            <Grid Width="300" Grid.ColumnSpan="2">
 
-                            <TextBlock Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
+                                <TextBlock Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
                                           Margin="20 0" VerticalAlignment="Center" Foreground="#B0B9C6" 
                                      IsHitTestVisible="False"/>
 
-                            <TextBox Name="textBoxSearch" Style="{StaticResource searchTextbox}"
+                                <TextBox Name="textBoxSearch" Style="{StaticResource searchTextbox}"
                                    Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
 
-                            <Icon:PackIconMaterial Kind="Magnify" Width="15" Height="15" 
+                                <Icon:PackIconMaterial Kind="Magnify" Width="15" Height="15" 
                           VerticalAlignment="Center" Margin="0 0 15 0" 
                           Foreground="#B0B9C6" HorizontalAlignment="Right" />
-                            
-                        </Grid>
 
-                        <WrapPanel Margin="10 0 0 10">
-                            <CheckBox Content="ФИО" Margin="0,0,15,0" IsChecked="{Binding SearchName, UpdateSourceTrigger=PropertyChanged}"/>
-                            <CheckBox Content="Адрес" Margin="0,0,15,0" IsChecked="{Binding SearchAdr, UpdateSourceTrigger=PropertyChanged}"/>
-                            <CheckBox Content="Телефон" Margin="0,0,15,0" IsChecked="{Binding SearchTel, UpdateSourceTrigger=PropertyChanged}"/>
-                            <CheckBox Content="Класс" Margin="0,0,15,0" IsChecked="{Binding SearchGrup, UpdateSourceTrigger=PropertyChanged}"/>
+                            </Grid>
+
+                            <WrapPanel Margin="10 0 0 10">
+                                <CheckBox Content="ФИО" Margin="0,0,15,0" IsChecked="{Binding SearchName, UpdateSourceTrigger=PropertyChanged}"/>
+                                <CheckBox Content="Адрес" Margin="0,0,15,0" IsChecked="{Binding SearchAdr, UpdateSourceTrigger=PropertyChanged}"/>
+                                <CheckBox Content="Телефон" Margin="0,0,15,0" IsChecked="{Binding SearchTel, UpdateSourceTrigger=PropertyChanged}"/>
+                                <CheckBox Content="Класс" Margin="0,0,15,0" IsChecked="{Binding SearchGrup, UpdateSourceTrigger=PropertyChanged}"/>
 
 
-                        </WrapPanel>
+                            </WrapPanel>
                         </StackPanel>
 
-                        
-                        
+
+
                         <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="90 0">
                             <TextBlock Text="Дата рождения:" />
                             <StackPanel Orientation="Horizontal">
-                            <StackPanel Orientation="Vertical" >
+                                <StackPanel Orientation="Vertical" >
 
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="От:" VerticalAlignment="Center" Margin="0 0 5 0"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="От:" VerticalAlignment="Center" Margin="0 0 5 0"/>
 
                                         <DatePicker SelectedDate="{Binding SearchDataStart}" 
                 Height="50" Width="100" BorderBrush="#B0B9C6" >
-                                    <DatePicker.Resources>
-                                        <!-- Подключение MaterialDesignResources.xaml как локальный ресурс -->
-                                        <ResourceDictionary>
-                                            <ResourceDictionary.MergedDictionaries>
-                                                <ResourceDictionary Source="pack://application:,,,/Ivanova_UchitDn;component/MaterialDesignResources.xaml" />
-                                            </ResourceDictionary.MergedDictionaries>
-                                        </ResourceDictionary>
-                                    </DatePicker.Resources>
-                                </DatePicker>
-                            </StackPanel>
-                            </StackPanel>
+                                            <DatePicker.Resources>
+                                                <!-- Подключение MaterialDesignResources.xaml как локальный ресурс -->
+                                                <ResourceDictionary>
+                                                    <ResourceDictionary.MergedDictionaries>
+                                                        <ResourceDictionary Source="pack://application:,,,/Ivanova_UchitDn;component/MaterialDesignResources.xaml" />
+                                                    </ResourceDictionary.MergedDictionaries>
+                                                </ResourceDictionary>
+                                            </DatePicker.Resources>
+                                        </DatePicker>
+                                    </StackPanel>
+                                </StackPanel>
 
 
-                        <StackPanel Orientation="Horizontal" Margin="20 0">
+                                <StackPanel Orientation="Horizontal" Margin="20 0">
                                     <TextBlock Text="До:"  VerticalAlignment="Center" Margin="0 0 5 0"/>
 
                                     <DatePicker SelectedDate="{Binding SearchDataEnd}" 
                Height="50" Width="100" BorderBrush="#B0B9C6"  >
-                                    <DatePicker.Resources>
-                                        <!-- Подключение MaterialDesignResources.xaml как локальный ресурс -->
-                                        <ResourceDictionary>
-                                            <ResourceDictionary.MergedDictionaries>
-                                                <ResourceDictionary Source="pack://application:,,,/Ivanova_UchitDn;component/MaterialDesignResources.xaml" />
-                                            </ResourceDictionary.MergedDictionaries>
-                                        </ResourceDictionary>
-                                    </DatePicker.Resources>
-                                </DatePicker>
+                                        <DatePicker.Resources>
+                                            <!-- Подключение MaterialDesignResources.xaml как локальный ресурс -->
+                                            <ResourceDictionary>
+                                                <ResourceDictionary.MergedDictionaries>
+                                                    <ResourceDictionary Source="pack://application:,,,/Ivanova_UchitDn;component/MaterialDesignResources.xaml" />
+                                                </ResourceDictionary.MergedDictionaries>
+                                            </ResourceDictionary>
+                                        </DatePicker.Resources>
+                                    </DatePicker>
 
-                        </StackPanel>
-                        </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
                         </StackPanel>
 
                     </StackPanel>
@@ -170,94 +172,97 @@
                     </ListView.ItemsPanel>
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            
+
                             <StackPanel Orientation="Horizontal">
 
 
                                 <StackPanel Orientation="Vertical" Margin="0 0 10 0">
 
 
-                                <StackPanel Margin="0 0 0 10" >
-                                    <Image Source="{Binding ImgPath}" MaxHeight="100"/>
-                                </StackPanel>
+                                    <StackPanel Margin="0 0 0 10" >
+                                        <Image Source="{Binding ImgPath}" MaxHeight="100"/>
+                                    </StackPanel>
 
-                                
-                                <StackPanel Margin="0 0 0 10" >
-                                    <TextBlock Text="ФИО ученика" Style="{StaticResource text}"/>
-                                    <TextBox Text="{Binding FIOStud}" IsReadOnly="True" Height="60" Width="165"/>
-                                </StackPanel>
 
-                                <StackPanel Margin="0 0 0 10">
-                                    <TextBlock Text="Класс" Style="{StaticResource text}" Margin="0"/>
+                                    <StackPanel Margin="0 0 0 10" >
+                                        <TextBlock Text="ФИО ученика" Style="{StaticResource text}"/>
+                                        <TextBox Text="{Binding FIOStud}" IsReadOnly="True" Height="60" Width="165"/>
+                                    </StackPanel>
 
-                                    <ComboBox 
+                                    <StackPanel Margin="0 0 0 10">
+                                        <TextBlock Text="Класс" Style="{StaticResource text}" Margin="0"/>
+
+                                        <ComboBox 
           ItemsSource="{Binding ListItemSelectGrup}" SelectedValue="{Binding IDGrup}" SelectedValuePath="IDGrup" 
           IsEnabled="False" Height="60" Foreground="#363636"
           Background="#F5F7F9" BorderBrush="#F5F7F9" FontSize="14" >
 
-                                        <ComboBox.Resources>
-                                            <!-- Подключение MaterialDesignResources.xaml как локальный ресурс -->
-                                            <ResourceDictionary>
-                                                <ResourceDictionary.MergedDictionaries>
-                                                    <ResourceDictionary Source="pack://application:,,,/Ivanova_UchitDn;component/MaterialDesignResources.xaml" />
-                                                </ResourceDictionary.MergedDictionaries>
-                                            </ResourceDictionary>
-                                        </ComboBox.Resources>
-                                        <ComboBox.Style>
-                                            <StaticResource ResourceKey="MaterialDesignComboBox" />
-                                        </ComboBox.Style>
-                                        <ComboBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Text="{Binding NameGrup}" TextWrapping="Wrap" />
-                                            </DataTemplate>
-                                        </ComboBox.ItemTemplate>
-                                    </ComboBox>
-                                </StackPanel>
+                                            <ComboBox.Resources>
+                                                <!-- Подключение MaterialDesignResources.xaml как локальный ресурс -->
+                                                <ResourceDictionary>
+                                                    <ResourceDictionary.MergedDictionaries>
+                                                        <ResourceDictionary Source="pack://application:,,,/Ivanova_UchitDn;component/MaterialDesignResources.xaml" />
+                                                    </ResourceDictionary.MergedDictionaries>
+                                                </ResourceDictionary>
+                                            </ComboBox.Resources>
+                                            <ComboBox.Style>
+                                                <StaticResource ResourceKey="MaterialDesignComboBox" />
+                                            </ComboBox.Style>
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding NameGrup}" TextWrapping="Wrap" />
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
+                                    </StackPanel>
 
-                                <StackPanel Margin="0 0 0 10">
-                                    <TextBlock Text="Национальность" Style="{StaticResource text}" Margin="0"/>
+                                    <StackPanel Margin="0 0 0 10">
+                                        <TextBlock Text="Национальность" Style="{StaticResource text}" Margin="0"/>
 
-                                    <ComboBox 
+                                        <ComboBox 
 ItemsSource="{Binding ListItemSelectNation}" SelectedValue="{Binding IDNation}" SelectedValuePath="IDNation" 
 IsEnabled="False" Height="60" Foreground="#363636"
 Background="#F5F7F9" BorderBrush="#F5F7F9" FontSize="14" >
 
-                                    <ComboBox.Resources>
-                                        <!-- Подключение MaterialDesignResources.xaml как локальный ресурс -->
-                                        <ResourceDictionary>
-                                            <ResourceDictionary.MergedDictionaries>
-                                                <ResourceDictionary Source="pack://application:,,,/Ivanova_UchitDn;component/MaterialDesignResources.xaml" />
-                                            </ResourceDictionary.MergedDictionaries>
-                                        </ResourceDictionary>
-                                    </ComboBox.Resources>
-                                    <ComboBox.Style>
-                                        <StaticResource ResourceKey="MaterialDesignComboBox" />
-                                    </ComboBox.Style>
-                                    <ComboBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding NameNation}" TextWrapping="Wrap" />
-                                        </DataTemplate>
-                                    </ComboBox.ItemTemplate>
-                                </ComboBox>
+                                            <ComboBox.Resources>
+                                                <!-- Подключение MaterialDesignResources.xaml как локальный ресурс -->
+                                                <ResourceDictionary>
+                                                    <ResourceDictionary.MergedDictionaries>
+                                                        <ResourceDictionary Source="pack://application:,,,/Ivanova_UchitDn;component/MaterialDesignResources.xaml" />
+                                                    </ResourceDictionary.MergedDictionaries>
+                                                </ResourceDictionary>
+                                            </ComboBox.Resources>
+                                            <ComboBox.Style>
+                                                <StaticResource ResourceKey="MaterialDesignComboBox" />
+                                            </ComboBox.Style>
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding NameNation}" TextWrapping="Wrap" />
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
+                                    </StackPanel>
+
+                                    <StackPanel Margin="0 0 0 10" >
+                                        <TextBlock Text="Дата рождения" Style="{StaticResource text}" Height="20" />
+                                        <TextBox Text="{Binding DRStud,StringFormat=dd-MM-yyyy}" Height="60" Width="165" />
+                                    </StackPanel>
+
+
                                 </StackPanel>
 
-                                <StackPanel Margin="0 0 0 10" >
-                                    <TextBlock Text="Дата рождения" Style="{StaticResource text}" Height="20" />
-                                    <TextBox Text="{Binding DRStud,StringFormat=dd-MM-yyyy}" Height="60" Width="165" />
-                                </StackPanel>
 
-                                
-                                </StackPanel>
 
-                            
-                            
                                 <StackPanel Orientation="Vertical" Margin="0 0 0 0">
 
 
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 0 0 0">
 
+                                        <Button Style="{StaticResource gridEditButton}" Click="OpenRoditeli">
+                                            <Icon:PackIconMaterial Kind="AccountMultipleOutline" Style="{StaticResource gridButtonIcon}"/>
+                                        </Button>
 
-                                        <Button Style="{StaticResource gridEditButton}" Click="OpenEdit" >
+                                            <Button Margin="5 0 0 0"  Style="{StaticResource gridEditButton}" Click="OpenEdit" >
                                             <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
 
@@ -265,40 +270,37 @@ Background="#F5F7F9" BorderBrush="#F5F7F9" FontSize="14" >
                                             <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
                                         </Button>
                                     </StackPanel>
-                                    
-                                    
+
+
                                     <StackPanel Margin="0 0 0 10" >
-                                    <TextBlock Text="Адрес проживания" Style="{StaticResource text}"/>
-                                    <TextBox Text="{Binding Adr}" IsReadOnly="True" Height="60" Width="165"/>
+                                        <TextBlock Text="Адрес проживания" Style="{StaticResource text}"/>
+                                        <TextBox Text="{Binding Adr}" IsReadOnly="True" Height="60" Width="165"/>
+                                    </StackPanel>
+
+                                    <StackPanel Margin="0 0 0 10" >
+                                        <TextBlock Text="Фактический адрес проживания" Style="{StaticResource text}"/>
+                                        <TextBox Text="{Binding FAdr}" IsReadOnly="True" Height="60" Width="165"/>
+                                    </StackPanel>
+
+                                    <StackPanel Margin="0 0 0 10" >
+                                        <TextBlock Text="Телефон" Style="{StaticResource text}"/>
+                                        <TextBox Text="{Binding Tel}" IsReadOnly="True" Height="60" Width="165"/>
+                                    </StackPanel>
+
+                                    <StackPanel Margin="0 0 0 16" >
+                                        <TextBlock Text="Секции" Style="{StaticResource text}"/>
+                                        <TextBox Text="{Binding Section}" IsReadOnly="True" Height="60" Width="165"/>
+                                    </StackPanel>
+
+                                    <StackPanel Margin="0 0 0 10" >
+                                        <TextBlock Text="Примечание" Style="{StaticResource text}"/>
+                                        <TextBox Text="{Binding Note}" IsReadOnly="True" Height="60" Width="165"/>
+                                    </StackPanel>
+
+
                                 </StackPanel>
 
-                                <StackPanel Margin="0 0 0 10" >
-                                    <TextBlock Text="Фактический адрес проживания" Style="{StaticResource text}"/>
-                                    <TextBox Text="{Binding FAdr}" IsReadOnly="True" Height="60" Width="165"/>
-                                </StackPanel>
 
-                                <StackPanel Margin="0 0 0 10" >
-                                    <TextBlock Text="Телефон" Style="{StaticResource text}"/>
-                                    <TextBox Text="{Binding Tel}" IsReadOnly="True" Height="60" Width="165"/>
-                                </StackPanel>
-
-                                <StackPanel Margin="0 0 0 16" >
-                                    <TextBlock Text="Секции" Style="{StaticResource text}"/>
-                                    <TextBox Text="{Binding Section}" IsReadOnly="True" Height="60" Width="165"/>
-                                </StackPanel>
-
-                                <StackPanel Margin="0 0 0 10" >
-                                    <TextBlock Text="Примечание" Style="{StaticResource text}"/>
-                                    <TextBox Text="{Binding Note}" IsReadOnly="True" Height="60" Width="165"/>
-                                </StackPanel>
-
-
-
-                                    
-                                    
-                                </StackPanel>
-                            
-                            
 
                             </StackPanel>
                         </DataTemplate>
@@ -330,12 +332,12 @@ Visibility="Collapsed" Background="Transparent" MouseDown="Window_MouseDown">
                     <StackPanel DataContext="{Binding NewStud}" Margin="15" Orientation="Horizontal">
 
                         <StackPanel Margin="0 0 20 0" Orientation="Vertical">
-                        
-                        
-                                <StackPanel>
-                                    <TextBlock Text="Фамилия, имя, отчество (ФИО)" Style="{StaticResource text}" Margin="0"/>
+
+
+                            <StackPanel>
+                                <TextBlock Text="Фамилия, имя, отчество (ФИО)" Style="{StaticResource text}" Margin="0"/>
                                 <TextBox Text="{Binding FIOStud, UpdateSourceTrigger=PropertyChanged}" Margin="5" MinHeight="50" Width="200"/>
-                                </StackPanel>
+                            </StackPanel>
 
                             <StackPanel>
                                 <TextBlock Text="Дата рождения" Style="{StaticResource text}" Margin="0"/>
@@ -353,7 +355,7 @@ Visibility="Collapsed" Background="Transparent" MouseDown="Window_MouseDown">
 
                             <StackPanel  >
 
-                            <TextBlock Text="Класс ученика" Style="{StaticResource text}"/>
+                                <TextBlock Text="Класс ученика" Style="{StaticResource text}"/>
 
                                 <ComboBox  Width="200"
       ItemsSource="{Binding ListItemSelectGrup}"  SelectedValue="{Binding IDGrup}" SelectedValuePath="IDGrup"
@@ -361,53 +363,53 @@ Visibility="Collapsed" Background="Transparent" MouseDown="Window_MouseDown">
  Background="#F5F7F9"
   BorderBrush="#F5F7F9" 
       Margin="5" >
-                                <ComboBox.Resources>
-                                    <!-- Подключение MaterialDesignResources.xaml как локальный ресурс -->
-                                    <ResourceDictionary>
-                                        <ResourceDictionary.MergedDictionaries>
-                                            <ResourceDictionary Source="pack://application:,,,/Ivanova_UchitDn;component/MaterialDesignResources.xaml" />
-                                        </ResourceDictionary.MergedDictionaries>
-                                    </ResourceDictionary>
-                                </ComboBox.Resources>
-                                <ComboBox.Style>
-                                    <StaticResource ResourceKey="MaterialDesignComboBox" />
-                                </ComboBox.Style>
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding NameGrup}" TextWrapping="Wrap" />
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-                        </StackPanel>
+                                    <ComboBox.Resources>
+                                        <!-- Подключение MaterialDesignResources.xaml как локальный ресурс -->
+                                        <ResourceDictionary>
+                                            <ResourceDictionary.MergedDictionaries>
+                                                <ResourceDictionary Source="pack://application:,,,/Ivanova_UchitDn;component/MaterialDesignResources.xaml" />
+                                            </ResourceDictionary.MergedDictionaries>
+                                        </ResourceDictionary>
+                                    </ComboBox.Resources>
+                                    <ComboBox.Style>
+                                        <StaticResource ResourceKey="MaterialDesignComboBox" />
+                                    </ComboBox.Style>
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding NameGrup}" TextWrapping="Wrap" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </StackPanel>
 
-                        <StackPanel Margin="0 0 0 10" >
+                            <StackPanel Margin="0 0 0 10" >
 
-                            <TextBlock Text="Национальность" Style="{StaticResource text}"/>
+                                <TextBlock Text="Национальность" Style="{StaticResource text}"/>
 
-                            <ComboBox 
+                                <ComboBox 
      ItemsSource="{Binding ListItemSelectNation}"  SelectedValue="{Binding IDNation}" SelectedValuePath="IDNation"
 IsEnabled="true" MinHeight="50" Foreground="#363636" FontSize="14"
 Background="#F5F7F9" Width="200"
  BorderBrush="#F5F7F9" 
      Margin="3" >
-                                <ComboBox.Resources>
-                                    <!-- Подключение MaterialDesignResources.xaml как локальный ресурс -->
-                                    <ResourceDictionary>
-                                        <ResourceDictionary.MergedDictionaries>
-                                            <ResourceDictionary Source="pack://application:,,,/Ivanova_UchitDn;component/MaterialDesignResources.xaml" />
-                                        </ResourceDictionary.MergedDictionaries>
-                                    </ResourceDictionary>
-                                </ComboBox.Resources>
-                                <ComboBox.Style>
-                                    <StaticResource ResourceKey="MaterialDesignComboBox" />
-                                </ComboBox.Style>
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding NameNation}" TextWrapping="Wrap" />
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-                        </StackPanel>
+                                    <ComboBox.Resources>
+                                        <!-- Подключение MaterialDesignResources.xaml как локальный ресурс -->
+                                        <ResourceDictionary>
+                                            <ResourceDictionary.MergedDictionaries>
+                                                <ResourceDictionary Source="pack://application:,,,/Ivanova_UchitDn;component/MaterialDesignResources.xaml" />
+                                            </ResourceDictionary.MergedDictionaries>
+                                        </ResourceDictionary>
+                                    </ComboBox.Resources>
+                                    <ComboBox.Style>
+                                        <StaticResource ResourceKey="MaterialDesignComboBox" />
+                                    </ComboBox.Style>
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding NameNation}" TextWrapping="Wrap" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </StackPanel>
 
                             <StackPanel>
                                 <TextBlock Text="Телефон" Style="{StaticResource text}" Margin="0"/>
@@ -446,7 +448,7 @@ Background="#F5F7F9" Width="200"
                             <StackPanel Margin="0 8 0 0">
                                 <TextBlock Text="Адрес проживания"  Style="{StaticResource text}" Margin="0"/>
                                 <TextBox Text="{Binding Adr, UpdateSourceTrigger=PropertyChanged}" x:Name="AdrTextBox" Margin="5" Width="200" MinHeight="50"/>
-                        </StackPanel>
+                            </StackPanel>
 
                             <CheckBox Content="Совпадает с фактическим" Margin="5 0 0 10" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"/>
 
@@ -462,8 +464,8 @@ Background="#F5F7F9" Width="200"
                             </StackPanel>
 
                         </StackPanel>
-                    
-                    
+
+
                     </StackPanel>
                     <Button Content="Добавить" Command="{Binding Insert}" Margin="0 10" Width="430"/>
 
@@ -632,6 +634,72 @@ Background="#F5F7F9" Width="200"
             </Border>
         </Grid>
 
+    </Grid>
+    
+    
 
+        <Grid x:Name="GridDataRoditeli"  Grid.Column="1" Grid.RowSpan="2" Visibility="Collapsed" Background="Transparent"  MouseDown="Window_MouseDown">
+
+
+                <Border Background="White" BorderBrush="#9575CD" BorderThickness="1" 
+CornerRadius="7" Margin="15" MaxWidth="480" HorizontalAlignment="Center" 
+VerticalAlignment="Center" Padding="15 15 15 30">
+                <StackPanel>
+                <Button Style="{StaticResource gridEditButton}" Click="CloseRoditeli" HorizontalAlignment="Right">
+                    <Icon:PackIconMaterial Kind="Close" Style="{StaticResource gridButtonIcon}" />
+                </Button>
+
+                <Label Content="Информация о родителях ученика" HorizontalAlignment="Center" FontSize="22" 
+    FontWeight="SemiBold" Foreground="#121518"/>
+                    <Label Content="{Binding FIOStud}" Margin="0 0 0 10" 
+FontSize="14" HorizontalAlignment="Center" Foreground="#6E7783"/>
+
+
+                    <ListView ItemsSource="{Binding RodList}" MaxHeight="500" HorizontalAlignment="Center" 
+       Margin="15 5" BorderThickness="0" Foreground="#000" ScrollViewer.VerticalScrollBarVisibility="Auto"
+       ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel ItemWidth="200" />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+
+                            
+                            <StackPanel >
+
+                                
+                                <StackPanel Margin="0 0 0 10" >
+                                    <TextBlock Text="ФИО родителя" Style="{StaticResource text}"/>
+                                    <TextBox Text="{Binding FIORod}" IsReadOnly="True" Height="60" Width="165"/>
+                                </StackPanel>
+                              
+
+                                <StackPanel Margin="0 0 0 10" >
+                                    <TextBlock Text="Адрес" Style="{StaticResource text}"/>
+                                    <TextBox Text="{Binding Adr}" IsReadOnly="True" Height="60" Width="165"/>
+                                </StackPanel>
+
+                                <StackPanel Margin="0 0 0 10" >
+                                    <TextBlock Text="Телефон" Style="{StaticResource text}"/>
+                                    <TextBox Text="{Binding Tel}" IsReadOnly="True" Height="60" Width="165"/>
+                                </StackPanel>
+
+                                <StackPanel Margin="0 0 0 10" >
+                                    <TextBlock Text="Работа" Style="{StaticResource text}"/>
+                                    <TextBox Text="{Binding Rabota}" IsReadOnly="True" Height="60" Width="165"/>
+                                </StackPanel>
+
+
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+                </StackPanel>
+            </Border>
+
+    </Grid>
     </Grid>
 </Page>
