@@ -44,15 +44,26 @@
                 </StackPanel>
             </Button>
 
+            <Separator Margin="20" Background="#7E5FDC" Height="0.6" Width="150"/>
+
+
+            <StackPanel Orientation="Horizontal" Margin="18 2 20 0">
+                <Icon:PackIconMaterial Kind="AccountCircleOutline" Foreground="#D0C0FF" Style="{StaticResource menuButtonIcon}"/>
+                <TextBlock x:Name="KuratorFIO" FontSize="13" Foreground="#D0C0FF" TextWrapping="Wrap" Width="120"/>
+                </StackPanel>
+
+            
+
         </StackPanel>
 
-        <Button Style="{StaticResource menuButton}" VerticalAlignment="Bottom" Click="LoginPageOpen" Margin="15 0 15 50">
+        <Button Style="{StaticResource menuButton}" VerticalAlignment="Bottom" Click="LoginPageOpen" Margin="28 0 20 50">
             <StackPanel Orientation="Horizontal">
                 <Icon:PackIconMaterial Kind="Logout" Style="{StaticResource menuButtonIcon}"/>
                 <TextBlock Text="Выйти"/>
             </StackPanel>
         </Button>
 
+        
 
         <Frame NavigationUIVisibility="Hidden" Name="MyFrame" Grid.Row="0" Grid.ColumnSpan="3"></Frame>
     </Grid>

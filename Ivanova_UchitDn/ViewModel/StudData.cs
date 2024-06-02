@@ -5,12 +5,20 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using static Ivanova_UchitDn.Core.CoreApp;
+using Microsoft.Office.Interop.Excel;
+using Excel = Microsoft.Office.Interop.Excel.Application;
+using MigraDoc.DocumentObjectModel;
+using MigraDoc.Rendering;
+using MigraDoc.DocumentObjectModel.Tables;
+using System.Diagnostics;
+using Ivanova_UchitDn.View_Page;
+using PdfSharp;
+using MigraDoc.DocumentObjectModel.Shapes;
 
 namespace Ivanova_UchitDn.ViewModel
 {
@@ -267,16 +275,31 @@ namespace Ivanova_UchitDn.ViewModel
                     conditions.Add("`FIO_stud` LIKE @text");
                 if (SearchAdr)
                     conditions.Add("`address_stud` LIKE @text");
+                if (SearchFAdr)
+                    conditions.Add("`faddress_stud` LIKE @text");
                 if (SearchTel)
                     conditions.Add("`tel_stud` LIKE @text");
                 if (SearchGrup)
                     conditions.Add("`id_grup` IN (SELECT `id_grup` FROM `grup` WHERE `name_grup` LIKE @text)");
+                if (SearchNation)
+                    conditions.Add("`id_nation` IN (SELECT `id_nation` FROM `nation` WHERE `name_nation` LIKE @text)");
+                if (SearchSection)
+                    conditions.Add("`section_stud` LIKE @text");
+                if (SearchNote)
+                    conditions.Add("`note_stud` LIKE @text");
 
                 // Если ни один чекбокс не выбран, добавляем условия поиска для всех полей
-                if (!SearchName && !SearchAdr && !SearchTel && !SearchGrup && !string.IsNullOrEmpty(SearchText))
+                if (!SearchName && !SearchAdr && !SearchFAdr && !SearchTel && !SearchGrup && !SearchNation && !SearchSection && !SearchNote && !string.IsNullOrEmpty(SearchText))
                 {
-                    conditions.Add("`FIO_stud` LIKE @text OR `address_stud` LIKE @text OR `tel_stud` LIKE @text " +
-                        "OR `id_grup` IN (SELECT `id_grup` FROM `grup` WHERE `name_grup` LIKE @text)");
+                    conditions.Add("`FIO_stud` LIKE @text " +
+                        "OR `address_stud` LIKE @text " +
+                        "OR `faddress_stud` LIKE @text " +
+                        "OR `tel_stud` LIKE @text " +
+                        "OR `id_grup` IN (SELECT `id_grup` FROM `grup` WHERE `name_grup` LIKE @text)" +
+                        "OR `id_nation` IN (SELECT `id_nation` FROM `nation` WHERE `name_nation` LIKE @text)" +
+                        "OR `section_stud` LIKE @text " +
+                        "OR `note_stud` LIKE @text "
+                        );
                 }
 
                 // Если есть добавленные условия, объединяем их с основным SQL запросом
@@ -674,6 +697,19 @@ namespace Ivanova_UchitDn.ViewModel
             }
         }
 
+        public bool SearchFAdrSelf;
+        public bool SearchFAdr
+        {
+            get => SearchFAdrSelf;
+            set
+            {
+                SearchFAdrSelf = value;
+                OnPropertyChanged("SearchFAdr");
+                LoadData();
+
+            }
+        }
+
         public bool SearchTelSelf;
         public bool SearchTel
         {
@@ -700,8 +736,8 @@ namespace Ivanova_UchitDn.ViewModel
             }
         }
 
-        private string SearchSectionSelf;
-        public string SearchSection
+        private bool SearchSectionSelf;
+        public bool SearchSection
         {
             get => SearchSectionSelf;
             set
@@ -713,27 +749,14 @@ namespace Ivanova_UchitDn.ViewModel
             }
         }
 
-        private string SearchNoteSelf;
-        public string SearchNote
+        private bool SearchNoteSelf;
+        public bool SearchNote
         {
             get => SearchNoteSelf;
             set
             {
                 SearchNoteSelf = value;
                 OnPropertyChanged("SearchNote");
-                LoadData();
-
-            }
-        }
-
-        private string SearchImgSelf;
-        public string SearchImg
-        {
-            get => SearchImgSelf;
-            set
-            {
-                SearchImgSelf = value;
-                OnPropertyChanged("SearchImg");
                 LoadData();
 
             }
@@ -799,6 +822,211 @@ namespace Ivanova_UchitDn.ViewModel
                 OnPropertyChanged("SearchDataEnd");
             }
         }
+
+        private IExcelExport ExportPdfSelf;
+        public IExcelExport ExportPdf => ExportPdfSelf ?? (ExportPdfSelf = new IExcelExport(ExportDataPdf));
+
+        private IExcelExport ExportExcelSelf;
+        public IExcelExport ExportExcel => ExportExcelSelf ?? (ExportExcelSelf = new IExcelExport(ExportDataExcel));
+
+        private string GetGrupName(int grupID)
+        {
+            foreach (var grup in ListItemSelectGrup)
+            {
+                if (grup.IDGrup == grupID)
+                {
+                    return grup.NameGrup;
+                }
+            }
+            return ""; 
+        }
+
+        private string GetNationName(int nationID)
+        {
+            foreach (var nation in ListItemSelectNation)
+            {
+                if (nation.IDNation == nationID)
+                {
+                    return nation.NameNation;
+                }
+            }
+            return "";
+        }
+
+
+        private void ExportDataExcel()
+        {
+            if (Users == null || !Users.Any())
+            {
+                MessageBox.Show("Нет данных для экспорта", "Ошибка");
+                return;
+            }
+
+            MessageBoxResult result = MessageBox.Show("Создать Excel документ для таблицы \"Ученики\"?", "Подтверждение", MessageBoxButton.YesNo);
+            if (result != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            var excelApp = new Excel();
+            var workbook = excelApp.Workbooks.Add();
+            Worksheet worksheet = (Worksheet)excelApp.ActiveSheet;
+
+
+            // Переименовываем лист
+            worksheet.Name = "Таблица \"Ученики\"";
+
+            // Заголовок таблицы
+            worksheet.Cells[1, 1] = "Таблица \"Ученики\"";
+            Range titleRange = worksheet.Range["A1", "B1"];
+            titleRange.Merge();
+            titleRange.Font.Bold = true;
+            titleRange.Font.Size = 12;
+            titleRange.HorizontalAlignment = XlHAlign.xlHAlignCenter;
+
+            // Заголовки колонок
+            worksheet.Cells[3, 1] = "ФИО ученика";
+            worksheet.Cells[3, 2] = "Класс";
+            worksheet.Cells[3, 3] = "Дата рождения";
+            worksheet.Cells[3, 4] = "Адрес";
+            worksheet.Cells[3, 5] = "Фактический адрес";
+            worksheet.Cells[3, 6] = "Телефон";
+            worksheet.Cells[3, 7] = "Национальность";
+            worksheet.Cells[3, 8] = "Секция";
+            worksheet.Cells[3, 9] = "Примечание";
+
+
+            // Делаем заголовки колонок жирными
+            for (int i = 1; i <= 9; i++)
+            {
+                Range headerCell = worksheet.Cells[3, i];
+                headerCell.Font.Bold = true;
+            }
+
+
+            // Данные
+            int row = 4; // Начинаем с 4-й строки, так как 3-я строка занята заголовками колонок
+            foreach (var student in Users)
+            {
+                worksheet.Cells[row, 1] = student.FIOStud;
+                worksheet.Cells[row, 2] = GetGrupName(student.IDGrup);
+                worksheet.Cells[row, 3] = student.DRStud;
+                worksheet.Cells[row, 4] = student.Adr;
+                worksheet.Cells[row, 5] = student.FAdr;
+                worksheet.Cells[row, 6] = student.Tel;
+                worksheet.Cells[row, 7] = GetNationName(student.IDNation);
+                worksheet.Cells[row, 8] = student.Section;
+                worksheet.Cells[row, 9] = student.Note;
+
+                row++;
+            }
+
+            // Автоматическое выравнивание столбцов
+            worksheet.Columns.AutoFit();
+
+            // Выровнять все ячейки по левому краю
+            worksheet.Cells.HorizontalAlignment = XlHAlign.xlHAlignLeft;
+
+            // Добавление границ для таблицы
+            Range dataRange = worksheet.Range["A3", $"I{row - 1}"];
+            dataRange.Borders.LineStyle = XlLineStyle.xlContinuous;
+            dataRange.Borders.Weight = XlBorderWeight.xlThin;
+
+            // Показать Excel
+            excelApp.Visible = true;
+        }
+
+        private void ExportDataPdf()
+        {
+            if (Users == null || !Users.Any())
+            {
+                MessageBox.Show("Нет данных для экспорта", "Ошибка");
+                return;
+            }
+
+            MessageBoxResult result = MessageBox.Show("Создать PDF документ для таблицы \"Ученики\"?", "Подтверждение", MessageBoxButton.YesNo);
+            if (result != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            // Создаем новый документ
+            Document document = new Document();
+            Section section = document.AddSection();
+            section.PageSetup.LeftMargin = 15;
+
+
+            // Заголовок таблицы
+            Paragraph title = section.AddParagraph("Таблица \"Ученики\"");
+            title.Format.Font.Bold = true;
+            title.Format.Font.Size = 14;
+            title.Format.SpaceAfter = "1cm";
+            title.Format.LeftIndent = "2cm";
+
+            title.Format.Alignment = ParagraphAlignment.Center;
+
+            // Таблица
+            Table table = section.AddTable();
+            table.Borders.Width = 0.75;
+
+            // Определение столбцов
+            Column column1 = table.AddColumn("2cm");
+            Column column2 = table.AddColumn("2cm");
+            Column column3 = table.AddColumn("1.75cm");
+            Column column4 = table.AddColumn("3cm");
+            Column column5 = table.AddColumn("3cm");
+            Column column6 = table.AddColumn("2cm");
+            Column column7 = table.AddColumn("2.5cm");
+            Column column8 = table.AddColumn("2cm");
+            Column column9 = table.AddColumn("2cm");
+
+
+            // Заголовок таблицы
+            Row headerRow = table.AddRow();
+            headerRow.Cells[0].AddParagraph("ФИО ученика").Format.Font.Size = 8;
+            headerRow.Cells[1].AddParagraph("Класс").Format.Font.Size = 8;
+            headerRow.Cells[2].AddParagraph("Дата рождения").Format.Font.Size = 8;
+            headerRow.Cells[3].AddParagraph("Адрес").Format.Font.Size = 8;
+            headerRow.Cells[4].AddParagraph("Фактический адрес").Format.Font.Size = 8;
+            headerRow.Cells[5].AddParagraph("Телефон").Format.Font.Size = 8;
+            headerRow.Cells[6].AddParagraph("Национальность").Format.Font.Size = 8;
+            headerRow.Cells[7].AddParagraph("Секция").Format.Font.Size = 8;
+            headerRow.Cells[8].AddParagraph("Примечание").Format.Font.Size = 8;
+
+            headerRow.Format.Font.Bold = true;
+
+            // Заполнение таблицы данными
+            foreach (var student in Users)
+            {
+                Row row = table.AddRow();
+                row.Cells[0].AddParagraph(student.FIOStud).Format.Font.Size = 8;
+                row.Cells[1].AddParagraph(GetGrupName(student.IDGrup)).Format.Font.Size = 8;
+                row.Cells[2].AddParagraph(student.DRStud.ToString()).Format.Font.Size = 8;
+                row.Cells[3].AddParagraph(student.Adr).Format.Font.Size = 8;
+                row.Cells[4].AddParagraph(student.FAdr).Format.Font.Size = 8;
+                row.Cells[5].AddParagraph(student.Tel).Format.Font.Size = 8;
+                row.Cells[6].AddParagraph(GetNationName(student.IDNation)).Format.Font.Size = 8;
+                row.Cells[7].AddParagraph(student.Section ?? "").Format.Font.Size = 8;
+                row.Cells[8].AddParagraph(student.Note ?? "").Format.Font.Size = 8;
+
+
+            }
+
+         
+
+            // Рендеринг документа
+            PdfDocumentRenderer renderer = new PdfDocumentRenderer(true);
+            renderer.Document = document;
+            renderer.RenderDocument();
+
+            var filePath = "Таблица_Ученики.pdf";
+            renderer.PdfDocument.Save(filePath);
+
+            // Открытие созданного PDF файла
+            Process.Start(new ProcessStartInfo(filePath) { UseShellExecute = true });
+        }
+
+
 
     }
 }

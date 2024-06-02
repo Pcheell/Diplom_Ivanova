@@ -10,6 +10,14 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using static Ivanova_UchitDn.Core.CoreApp;
+using Microsoft.Office.Interop.Excel;
+using Excel = Microsoft.Office.Interop.Excel.Application;
+using System.Linq;
+using MigraDoc.DocumentObjectModel;
+using MigraDoc.Rendering;
+using MigraDoc.DocumentObjectModel.Tables;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace Ivanova_UchitDn.ViewModel
 {
@@ -550,6 +558,158 @@ namespace Ivanova_UchitDn.ViewModel
 
 
 
+        private IExcelExport ExportPdfSelf;
+        public IExcelExport ExportPdf => ExportPdfSelf ?? (ExportPdfSelf = new IExcelExport(ExportDataPdf));
+
+        private IExcelExport ExportExcelSelf;
+        public IExcelExport ExportExcel => ExportExcelSelf ?? (ExportExcelSelf = new IExcelExport(ExportDataExcel));
+
+        private string GetKuratorFIO(int kuratorID)
+        {
+            foreach (var kurator in ListItemSelectKur)
+            {
+                if (kurator.IDKur == kuratorID)
+                {
+                    return kurator.FIOKur;
+                }
+            }
+            return ""; // Вернуть пустую строку, если куратор не найден
+        }
+
+
+        private void ExportDataExcel()
+        {
+            if (Users == null || !Users.Any())
+            {
+                MessageBox.Show("Нет данных для экспорта", "Ошибка");
+                return;
+            }
+
+            MessageBoxResult result = MessageBox.Show("Создать Excel документ для таблицы \"Классы\"?", "Подтверждение", MessageBoxButton.YesNo);
+            if (result != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            var excelApp = new Excel();
+            var workbook = excelApp.Workbooks.Add();
+            Worksheet worksheet = (Worksheet)excelApp.ActiveSheet;
+
+
+            // Переименовываем лист
+            worksheet.Name = "Таблица \"Классы\"";
+
+            // Заголовок таблицы
+            worksheet.Cells[1, 1] = "Таблица \"Классы\"";
+            Range titleRange = worksheet.Range["A1", "B1"];
+            titleRange.Merge();
+            titleRange.Font.Bold = true;
+            titleRange.Font.Size = 12;
+            titleRange.HorizontalAlignment = XlHAlign.xlHAlignCenter;
+
+            // Заголовки колонок
+            worksheet.Cells[3, 1] = "Название класса";
+            worksheet.Cells[3, 2] = "Классный руководитель";
+
+
+            // Делаем заголовки колонок жирными
+            for (int i = 1; i <= 2; i++)
+            {
+                Range headerCell = worksheet.Cells[3, i];
+                headerCell.Font.Bold = true;
+            }
+
+
+            // Данные
+            int row = 4;
+            foreach (var group in Users)
+            {
+                worksheet.Cells[row, 1] = group.NameGrup;
+                worksheet.Cells[row, 2] = GetKuratorFIO(group.IDKur); // Получить ФИО куратора по его ID
+                row++;
+            }
+
+            // Автоматическое выравнивание столбцов
+            worksheet.Columns.AutoFit();
+
+            // Выровнять все ячейки по левому краю
+            worksheet.Cells.HorizontalAlignment = XlHAlign.xlHAlignLeft;
+
+            // Добавление границ для таблицы
+            Range dataRange = worksheet.Range["A3", $"B{row - 1}"];
+            dataRange.Borders.LineStyle = XlLineStyle.xlContinuous;
+            dataRange.Borders.Weight = XlBorderWeight.xlThin;
+
+            // Показать Excel
+            excelApp.Visible = true;
+        }
+
+        private void ExportDataPdf()
+        {
+            if (Users == null || !Users.Any())
+            {
+                MessageBox.Show("Нет данных для экспорта", "Ошибка");
+                return;
+            }
+
+            MessageBoxResult result = MessageBox.Show("Создать PDF документ для таблицы \"Группы\"?", "Подтверждение", MessageBoxButton.YesNo);
+            if (result != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            // Создаем новый документ
+            Document document = new Document();
+            Section section = document.AddSection();
+            section.PageSetup.LeftMargin = 150; //отступ слева для таблицы
+
+
+            // Заголовок таблицы
+            Paragraph title = section.AddParagraph("Таблица \"Группы\"");
+            title.Format.Font.Bold = true;
+            title.Format.Font.Size = 14;
+            title.Format.SpaceAfter = "1cm";
+            title.Format.LeftIndent = "-2cm";
+
+            title.Format.Alignment = ParagraphAlignment.Center;
+
+            // Таблица
+            Table table = section.AddTable();
+            table.Borders.Width = 0.75;
+            table.Format.Alignment = ParagraphAlignment.Center;
+
+            // Определение столбцов
+            Column column1 = table.AddColumn("2cm");
+            Column column2 = table.AddColumn("8cm");
+
+            // Заголовок таблицы
+            Row headerRow = table.AddRow();
+            headerRow.Cells[0].AddParagraph("Название класса");
+            headerRow.Cells[1].AddParagraph("ФИО куратора");
+
+            headerRow.Format.Font.Bold = true;
+            headerRow.Format.Alignment = ParagraphAlignment.Center;
+
+            // Заполнение таблицы данными
+            foreach (var group in Users)
+            {
+                Row row = table.AddRow();
+                row.Cells[0].AddParagraph(group.NameGrup);
+                row.Cells[1].AddParagraph(GetKuratorFIO(group.IDKur));
+                row.Format.Alignment = ParagraphAlignment.Center;
+            }
+
+            // Рендеринг документа
+            PdfDocumentRenderer renderer = new PdfDocumentRenderer(true);
+            renderer.Document = document;
+            renderer.RenderDocument();
+
+            var filePath = "Таблица_Группы.pdf";
+            renderer.PdfDocument.Save(filePath);
+
+            // Открытие созданного PDF файла
+            Process.Start(new ProcessStartInfo(filePath) { UseShellExecute = true });
+        }
 
 
 

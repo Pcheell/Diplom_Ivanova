@@ -1,5 +1,8 @@
-﻿using Ivanova_UchitDn.View_Page;
+﻿using Ivanova_UchitDn.Core;
+using Ivanova_UchitDn.View_Page;
 using Ivanova_UchitDn.ViewModel;
+using MySqlConnector;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -21,8 +24,34 @@ namespace Ivanova_UchitDn
             this.userId = userId; // Сохраняем ID пользователя
             var studData = new StudData(userId);
             var rodData = new RodData(userId);
+
+            LoadKuratorFIO();
         }
-      
+
+        private async void LoadKuratorFIO()
+        {
+            try
+            {
+                Connector con = new Connector();
+                string sql = "SELECT FIO_kurator FROM kurator WHERE id_kurator = @userId";
+                MySqlCommand command = new MySqlCommand(sql, con.GetCon());
+                command.Parameters.Add(new MySqlParameter("@userId", userId));
+
+                await con.GetOpen();
+                MySqlDataReader reader = await command.ExecuteReaderAsync();
+
+                if (await reader.ReadAsync())
+                {
+                    KuratorFIO.Text = reader["FIO_kurator"].ToString();
+                }
+
+                await con.GetClose();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка при загрузке ФИО куратора: " + ex.Message);
+            }
+        }
 
         private void Stud_btn(object sender, RoutedEventArgs e)
         {

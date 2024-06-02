@@ -7,6 +7,13 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Office.Interop.Excel;
+using Excel = Microsoft.Office.Interop.Excel.Application;
+using System.Linq;
+using MigraDoc.DocumentObjectModel;
+using MigraDoc.Rendering;
+using MigraDoc.DocumentObjectModel.Tables;
+using System.Diagnostics;
 
 
 namespace Ivanova_UchitDn.ViewModel
@@ -412,9 +419,153 @@ namespace Ivanova_UchitDn.ViewModel
             }
         }
 
-     
+        private IExcelExport ExportExcelSelf;
+        public IExcelExport ExportExcel => ExportExcelSelf ?? (ExportExcelSelf = new IExcelExport(ExportDataExcel));
+        private void ExportDataExcel()
+        {
+            if (Users == null || !Users.Any())
+            {
+                MessageBox.Show("Нет данных для экспорта", "Ошибка");
+                return;
+            }
+
+            MessageBoxResult result = MessageBox.Show("Создать Excel документ для таблицы \"Руководители\"?", "Подтверждение", MessageBoxButton.YesNo);
+            if (result != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            var excelApp = new Excel();
+            var workbook = excelApp.Workbooks.Add();
+            Worksheet worksheet = (Worksheet)excelApp.ActiveSheet;
+
+            // Переименовываем лист
+            worksheet.Name = "Таблица \"Кураторы\"";
 
 
+            // Заголовок таблицы
+            worksheet.Cells[1, 1] = "Таблица \"Кураторы\"";
+            Range titleRange = worksheet.Range["A1", "B1"];
+            titleRange.Merge();
+            titleRange.Font.Bold = true;
+            titleRange.Font.Size = 12;
+            titleRange.HorizontalAlignment = XlHAlign.xlHAlignCenter;
 
+            // Заголовки колонок
+            worksheet.Cells[3, 1] = "ID";
+            worksheet.Cells[3, 2] = "ФИО руководителя";
+            worksheet.Cells[3, 3] = "Логин";
+            worksheet.Cells[3, 4] = "Пароль";
+
+            // Делаем заголовки колонок жирными
+            for (int i = 1; i <= 4; i++)
+            {
+                Range headerCell = worksheet.Cells[3, i];
+                headerCell.Font.Bold = true;
+            }
+
+            // Данные
+            int row = 4; // Начинаем с 4-й строки, так как 3-я строка занята заголовками колонок
+            foreach (var user in Users)
+            {
+                worksheet.Cells[row, 1] = user.ID;
+                worksheet.Cells[row, 2] = user.Name;
+                worksheet.Cells[row, 3] = user.Login;
+                worksheet.Cells[row, 4] = user.Parol;
+                row++;
+            }
+
+
+            // Автоматическое выравнивание столбцов
+            worksheet.Columns.AutoFit();
+
+            // Выровнять все ячейки по левому краю
+            worksheet.Cells.HorizontalAlignment = XlHAlign.xlHAlignLeft;
+
+            // Добавление границ для таблицы
+            Range dataRange = worksheet.Range["A3", $"D{row - 1}"];
+            dataRange.Borders.LineStyle = XlLineStyle.xlContinuous;
+            dataRange.Borders.Weight = XlBorderWeight.xlThin;
+
+
+            // Показать Excel
+            excelApp.Visible = true;
+        }
+
+        private IExcelExport ExportPdfSelf;
+        public IExcelExport ExportPdf => ExportPdfSelf ?? (ExportPdfSelf = new IExcelExport(ExportDataPdf));
+        private void ExportDataPdf()
+        {
+            if (Users == null || !Users.Any())
+            {
+                MessageBox.Show("Нет данных для экспорта", "Ошибка");
+                return;
+            }
+
+            MessageBoxResult result = MessageBox.Show("Создать PDF документ для таблицы \"Руководители\"?", "Подтверждение", MessageBoxButton.YesNo);
+            if (result != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            // Создаем новый документ
+            Document document = new Document();
+            Section section = document.AddSection();
+            section.PageSetup.LeftMargin = 75; //отступ слева для таблицы
+
+
+            // Заголовок таблицы
+            Paragraph title = section.AddParagraph("Таблица \"Классные руководители\"");
+            title.Format.Font.Bold = true;
+            title.Format.Font.Size = 14;
+            title.Format.SpaceAfter = "1cm";
+            title.Format.LeftIndent = "1cm";// остут слева для тайтла
+
+
+            title.Format.Alignment = ParagraphAlignment.Center;
+
+            // Таблица
+            Table table = section.AddTable();
+            table.Borders.Width = 0.75;
+            table.Format.Alignment = ParagraphAlignment.Center;
+
+            // Определение столбцов
+            Column column1 = table.AddColumn("2cm");
+            Column column2 = table.AddColumn("6cm");
+            Column column3 = table.AddColumn("4cm");
+            Column column4 = table.AddColumn("4cm");
+
+            // Заголовок таблицы
+            Row headerRow = table.AddRow();
+            headerRow.Cells[0].AddParagraph("ID");
+            headerRow.Cells[1].AddParagraph("ФИО руководителя");
+            headerRow.Cells[2].AddParagraph("Логин");
+            headerRow.Cells[3].AddParagraph("Пароль");
+
+            headerRow.Format.Font.Bold = true;
+            headerRow.Format.Alignment = ParagraphAlignment.Center;
+
+            // Заполнение таблицы данными
+            foreach (var user in Users)
+            {
+                Row row = table.AddRow();
+                row.Cells[0].AddParagraph(user.ID.ToString());
+                row.Cells[1].AddParagraph(user.Name);
+                row.Cells[2].AddParagraph(user.Login);
+                row.Cells[3].AddParagraph(user.Parol);
+                row.Format.Alignment = ParagraphAlignment.Center;
+            }
+
+            // Рендеринг документа
+            PdfDocumentRenderer renderer = new PdfDocumentRenderer(true);
+            renderer.Document = document;
+            renderer.RenderDocument();
+
+            var filePath = "Таблица_руководитель.pdf";
+            renderer.PdfDocument.Save(filePath);
+
+            // Открытие созданного PDF файла
+            Process.Start(new ProcessStartInfo(filePath) { UseShellExecute = true });
+        }
     }
 }

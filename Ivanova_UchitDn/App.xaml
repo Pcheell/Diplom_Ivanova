@@ -122,7 +122,7 @@
             </Style>
 
 
-            <Style x:Key="topButton" TargetType="Button">
+        <Style x:Key="topButton" TargetType="Button">
                 <Setter Property="Background" Value="Transparent" />
                 <Setter Property="Foreground" Value="#6E7783" />
                 <Setter Property="FocusVisualStyle" Value="{x:Null}" />
@@ -170,8 +170,8 @@
                 </Style.Triggers>
             </Style>
 
-
-            <Style x:Key="menuButtonIcon" TargetType="Icon:PackIconMaterial">
+     
+        <Style x:Key="menuButtonIcon" TargetType="Icon:PackIconMaterial">
                 <Setter Property="Margin" Value="20 2 20 0" />
                 <Setter Property="VerticalAlignment" Value="Center" />
                 <Setter Property="Width" Value="15" />

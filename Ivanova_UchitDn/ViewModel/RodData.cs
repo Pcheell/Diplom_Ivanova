@@ -9,6 +9,13 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using static Ivanova_UchitDn.Core.CoreApp;
+using Microsoft.Office.Interop.Excel;
+using Excel = Microsoft.Office.Interop.Excel.Application;
+using MigraDoc.DocumentObjectModel;
+using MigraDoc.Rendering;
+using MigraDoc.DocumentObjectModel.Tables;
+using System.Diagnostics;
+using System.Linq;
 
 namespace Ivanova_UchitDn.ViewModel
 {
@@ -236,7 +243,7 @@ namespace Ivanova_UchitDn.ViewModel
                 if (SearchStud)
                 {
                     SearchTypesAnd(ref sql, "`id_stud` IN (SELECT `id_stud` FROM `kart_stud` WHERE `FIO_stud` LIKE @text)");
-                }
+                } 
 
                 if (!SearchName && !SearchAdr && !SearchTel && !string.IsNullOrEmpty(SearchText))
                 {
@@ -647,6 +654,180 @@ namespace Ivanova_UchitDn.ViewModel
             get => SearchSelectStudSelf;
             set { SearchSelectStudSelf = value; LoadData(); OnPropertyChanged("SearchSelectStud"); }
         }
+
+        private IExcelExport ExportPdfSelf;
+        public IExcelExport ExportPdf => ExportPdfSelf ?? (ExportPdfSelf = new IExcelExport(ExportDataPdf));
+
+        private IExcelExport ExportExcelSelf;
+        public IExcelExport ExportExcel => ExportExcelSelf ?? (ExportExcelSelf = new IExcelExport(ExportDataExcel));
+
+        private string GetStudName(int studID)
+        {
+            foreach (var stud in ListItemSelectStud)
+            {
+                if (stud.IDStud == studID)
+                {
+                    return stud.FIOStud;
+                }
+            }
+            return "";
+        }
+
+
+        private void ExportDataExcel()
+        {
+            if (Users == null || !Users.Any())
+            {
+                MessageBox.Show("Нет данных для экспорта", "Ошибка");
+                return;
+            }
+
+            MessageBoxResult result = MessageBox.Show("Создать Excel документ для таблицы \"Родители\"?", "Подтверждение", MessageBoxButton.YesNo);
+            if (result != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            var excelApp = new Excel();
+            var workbook = excelApp.Workbooks.Add();
+            Worksheet worksheet = (Worksheet)excelApp.ActiveSheet;
+
+
+            // Переименовываем лист
+            worksheet.Name = "Таблица \"Родители\"";
+
+            // Заголовок таблицы
+            worksheet.Cells[1, 1] = "Таблица \"Родители\"";
+            Range titleRange = worksheet.Range["A1", "B1"];
+            titleRange.Merge();
+            titleRange.Font.Bold = true;
+            titleRange.Font.Size = 12;
+            titleRange.HorizontalAlignment = XlHAlign.xlHAlignCenter;
+
+            // Заголовки колонок
+            worksheet.Cells[3, 1] = "ФИО родителя";
+            worksheet.Cells[3, 2] = "ФИО студента";
+            worksheet.Cells[3, 3] = "Адрес";
+            worksheet.Cells[3, 4] = "Телефон";
+            worksheet.Cells[3, 5] = "Работа";
+
+
+            // Делаем заголовки колонок жирными
+            for (int i = 1; i <= 5; i++)
+            {
+                Range headerCell = worksheet.Cells[3, i];
+                headerCell.Font.Bold = true;
+            }
+
+
+            // Данные
+            int row = 4; // Начинаем с 4-й строки, так как 3-я строка занята заголовками колонок
+            foreach (var student in Users)
+            {
+                worksheet.Cells[row, 1] = student.FIORod;
+                worksheet.Cells[row, 2] = GetStudName(student.IDStud);
+                worksheet.Cells[row, 3] = student.Adr;
+                worksheet.Cells[row, 4] = student.Tel;
+                worksheet.Cells[row, 5] = student.Rabota;
+               
+
+                row++;
+            }
+
+            // Автоматическое выравнивание столбцов
+            worksheet.Columns.AutoFit();
+
+            // Выровнять все ячейки по левому краю
+            worksheet.Cells.HorizontalAlignment = XlHAlign.xlHAlignLeft;
+
+            // Добавление границ для таблицы
+            Range dataRange = worksheet.Range["A3", $"E{row - 1}"];
+            dataRange.Borders.LineStyle = XlLineStyle.xlContinuous;
+            dataRange.Borders.Weight = XlBorderWeight.xlThin;
+
+            // Показать Excel
+            excelApp.Visible = true;
+        }
+
+        private void ExportDataPdf()
+        {
+            if (Users == null || !Users.Any())
+            {
+                MessageBox.Show("Нет данных для экспорта", "Ошибка");
+                return;
+            }
+
+            MessageBoxResult result = MessageBox.Show("Создать PDF документ для таблицы \"Родители\"?", "Подтверждение", MessageBoxButton.YesNo);
+            if (result != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            // Создаем новый документ
+            Document document = new Document();
+            Section section = document.AddSection();
+            section.PageSetup.LeftMargin = 70; //отступ слева для таблицы
+
+
+            // Заголовок таблицы
+            Paragraph title = section.AddParagraph("Таблица \"Родители\"");
+            title.Format.Font.Bold = true;
+            title.Format.Font.Size = 14;
+            title.Format.SpaceAfter = "1cm";
+            title.Format.LeftIndent = "2cm";
+
+            title.Format.Alignment = ParagraphAlignment.Center;
+
+            // Таблица
+            Table table = section.AddTable();
+            table.Borders.Width = 0.75;
+
+
+            // Определение столбцов
+            Column column1 = table.AddColumn("4cm");
+            Column column2 = table.AddColumn("4cm");
+            Column column3 = table.AddColumn("4cm");
+            Column column4 = table.AddColumn("2cm");
+            Column column5 = table.AddColumn("3cm");
+     
+
+
+            // Заголовок таблицы
+            Row headerRow = table.AddRow();
+            headerRow.Cells[0].AddParagraph("ФИО родителя");
+            headerRow.Cells[1].AddParagraph("ФИО студента");
+            headerRow.Cells[2].AddParagraph("Адрес");
+            headerRow.Cells[3].AddParagraph("Телефон");
+            headerRow.Cells[4].AddParagraph("Работа");
+
+            headerRow.Format.Font.Bold = true;
+
+            // Заполнение таблицы данными
+            foreach (var student in Users)
+            {
+                Row row = table.AddRow();
+                row.Cells[0].AddParagraph(student.FIORod);
+                row.Cells[1].AddParagraph(GetStudName(student.IDStud));
+                row.Cells[2].AddParagraph(student.Adr.ToString());
+                row.Cells[3].AddParagraph(student.Tel);
+                row.Cells[4].AddParagraph(student.Rabota);
+
+
+            }
+
+            // Рендеринг документа
+            PdfDocumentRenderer renderer = new PdfDocumentRenderer(true);
+            renderer.Document = document;
+            renderer.RenderDocument();
+
+            var filePath = "Таблица_Ученики.pdf";
+            renderer.PdfDocument.Save(filePath);
+
+            // Открытие созданного PDF файла
+            Process.Start(new ProcessStartInfo(filePath) { UseShellExecute = true });
+        }
+
+
 
     }
 }
