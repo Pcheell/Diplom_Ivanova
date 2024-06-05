@@ -94,16 +94,25 @@ namespace Ivanova_UchitDn.Model
         }
 
 
-        private DateTime DRStudSelf;
-        public DateTime DRStud
+
+        private DateTime? DRStudSelf;
+        public DateTime? DRStud
         {
             get => DRStudSelf;
             set
             {
-                DRStudSelf = value;
+                if (value.HasValue && value.Value != DateTime.MinValue)
+                {
+                    DRStudSelf = value;
+                }
+                else
+                {
+                    DRStudSelf = null; // Или установите другое значение по умолчанию
+                }
                 OnPropertyChanged("DRStud");
             }
         }
+
 
         private string AdrSelf;
         public string Adr

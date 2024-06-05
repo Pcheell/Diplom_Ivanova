@@ -8,7 +8,7 @@
       
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="1200"
-     Title="Student">
+     Title="Ученики">
 
 
     <Grid>
@@ -81,7 +81,7 @@
 
 
                             <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="90 0">
-                                <TextBlock Text="Дата рождения:" />
+                                <TextBlock Text="Поиск по дате рождения:" />
                                 <StackPanel Orientation="Horizontal">
                                     <StackPanel Orientation="Vertical" >
 
@@ -152,7 +152,7 @@
                                     </StackPanel>
 
                                     <StackPanel >
-                                        <Button Style="{StaticResource addButton}" Width="180" Command="{Binding SearchByDate}">
+                                        <Button Style="{StaticResource addButton}" Width="180" Command="{Binding SearchDate, UpdateSourceTrigger=PropertyChanged}">
                                             <StackPanel Orientation="Horizontal">
                                                 <Icon:PackIconMaterial Kind="Reload" VerticalAlignment="Center" Margin="0 1 8 0" Width="11" Height="11"/>
                                                 <TextBlock Text="Поиск по дате рождения" />
@@ -173,6 +173,9 @@
                     <TextBlock Text="Ученики" FontSize="20" VerticalAlignment="Bottom" FontWeight="SemiBold" Foreground="#121518" Margin="35 0 10 5"/>
 
                     <Button Style="{StaticResource addButton}"  Command="{Binding ExportExcel}" Width="30" Height="28" Margin="4 0" >
+                        <Button.ToolTip>
+                            <ToolTip Content="Экспорт в Excel"/>
+                        </Button.ToolTip>
                         <StackPanel Orientation="Horizontal" >
                             <Icon:PackIconMaterial Kind="FileExcel" VerticalAlignment="Center" 
                    Margin="0 1 0 0" Width="14" Height="14"/>
@@ -181,6 +184,9 @@
                     </Button>
 
                     <Button Style="{StaticResource addButton}" Command="{Binding ExportPdf}" Width="30"  Height="28" Margin="4 0" >
+                        <Button.ToolTip>
+                            <ToolTip Content="Экспорт в PDF"/>
+                        </Button.ToolTip>
                         <StackPanel Orientation="Horizontal" >
                             <Icon:PackIconMaterial Kind="FilePdfBox" VerticalAlignment="Center" 
 Margin="0 1 0 0" Width="14" Height="14"/>
@@ -283,7 +289,7 @@ Background="#F5F7F9" BorderBrush="#F5F7F9" FontSize="14" >
 
                                         <StackPanel Margin="0 0 0 10" >
                                             <TextBlock Text="Дата рождения" Style="{StaticResource text}" Height="20" />
-                                            <TextBox Text="{Binding DRStud,StringFormat=dd-MM-yyyy}" Height="60" Width="165" />
+                                            <TextBox Text="{Binding DRStud,StringFormat={}{0:dd.MM.yyyy}}" Height="60" Width="165" />
                                         </StackPanel>
 
 
@@ -297,14 +303,23 @@ Background="#F5F7F9" BorderBrush="#F5F7F9" FontSize="14" >
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 0 0 0">
 
                                             <Button Style="{StaticResource gridEditButton}" Click="OpenRoditeli">
+                                                <Button.ToolTip>
+                                                    <ToolTip Content="Информация о родителях"/>
+                                                </Button.ToolTip>
                                                 <Icon:PackIconMaterial Kind="AccountMultipleOutline" Style="{StaticResource gridButtonIcon}"/>
                                             </Button>
 
                                             <Button Margin="5 0 0 0"  Style="{StaticResource gridEditButton}" Click="OpenEdit" >
+                                                <Button.ToolTip>
+                                                    <ToolTip Content="Редактировать данные"/>
+                                                </Button.ToolTip>
                                                 <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
                                             </Button>
 
                                             <Button Margin="5 0 0 0" Style="{StaticResource gridRemoveButton}" Command="{Binding Delete}">
+                                                <Button.ToolTip>
+                                                    <ToolTip Content="Удалить данные"/>
+                                                </Button.ToolTip>
                                                 <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
                                             </Button>
                                         </StackPanel>

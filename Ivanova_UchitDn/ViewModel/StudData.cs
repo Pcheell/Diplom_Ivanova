@@ -19,6 +19,7 @@ using System.Diagnostics;
 using Ivanova_UchitDn.View_Page;
 using PdfSharp;
 using MigraDoc.DocumentObjectModel.Shapes;
+using System.Windows.Input;
 
 namespace Ivanova_UchitDn.ViewModel
 {
@@ -205,7 +206,9 @@ namespace Ivanova_UchitDn.ViewModel
 
                 string sql = SearchTypes(existingSql);
 
+
                 MySqlCommand command = new MySqlCommand(sql, con.GetCon());
+              
 
                 // Параметры для поиска
                 command.Parameters.Add(new MySqlParameter("@kuratorId", userId));
@@ -215,6 +218,7 @@ namespace Ivanova_UchitDn.ViewModel
                 command.Parameters.Add(new MySqlParameter("@date_start", SearchDataStart.ToString("yyyy-MM-dd")));
                 command.Parameters.Add(new MySqlParameter("@date_end", SearchDataEnd.ToString("yyyy-MM-dd")));
 
+          
                 await con.GetOpen();
                 Users = new ObservableCollection<StudModel>();
 
@@ -288,6 +292,9 @@ namespace Ivanova_UchitDn.ViewModel
                 if (SearchNote)
                     conditions.Add("`note_stud` LIKE @text");
 
+             
+
+
                 // Если ни один чекбокс не выбран, добавляем условия поиска для всех полей
                 if (!SearchName && !SearchAdr && !SearchFAdr && !SearchTel && !SearchGrup && !SearchNation && !SearchSection && !SearchNote && !string.IsNullOrEmpty(SearchText))
                 {
@@ -305,8 +312,15 @@ namespace Ivanova_UchitDn.ViewModel
                 // Если есть добавленные условия, объединяем их с основным SQL запросом
                 if (conditions.Any())
                 {
-                    string whereClause = string.Join(" OR ", conditions);
-                    existingSql += " WHERE " + whereClause; // Заменяем AND на WHERE, так как это первое условие
+                    string whereClause = string.Join(" AND ", conditions);
+                    if (existingSql.Contains("WHERE"))
+                    {
+                        existingSql += " AND " + whereClause;
+                    }
+                    else
+                    {
+                        existingSql += " WHERE " + whereClause;
+                    }
                 }
 
                 return existingSql;
@@ -330,7 +344,31 @@ namespace Ivanova_UchitDn.ViewModel
         {
             sql += string.IsNullOrEmpty(sql) ? value : " and " + value;
         }
-  
+
+
+
+        public class SearchCommand : ICommand
+        {
+            private readonly System.Action _execute;
+
+            public SearchCommand(System.Action execute)
+            {
+                _execute = execute;
+            }
+
+            public bool CanExecute(object parameter)
+            {
+                return true;
+            }
+
+            public event EventHandler CanExecuteChanged;
+
+            public void Execute(object parameter)
+            {
+                _execute?.Invoke();
+            }
+        }
+
 
 
         private UpdateData UpdateSelf;
@@ -458,7 +496,6 @@ namespace Ivanova_UchitDn.ViewModel
 
 
 
-
             Connector
                  con = new Connector();
             string
@@ -542,7 +579,7 @@ namespace Ivanova_UchitDn.ViewModel
                 return;
             }
 
-            if (NewStudSelf.DRStud == null)
+            if (EditStud.DRStud == null)
             {
                 MessageBox.Show("Не указана дата рождения");
                 return;
@@ -783,10 +820,14 @@ namespace Ivanova_UchitDn.ViewModel
         public bool SearchDate
         {
             get => SearchDateSelf;
-            set { SearchDateSelf = value; OnPropertyChanged("SearchDate"); }
-        }
+            set { 
 
-        //private DateTime searchDataStartSelf = DateTime.Now.AddMonths(-1); // Начальная дата
+                SearchDateSelf = value; 
+                OnPropertyChanged("SearchDate");
+                LoadData();
+            }
+        }
+      
         private DateTime SearchDataStartSelf;
         public DateTime SearchDataStart
         {
@@ -800,11 +841,10 @@ namespace Ivanova_UchitDn.ViewModel
                 }
 
                 SearchDataStartSelf = value;
+                LoadData();  // или другой метод для обновления данных
                 OnPropertyChanged("SearchDataStart");
             }
         }
-
-        //private DateTime searchDataEndSelf = DateTime.Now; // Конечная дата
 
         private DateTime SearchDataEndSelf;
         public DateTime SearchDataEnd
@@ -819,9 +859,13 @@ namespace Ivanova_UchitDn.ViewModel
                 }
 
                 SearchDataEndSelf = value;
+                LoadData();  // или другой метод для обновления данных
                 OnPropertyChanged("SearchDataEnd");
             }
         }
+
+
+
 
         private IExcelExport ExportPdfSelf;
         public IExcelExport ExportPdf => ExportPdfSelf ?? (ExportPdfSelf = new IExcelExport(ExportDataPdf));

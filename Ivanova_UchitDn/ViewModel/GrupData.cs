@@ -502,6 +502,12 @@ namespace Ivanova_UchitDn.ViewModel
 
         private async void PromoteClasses()
         {
+            bool confirmed = MessageBox.Show("Перевод классов осуществляется каждый год. Вы точно хотите перевести классы?", 
+                "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes;
+
+            if (!confirmed)
+                return;
+
             Connector con = new Connector();
             MySqlCommand command;
             await con.GetOpen();

@@ -17,6 +17,10 @@ namespace Ivanova_UchitDn
         {
             InitializeComponent();
         }
+        private void Btn_Close(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
 
         private async void Btn_Vhod(object sender, RoutedEventArgs e)
         {

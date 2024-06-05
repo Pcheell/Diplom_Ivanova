@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:Ivanova_UchitDn.View_Page" xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="1000"
-      Title="Roditeli">
+      Title="Родители">
 
     <Grid x:Name="GridData">
 
@@ -109,6 +109,9 @@
                 <TextBlock Text="Родители" FontSize="20" VerticalAlignment="Bottom" FontWeight="SemiBold" Foreground="#121518" Margin="35 0 10 5"/>
 
                 <Button Style="{StaticResource addButton}"  Command="{Binding ExportExcel}" Width="30" Height="28" Margin="4 0" >
+                    <Button.ToolTip>
+                        <ToolTip Content="Экспорт в Excel"/>
+                    </Button.ToolTip>
                     <StackPanel Orientation="Horizontal" >
                         <Icon:PackIconMaterial Kind="FileExcel" VerticalAlignment="Center" 
                    Margin="0 1 0 0" Width="14" Height="14"/>
@@ -117,6 +120,9 @@
                 </Button>
 
                 <Button Style="{StaticResource addButton}" Command="{Binding ExportPdf}" Width="30"  Height="28" Margin="4 0" >
+                    <Button.ToolTip>
+                        <ToolTip Content="Экспорт в PDF"/>
+                    </Button.ToolTip>
                     <StackPanel Orientation="Horizontal" >
                         <Icon:PackIconMaterial Kind="FilePdfBox" VerticalAlignment="Center" 
 Margin="0 1 0 0" Width="14" Height="14"/>
@@ -198,10 +204,16 @@ Margin="0 1 0 0" Width="14" Height="14"/>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 20 0 0">
 
                                     <Button Style="{StaticResource gridEditButton}" Click="OpenEdit" >
+                                        <Button.ToolTip>
+                                            <ToolTip Content="Редактировать данные"/>
+                                        </Button.ToolTip>
                                         <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
                                     </Button>
 
                                     <Button Margin="5 0 0 0" Style="{StaticResource gridRemoveButton}" Command="{Binding Delete}">
+                                        <Button.ToolTip>
+                                            <ToolTip Content="Удалить данные"/>
+                                        </Button.ToolTip>
                                         <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
                                     </Button>
                                 </StackPanel>

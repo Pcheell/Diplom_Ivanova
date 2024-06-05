@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:Ivanova_UchitDn.View_Page" xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="1000"
-      Title="Nation">
+      Title="Национальности">
 
     <Grid x:Name="GridData">
 
