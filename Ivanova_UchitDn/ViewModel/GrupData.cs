@@ -72,16 +72,46 @@ namespace Ivanova_UchitDn.ViewModel
 
         public ICommand PromoteClassesCommand { get; }
 
-      
 
+        private bool isAscending = true;
+        public ICommand SortCommand { get; private set; }
         public GrupData()
         {
             ListItemSelectKur = new ObservableCollection<ListItemSelect>();
             LoadData();
 
             PromoteClassesCommand = new RelayCommand(PromoteClasses);
+            SortCommand = new RelayCommand(SortUsers);
+
 
         }
+        private void SortUsers()
+        {
+            if (isAscending)
+            {
+                Users = new ObservableCollection<GrupModel>(Users.OrderBy(u => ParseClass(u.NameGrup)));
+            }
+            else
+            {
+                Users = new ObservableCollection<GrupModel>(Users.OrderByDescending(u => ParseClass(u.NameGrup)));
+            }
+            isAscending = !isAscending;
+            OnPropertyChanged(nameof(Users));
+        }
+
+
+        private (int, string) ParseClass(string className)
+        {
+            var match = Regex.Match(className, @"(\d+)(\D+)");
+            if (match.Success)
+            {
+                int number = int.Parse(match.Groups[1].Value);
+                string letter = match.Groups[2].Value;
+                return (number, letter);
+            }
+            return (0, className); 
+        }
+
 
         public async void LoadData()
         {
@@ -98,8 +128,21 @@ namespace Ivanova_UchitDn.ViewModel
             OnPropertyChanged("SearchSelectKur");
             _ = await GroupDataSelect();
 
+            GCount = Users.Count;
+
             isUpdating = false;
 
+        }
+
+        private int _gCount;
+        public int GCount
+        {
+            get { return _gCount; }
+            set
+            {
+                _gCount = value;
+                OnPropertyChanged(nameof(GCount));
+            }
         }
 
         async Task<bool> GroupDataList()

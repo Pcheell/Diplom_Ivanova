@@ -14,6 +14,7 @@ using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
 using MigraDoc.DocumentObjectModel.Tables;
 using System.Diagnostics;
+using System.Windows.Input;
 
 
 namespace Ivanova_UchitDn.ViewModel
@@ -53,9 +54,30 @@ namespace Ivanova_UchitDn.ViewModel
             }
         }
 
+        private bool isAscending = true;
+        public ICommand SortCommand { get; private set; }
+
+
         public UserData()
         {
             LoadData();
+
+            SortCommand = new RelayCommand(SortUsers);
+
+        }
+
+        private void SortUsers()
+        {
+            if (isAscending)
+            {
+                Users = new ObservableCollection<User>(Users.OrderBy(u => u.Name));
+            }
+            else
+            {
+                Users = new ObservableCollection<User>(Users.OrderByDescending(u => u.Name));
+            }
+            isAscending = !isAscending;
+            OnPropertyChanged(nameof(Users));
         }
 
         private async void LoadData()
@@ -71,8 +93,23 @@ namespace Ivanova_UchitDn.ViewModel
             NewUser = new User();
             EditUser = new User();
             await UserDataSelect();
+
+            KCount = Users.Count;
+
             isUpdating = false;
         }
+
+        private int _kCount;
+        public int KCount
+        {
+            get { return _kCount; }
+            set
+            {
+                _kCount = value;
+                OnPropertyChanged(nameof(KCount));
+            }
+        }
+
 
         private async Task<bool> UserDataSelect()
         {

@@ -95,7 +95,31 @@
                                         </StackPanel>
                                     </Button>
                                 </StackPanel>
-                                    
+
+                                <Button Style="{StaticResource addButton}"  Command="{Binding ExportExcel}" VerticalAlignment="Bottom" Width="40" Margin="10 0" >
+                                    <Button.ToolTip>
+                                        <ToolTip Content="Экспорт в Excel"/>
+                                    </Button.ToolTip>
+                                    <StackPanel Orientation="Horizontal" >
+                                        <Icon:PackIconMaterial Kind="FileExcel" VerticalAlignment="Center" 
+                   Margin="0 1 0 0" Width="17" Height="17"/>
+                                        <TextBlock Text="" />
+                                    </StackPanel>
+                                </Button>
+
+                                <Button Style="{StaticResource addButton}" Command="{Binding ExportPdf}" VerticalAlignment="Bottom" Width="40" Margin="0 0" >
+                                    <Button.ToolTip>
+                                        <ToolTip Content="Экспорт в PDF"/>
+                                    </Button.ToolTip>
+                                    <StackPanel Orientation="Horizontal" >
+                                        <Icon:PackIconMaterial Kind="FilePdfBox" VerticalAlignment="Center" 
+Margin="0 1 0 0" Width="17" Height="17"/>
+                                        <TextBlock Text="" />
+                                    </StackPanel>
+                                </Button>
+
+
+
                             </StackPanel>
                         </WrapPanel>
 
@@ -104,25 +128,15 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Классы" FontSize="20" VerticalAlignment="Bottom" FontWeight="SemiBold" Foreground="#121518" Margin="35 0 10 5"/>
+                <TextBlock Text="Классы" FontSize="20" VerticalAlignment="Bottom" FontWeight="SemiBold" Foreground="#121518" Margin="35 0 0 5"/>
+                <TextBlock Text="{Binding GCount, StringFormat=({0})}" FontSize="20" FontWeight="SemiBold" Foreground="#121518" Margin="5,0,10,0" />
 
-                <Button Style="{StaticResource addButton}"  Command="{Binding ExportExcel}" Width="30" Height="28" Margin="4 0" >
+                <Button Style="{StaticResource addButton}" Command="{Binding SortCommand}" Width="30"  Height="28" Margin="4 0" >
                     <Button.ToolTip>
-                        <ToolTip Content="Экспорт в Excel"/>
+                        <ToolTip Content="Сортировка по возрастанию и убыванию классов"/>
                     </Button.ToolTip>
                     <StackPanel Orientation="Horizontal" >
-                        <Icon:PackIconMaterial Kind="FileExcel" VerticalAlignment="Center" 
-                   Margin="0 1 0 0" Width="14" Height="14"/>
-                        <TextBlock Text="" />
-                    </StackPanel>
-                </Button>
-
-                <Button Style="{StaticResource addButton}" Command="{Binding ExportPdf}" Width="30"  Height="28" Margin="4 0" >
-                    <Button.ToolTip>
-                        <ToolTip Content="Экспорт в PDF"/>
-                    </Button.ToolTip>
-                    <StackPanel Orientation="Horizontal" >
-                        <Icon:PackIconMaterial Kind="FilePdfBox" VerticalAlignment="Center" 
+                        <Icon:PackIconMaterial Kind="SortAlphabeticalVariant" VerticalAlignment="Center" 
 Margin="0 1 0 0" Width="14" Height="14"/>
                         <TextBlock Text="" />
                     </StackPanel>

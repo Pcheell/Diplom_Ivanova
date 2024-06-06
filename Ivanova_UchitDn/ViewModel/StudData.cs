@@ -29,6 +29,8 @@ namespace Ivanova_UchitDn.ViewModel
         private bool isUpdating = false;
 
 
+       
+
         /// <summary>
         /// Событие оповещения об изменениях
         /// </summary>
@@ -82,6 +84,9 @@ namespace Ivanova_UchitDn.ViewModel
             }
         }
 
+        private bool isAscending = true;
+        public ICommand SortCommand { get; private set; }
+
         public StudData(int userId)
         {
             SearchDataStartSelf = DateTime.Today;
@@ -91,6 +96,22 @@ namespace Ivanova_UchitDn.ViewModel
             ListItemSelectNation = new ObservableCollection<ListItemSelectN>();
             LoadData();
             this.userId = userId;
+
+            SortCommand = new RelayCommand(SortUsers);
+        }
+
+        private void SortUsers()
+        {
+            if (isAscending)
+            {
+                Users = new ObservableCollection<StudModel>(Users.OrderBy(u => u.FIOStud));
+            }
+            else
+            {
+                Users = new ObservableCollection<StudModel>(Users.OrderByDescending(u => u.FIOStud));
+            }
+            isAscending = !isAscending;
+            OnPropertyChanged(nameof(Users));
         }
 
         private async void LoadData()
@@ -110,8 +131,21 @@ namespace Ivanova_UchitDn.ViewModel
             _ = await StudDataSelect();
             OnPropertyChanged("Users");
 
+            StudentCount = Users.Count; // Обновляем количество учеников
+
             isUpdating = false;
 
+        }
+
+        private int _studentCount;
+        public int StudentCount
+        {
+            get { return _studentCount; }
+            set
+            {
+                _studentCount = value;
+                OnPropertyChanged(nameof(StudentCount));
+            }
         }
 
         private async Task<bool> GroupDataList()
@@ -215,10 +249,10 @@ namespace Ivanova_UchitDn.ViewModel
                 command.Parameters.Add(new MySqlParameter("@text", string.Format("%{0}%", SearchText)));
                 command.Parameters.Add(new MySqlParameter("@grup", SearchSelectGroup));
                 command.Parameters.Add(new MySqlParameter("@nation", SearchSelectNation));
-                command.Parameters.Add(new MySqlParameter("@date_start", SearchDataStart.ToString("yyyy-MM-dd")));
-                command.Parameters.Add(new MySqlParameter("@date_end", SearchDataEnd.ToString("yyyy-MM-dd")));
+                command.Parameters.Add(new MySqlParameter("@date_start", SearchDataStart));
+                command.Parameters.Add(new MySqlParameter("@date_end", SearchDataEnd));
 
-          
+
                 await con.GetOpen();
                 Users = new ObservableCollection<StudModel>();
 
@@ -292,7 +326,10 @@ namespace Ivanova_UchitDn.ViewModel
                 if (SearchNote)
                     conditions.Add("`note_stud` LIKE @text");
 
-             
+                if (SearchDate)
+                    conditions.Add("`dr_stud` BETWEEN @date_start AND @date_end");
+
+
 
 
                 // Если ни один чекбокс не выбран, добавляем условия поиска для всех полей
@@ -827,22 +864,16 @@ namespace Ivanova_UchitDn.ViewModel
                 LoadData();
             }
         }
-      
+
         private DateTime SearchDataStartSelf;
         public DateTime SearchDataStart
         {
             get => SearchDataStartSelf;
             set
             {
-                if (value > SearchDataEndSelf)
-                {
-                    SearchDataEndSelf = value;
-                    OnPropertyChanged("SearchDataEnd");
-                }
-
                 SearchDataStartSelf = value;
-                LoadData();  // или другой метод для обновления данных
                 OnPropertyChanged("SearchDataStart");
+                LoadData();
             }
         }
 
@@ -852,17 +883,12 @@ namespace Ivanova_UchitDn.ViewModel
             get => SearchDataEndSelf;
             set
             {
-                if (value < SearchDataStartSelf)
-                {
-                    SearchDataStartSelf = value;
-                    OnPropertyChanged("SearchDataStart");
-                }
-
                 SearchDataEndSelf = value;
-                LoadData();  // или другой метод для обновления данных
                 OnPropertyChanged("SearchDataEnd");
+                LoadData();
             }
         }
+
 
 
 
