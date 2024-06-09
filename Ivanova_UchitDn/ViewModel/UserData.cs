@@ -276,17 +276,17 @@ namespace Ivanova_UchitDn.ViewModel
         {
             if (string.IsNullOrEmpty(NewUserSelf.Name))
             {
-                MessageBox.Show("Не указано ФИО");
+                MessageBox.Show("Не указано ФИО", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
             if (string.IsNullOrEmpty(NewUserSelf.Login))
             {
-                MessageBox.Show("Не указан логин");
+                MessageBox.Show("Не указан логин", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
             if (string.IsNullOrEmpty(NewUserSelf.Parol))
             {
-                MessageBox.Show("Не указано пароль");
+                MessageBox.Show("Не указано пароль", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -307,7 +307,7 @@ namespace Ivanova_UchitDn.ViewModel
             if (await command.ExecuteNonQueryAsync() != 1)
             {
                 await con.GetClose();
-                MessageBox.Show("Таблица не добавлена", "Ошибка");
+                MessageBox.Show("Таблица не добавлена", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
 
             }
@@ -320,7 +320,7 @@ namespace Ivanova_UchitDn.ViewModel
 
         public async void DeleteData(int a)
         {
-            if (MessageBox.Show("Удалить запись?", "Удаление", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+            if (MessageBox.Show("Удалить запись?", "Удаление", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                 return;
 
             Connector 
@@ -338,7 +338,7 @@ namespace Ivanova_UchitDn.ViewModel
             if (await command.ExecuteNonQueryAsync() != 1)
             {
                 await con.GetClose();
-                MessageBox.Show("Запись не удалена", "Ошибка");
+                MessageBox.Show("Запись не удалена", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -352,17 +352,17 @@ namespace Ivanova_UchitDn.ViewModel
         {
             if (string.IsNullOrEmpty(EditUser.Name))
             {
-                MessageBox.Show("Не указано ФИО");
+                MessageBox.Show("Не указано ФИО", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
             if (string.IsNullOrEmpty(EditUser.Login))
             {
-                MessageBox.Show("Не указан логин");
+                MessageBox.Show("Не указан логин", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
             if (string.IsNullOrEmpty(EditUser.Parol))
             {
-                MessageBox.Show("Не указано пароль");
+                MessageBox.Show("Не указано пароль", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -386,7 +386,7 @@ namespace Ivanova_UchitDn.ViewModel
             if (await command.ExecuteNonQueryAsync() != 1)
             {
                 await con.GetClose();
-                MessageBox.Show("Запись не изменена", "Ошибка");
+                MessageBox.Show("Запись не изменена", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -462,11 +462,11 @@ namespace Ivanova_UchitDn.ViewModel
         {
             if (Users == null || !Users.Any())
             {
-                MessageBox.Show("Нет данных для экспорта", "Ошибка");
+                MessageBox.Show("Нет данных для экспорта", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            MessageBoxResult result = MessageBox.Show("Создать Excel документ для таблицы \"Руководители\"?", "Подтверждение", MessageBoxButton.YesNo);
+            MessageBoxResult result = MessageBox.Show("Создать Excel документ для таблицы \"Руководители\"?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result != MessageBoxResult.Yes)
             {
                 return;
@@ -535,11 +535,11 @@ namespace Ivanova_UchitDn.ViewModel
         {
             if (Users == null || !Users.Any())
             {
-                MessageBox.Show("Нет данных для экспорта", "Ошибка");
+                MessageBox.Show("Нет данных для экспорта", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            MessageBoxResult result = MessageBox.Show("Создать PDF документ для таблицы \"Руководители\"?", "Подтверждение", MessageBoxButton.YesNo);
+            MessageBoxResult result = MessageBox.Show("Создать PDF документ для таблицы \"Руководители\"?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result != MessageBoxResult.Yes)
             {
                 return;

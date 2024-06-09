@@ -49,7 +49,7 @@ namespace Ivanova_UchitDn
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Ошибка при загрузке ФИО куратора: " + ex.Message);
+                MessageBox.Show("Ошибка при загрузке ФИО куратора: " + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

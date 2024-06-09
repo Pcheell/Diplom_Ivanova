@@ -208,7 +208,7 @@ namespace Ivanova_UchitDn.ViewModel
         {
             if (string.IsNullOrEmpty(NewNationSelf.NameNation))
             {
-                MessageBox.Show("Не указано название национальности");
+                MessageBox.Show("Не указано название национальности", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -226,7 +226,7 @@ namespace Ivanova_UchitDn.ViewModel
             if (await command.ExecuteNonQueryAsync() != 1)
             {
                 await con.GetClose();
-                MessageBox.Show("Таблица не добавлена", "Ошибка");
+                MessageBox.Show("Таблица не добавлена", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
 
             }
@@ -239,7 +239,7 @@ namespace Ivanova_UchitDn.ViewModel
 
         public async void DeleteData(int a)
         {
-            if (MessageBox.Show("Удалить запись?", "Удаление", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+            if (MessageBox.Show("Удалить запись?", "Удаление", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                 return;
 
             Connector
@@ -257,7 +257,7 @@ namespace Ivanova_UchitDn.ViewModel
             if (await command.ExecuteNonQueryAsync() != 1)
             {
                 await con.GetClose();
-                MessageBox.Show("Запись не удалена", "Ошибка");
+                MessageBox.Show("Запись не удалена", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -294,7 +294,7 @@ namespace Ivanova_UchitDn.ViewModel
             if (await command.ExecuteNonQueryAsync() != 1)
             {
                 await con.GetClose();
-                MessageBox.Show("Запись не изменена", "Ошибка");
+                MessageBox.Show("Запись не изменена", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 

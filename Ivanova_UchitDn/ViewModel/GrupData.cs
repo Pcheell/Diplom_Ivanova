@@ -356,13 +356,13 @@ namespace Ivanova_UchitDn.ViewModel
         {
             if (GroupInsertNotValid(NewGroupSelf.IDKur))
             {
-                MessageBox.Show("Не выбран куратор");
+                MessageBox.Show("Не выбран куратор", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (string.IsNullOrEmpty(NewGroupSelf.NameGrup))
             {
-                MessageBox.Show("Не указано название группы");
+                MessageBox.Show("Не указано название группы", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -382,7 +382,7 @@ namespace Ivanova_UchitDn.ViewModel
             if (await command.ExecuteNonQueryAsync() != 1)
             {
                 await con.GetClose();
-                MessageBox.Show("Таблица не добавлена", "Ошибка");
+                MessageBox.Show("Таблица не добавлена", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
 
             }
@@ -393,7 +393,7 @@ namespace Ivanova_UchitDn.ViewModel
 
         private async void DeleteData(int a)
         {
-            if (MessageBox.Show("Удалить запись?", "Удаление", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+            if (MessageBox.Show("Удалить запись?", "Удаление", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                 return;
 
             Connector
@@ -411,7 +411,7 @@ namespace Ivanova_UchitDn.ViewModel
             if (await command.ExecuteNonQueryAsync() != 1)
             {
                 await con.GetClose();
-                MessageBox.Show("Запись не удалена", "Ошибка");
+                MessageBox.Show("Запись не удалена", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -425,13 +425,13 @@ namespace Ivanova_UchitDn.ViewModel
         {
             if (GroupInsertNotValid(EditGroup.IDKur))
             {
-                MessageBox.Show("Не выбран куратор");
+                MessageBox.Show("Не выбран куратор", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (string.IsNullOrEmpty(EditGroup.NameGrup))
             {
-                MessageBox.Show("Не указано название группы");
+                MessageBox.Show("Не указано название группы", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -455,7 +455,7 @@ namespace Ivanova_UchitDn.ViewModel
             if (await command.ExecuteNonQueryAsync() != 1)
             {
                 await con.GetClose();
-                MessageBox.Show("Запись не изменена", "Ошибка");
+                MessageBox.Show("Запись не изменена", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -595,7 +595,7 @@ namespace Ivanova_UchitDn.ViewModel
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка при переводе классов: {ex.Message}", "Ошибка");
+                MessageBox.Show($"Ошибка при переводе классов: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             finally
             {
@@ -630,11 +630,11 @@ namespace Ivanova_UchitDn.ViewModel
         {
             if (Users == null || !Users.Any())
             {
-                MessageBox.Show("Нет данных для экспорта", "Ошибка");
+                MessageBox.Show("Нет данных для экспорта", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            MessageBoxResult result = MessageBox.Show("Создать Excel документ для таблицы \"Классы\"?", "Подтверждение", MessageBoxButton.YesNo);
+            MessageBoxResult result = MessageBox.Show("Создать Excel документ для таблицы \"Классы\"?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Information);
             if (result != MessageBoxResult.Yes)
             {
                 return;
@@ -697,11 +697,11 @@ namespace Ivanova_UchitDn.ViewModel
         {
             if (Users == null || !Users.Any())
             {
-                MessageBox.Show("Нет данных для экспорта", "Ошибка");
+                MessageBox.Show("Нет данных для экспорта", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            MessageBoxResult result = MessageBox.Show("Создать PDF документ для таблицы \"Группы\"?", "Подтверждение", MessageBoxButton.YesNo);
+            MessageBoxResult result = MessageBox.Show("Создать PDF документ для таблицы \"Группы\"?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result != MessageBoxResult.Yes)
             {
                 return;

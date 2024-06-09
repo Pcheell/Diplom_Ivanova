@@ -28,7 +28,7 @@ namespace Ivanova_UchitDn
 
             if (userId == -1)
             {
-                MessageBox.Show("Неправильно введен логин или пароль");
+                MessageBox.Show("Неправильно введен логин или пароль", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 

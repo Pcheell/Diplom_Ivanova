@@ -237,6 +237,8 @@ namespace Ivanova_UchitDn.ViewModel
 
                 while (await reader.ReadAsync())
                 {
+                    await Task.Delay(3);
+
                     RodsSelf.Add(new RodModel()
                     {
                         IDRod = (int)reader["id_roditel"],
@@ -410,31 +412,31 @@ namespace Ivanova_UchitDn.ViewModel
         {
             if (GroupInsertNotValid(NewRodSelf.IDStud))
             {
-                MessageBox.Show("Не выбран куратор");
+                MessageBox.Show("Не выбран куратор", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (string.IsNullOrEmpty(NewRodSelf.FIORod))
             {
-                MessageBox.Show("Не указано ФИО");
+                MessageBox.Show("Не указано ФИО", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (string.IsNullOrEmpty(NewRodSelf.Adr))
             {
-                MessageBox.Show("Не указан адрес");
+                MessageBox.Show("Не указан адрес", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (string.IsNullOrEmpty(NewRodSelf.Tel))
             {
-                MessageBox.Show("Не указан телефон");
+                MessageBox.Show("Не указан телефон", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (string.IsNullOrEmpty(NewRodSelf.Rabota))
             {
-                MessageBox.Show("Не указана работа");
+                MessageBox.Show("Не указана работа", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -457,7 +459,7 @@ namespace Ivanova_UchitDn.ViewModel
             if (await command.ExecuteNonQueryAsync() != 1)
             {
                 await con.GetClose();
-                MessageBox.Show("Таблица не добавлена", "Ошибка");
+                MessageBox.Show("Таблица не добавлена", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
 
             }
@@ -469,7 +471,7 @@ namespace Ivanova_UchitDn.ViewModel
       
         private async void DeleteData(int a)
         {
-            if (MessageBox.Show("Удалить запись?", "Удаление", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+            if (MessageBox.Show("Удалить запись?", "Удаление", MessageBoxButton.YesNo,  MessageBoxImage.Question) != MessageBoxResult.Yes)
                 return;
 
             Connector
@@ -486,7 +488,7 @@ namespace Ivanova_UchitDn.ViewModel
             if (await command.ExecuteNonQueryAsync() != 1)
             {
                 await con.GetClose();
-                MessageBox.Show("Запись не удалена", "Ошибка");
+                MessageBox.Show("Запись не удалена", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -500,31 +502,31 @@ namespace Ivanova_UchitDn.ViewModel
         {
             if (GroupInsertNotValid(EditRod.IDStud))
             {
-                MessageBox.Show("Не выбран куратор");
+                MessageBox.Show("Не выбран куратор", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (string.IsNullOrEmpty(EditRod.FIORod))
             {
-                MessageBox.Show("Не указано ФИО");
+                MessageBox.Show("Не указано ФИО", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (string.IsNullOrEmpty(EditRod.Adr))
             {
-                MessageBox.Show("Не указан адрес");
+                MessageBox.Show("Не указан адрес", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (string.IsNullOrEmpty(EditRod.Tel))
             {
-                MessageBox.Show("Не указан телефон");
+                MessageBox.Show("Не указан телефон", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (string.IsNullOrEmpty(EditRod.Rabota))
             {
-                MessageBox.Show("Не указана работа");
+                MessageBox.Show("Не указана работа", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -552,7 +554,7 @@ namespace Ivanova_UchitDn.ViewModel
             if (await command.ExecuteNonQueryAsync() != 1)
             {
                 await con.GetClose();
-                MessageBox.Show("Запись не изменена", "Ошибка");
+                MessageBox.Show("Запись не изменена", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -711,11 +713,11 @@ namespace Ivanova_UchitDn.ViewModel
         {
             if (Users == null || !Users.Any())
             {
-                MessageBox.Show("Нет данных для экспорта", "Ошибка");
+                MessageBox.Show("Нет данных для экспорта", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            MessageBoxResult result = MessageBox.Show("Создать Excel документ для таблицы \"Родители\"?", "Подтверждение", MessageBoxButton.YesNo);
+            MessageBoxResult result = MessageBox.Show("Создать Excel документ для таблицы \"Родители\"?", "Подтверждение", MessageBoxButton.YesNo,  MessageBoxImage.Question);
             if (result != MessageBoxResult.Yes)
             {
                 return;
@@ -786,11 +788,11 @@ namespace Ivanova_UchitDn.ViewModel
         {
             if (Users == null || !Users.Any())
             {
-                MessageBox.Show("Нет данных для экспорта", "Ошибка");
+                MessageBox.Show("Нет данных для экспорта", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            MessageBoxResult result = MessageBox.Show("Создать PDF документ для таблицы \"Родители\"?", "Подтверждение", MessageBoxButton.YesNo);
+            MessageBoxResult result = MessageBox.Show("Создать PDF документ для таблицы \"Родители\"?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result != MessageBoxResult.Yes)
             {
                 return;

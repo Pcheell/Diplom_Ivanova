@@ -29,8 +29,6 @@ namespace Ivanova_UchitDn.ViewModel
         private bool isUpdating = false;
 
 
-       
-
         /// <summary>
         /// Событие оповещения об изменениях
         /// </summary>
@@ -69,9 +67,12 @@ namespace Ivanova_UchitDn.ViewModel
         public IList<StudModel> Users
         {
             get => StudsSelf;
-            set => StudsSelf = value;
+            set
+            {
+                StudsSelf = value;
+                OnPropertyChanged(nameof(Users)); // Добавляем уведомление об изменении
+            }
         }
-
 
         private StudModel NewStudSelf;
         public StudModel NewStud
@@ -153,7 +154,7 @@ namespace Ivanova_UchitDn.ViewModel
             Connector
                  con = new Connector();
             string
-                sql = "select * from `grup` limit 50";
+                sql = "select * from `grup` ";
             MySqlCommand
                 command = new MySqlCommand(sql, con.GetCon());
 
@@ -191,7 +192,7 @@ namespace Ivanova_UchitDn.ViewModel
             Connector
                  con = new Connector();
             string
-                sql = "select * from `nation` limit 50";
+                sql = "select * from `nation`";
             MySqlCommand
                 command = new MySqlCommand(sql, con.GetCon());
 
@@ -254,7 +255,7 @@ namespace Ivanova_UchitDn.ViewModel
 
 
                 await con.GetOpen();
-                Users = new ObservableCollection<StudModel>();
+                StudsSelf = new ObservableCollection<StudModel>();
 
                 MySqlDataReader reader = await command.ExecuteReaderAsync();
 
@@ -267,8 +268,11 @@ namespace Ivanova_UchitDn.ViewModel
 
                 while (await reader.ReadAsync())
                 {
-                    Users.Add(new StudModel()
+                    await Task.Delay(3);
+
+                    StudsSelf.Add(new StudModel()
                     {
+
                         IDStud = (int)reader["id_stud"],
                         IDGrup = (int)reader["id_grup"],
                         ListItemSelectGrup = ListItemSelectGrupSelf,
@@ -279,10 +283,11 @@ namespace Ivanova_UchitDn.ViewModel
                         Tel = (string)reader["tel_stud"],
                         IDNation = (int)reader["id_nation"],
                         ListItemSelectNation = ListItemSelectNationSelf,
-                        Section = reader["section_stud"] == DBNull.Value ? null : (string)reader["section_stud"],
-                        Img = reader["img_stud"] == DBNull.Value ? null : (string)reader["img_stud"],
-                        Note = reader["note_stud"] == DBNull.Value ? null : (string)reader["note_stud"],
-                    Delete = new DeleteCommand(DeleteData, (int)reader[0])
+                        Section = reader["section_stud"] == DBNull.Value ? null : reader["section_stud"].ToString(),
+                        Img = reader["img_stud"] == DBNull.Value ? null : reader["img_stud"].ToString(),
+                        Note = reader["note_stud"] == DBNull.Value ? null : reader["note_stud"].ToString(),
+
+                        Delete = new DeleteCommand(DeleteData, (int)reader[0])
                     });
 
                     OnPropertyChanged("Users");
@@ -330,8 +335,6 @@ namespace Ivanova_UchitDn.ViewModel
                     conditions.Add("`dr_stud` BETWEEN @date_start AND @date_end");
 
 
-
-
                 // Если ни один чекбокс не выбран, добавляем условия поиска для всех полей
                 if (!SearchName && !SearchAdr && !SearchFAdr && !SearchTel && !SearchGrup && !SearchNation && !SearchSection && !SearchNote && !string.IsNullOrEmpty(SearchText))
                 {
@@ -359,6 +362,7 @@ namespace Ivanova_UchitDn.ViewModel
                         existingSql += " WHERE " + whereClause;
                     }
                 }
+                Console.WriteLine("Итоговый SQL-запрос: " + existingSql); // Отладочный вывод
 
                 return existingSql;
             }
@@ -496,38 +500,44 @@ namespace Ivanova_UchitDn.ViewModel
 
             if (GroupInsertNotValid(NewStudSelf.IDGrup))
             {
-                MessageBox.Show("Не выбрана группа");
+                MessageBox.Show("Не выбрана группа", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (GroupInsertNotValidNation(NewStudSelf.IDNation))
             {
-                MessageBox.Show("Не выбрана группа");
+                MessageBox.Show("Не выбрана группа", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
 
             if (string.IsNullOrEmpty(NewStudSelf.FIOStud))
             {
-                MessageBox.Show("Не указано ФИО");
+                MessageBox.Show("Не указано ФИО", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (NewStudSelf.DRStud == null)
             {
-                MessageBox.Show("Не указана дата рождения");
+                MessageBox.Show("Не указана дата рождения", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (string.IsNullOrEmpty(NewStudSelf.Adr))
             {
-                MessageBox.Show("Не указан адрес");
+                MessageBox.Show("Не указан адрес", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (string.IsNullOrEmpty(NewStudSelf.FAdr))
+            {
+                MessageBox.Show("Не указан фактический адрес", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (string.IsNullOrEmpty(NewStudSelf.Tel))
             {
-                MessageBox.Show("Не указан телефон");
+                MessageBox.Show("Не указан телефон", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -557,7 +567,7 @@ namespace Ivanova_UchitDn.ViewModel
             if (await command.ExecuteNonQueryAsync() != 1)
             {
                 await con.GetClose();
-                MessageBox.Show("Таблица не добавлена", "Ошибка");
+                MessageBox.Show("Таблица не добавлена", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
 
             }
@@ -568,7 +578,7 @@ namespace Ivanova_UchitDn.ViewModel
 
         private async void DeleteData(int a)
         {
-            if (MessageBox.Show("Удалить запись?", "Удаление", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+            if (MessageBox.Show("Удалить запись?", "Удаление", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                 return;
 
             Connector
@@ -586,7 +596,7 @@ namespace Ivanova_UchitDn.ViewModel
             if (await command.ExecuteNonQueryAsync() != 1)
             {
                 await con.GetClose();
-                MessageBox.Show("Запись не удалена", "Ошибка");
+                MessageBox.Show("Запись не удалена", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -600,37 +610,43 @@ namespace Ivanova_UchitDn.ViewModel
         {
             if (GroupInsertNotValid(EditStud.IDGrup))
             {
-                MessageBox.Show("Не выбрана группа");
+                MessageBox.Show("Не выбрана группа", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (GroupInsertNotValidNation(EditStud.IDNation))
             {
-                MessageBox.Show("Не выбрана национальность");
+                MessageBox.Show("Не выбрана национальность", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (string.IsNullOrEmpty(EditStud.FIOStud))
             {
-                MessageBox.Show("Не указано ФИО");
+                MessageBox.Show("Не указано ФИО", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (EditStud.DRStud == null)
             {
-                MessageBox.Show("Не указана дата рождения");
+                MessageBox.Show("Не указана дата рождения", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (string.IsNullOrEmpty(EditStud.Adr))
             {
-                MessageBox.Show("Не указан адрес");
+                MessageBox.Show("Не указан адрес", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (string.IsNullOrEmpty(EditStud.FAdr))
+            {
+                MessageBox.Show("Не указан фактический адрес", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (string.IsNullOrEmpty(EditStud.Tel))
             {
-                MessageBox.Show("Не указан телефон");
+                MessageBox.Show("Не указан телефон", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -665,7 +681,7 @@ namespace Ivanova_UchitDn.ViewModel
             if (await command.ExecuteNonQueryAsync() != 1)
             {
                 await con.GetClose();
-                MessageBox.Show("Запись не изменена", "Ошибка");
+                MessageBox.Show("Запись не изменена", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -928,11 +944,11 @@ namespace Ivanova_UchitDn.ViewModel
         {
             if (Users == null || !Users.Any())
             {
-                MessageBox.Show("Нет данных для экспорта", "Ошибка");
+                MessageBox.Show("Нет данных для экспорта", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            MessageBoxResult result = MessageBox.Show("Создать Excel документ для таблицы \"Ученики\"?", "Подтверждение", MessageBoxButton.YesNo);
+            MessageBoxResult result = MessageBox.Show("Создать Excel документ для таблицы \"Ученики\"?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result != MessageBoxResult.Yes)
             {
                 return;
@@ -1010,11 +1026,11 @@ namespace Ivanova_UchitDn.ViewModel
         {
             if (Users == null || !Users.Any())
             {
-                MessageBox.Show("Нет данных для экспорта", "Ошибка");
+                MessageBox.Show("Нет данных для экспорта", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            MessageBoxResult result = MessageBox.Show("Создать PDF документ для таблицы \"Ученики\"?", "Подтверждение", MessageBoxButton.YesNo);
+            MessageBoxResult result = MessageBox.Show("Создать PDF документ для таблицы \"Ученики\"?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result != MessageBoxResult.Yes)
             {
                 return;
