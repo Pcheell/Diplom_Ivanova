@@ -701,7 +701,7 @@ namespace Ivanova_UchitDn.ViewModel
                 return;
             }
 
-            MessageBoxResult result = MessageBox.Show("Создать PDF документ для таблицы \"Группы\"?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            MessageBoxResult result = MessageBox.Show("Создать PDF документ для таблицы \"Классы\"?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result != MessageBoxResult.Yes)
             {
                 return;
@@ -714,7 +714,7 @@ namespace Ivanova_UchitDn.ViewModel
 
 
             // Заголовок таблицы
-            Paragraph title = section.AddParagraph("Таблица \"Группы\"");
+            Paragraph title = section.AddParagraph("Таблица \"Классы\"");
             title.Format.Font.Bold = true;
             title.Format.Font.Size = 14;
             title.Format.SpaceAfter = "1cm";
